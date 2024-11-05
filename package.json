@@ -15,5 +15,8 @@
         "prettier-plugin-tailwindcss": "^0.6.8",
         "tailwindcss": "^3.4.13",
         "vite": "^5.0"
+    },
+    "dependencies": {
+        "prettier-plugin-blade": "^2.1.19"
     }
 }
