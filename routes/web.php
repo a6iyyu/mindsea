@@ -2,13 +2,21 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    return view('pages.beranda');
 });
 
-Route::get('/about-us', function () {
-    return view('about-us');
+Route::get('/latihan-soal', function () {
+    return view('pages.latihan-soal');
 });
 
-Route::get('/profile', function () {
-    return view('profile');
+Route::get('/masuk', function () {
+    return view('pages.masuk');
+});
+
+Route::get('/profil', function () {
+    return view('pages.profil');
+});
+
+Route::get('/tentang-kami', function () {
+    return view('pages.tentang-kami');
 });
