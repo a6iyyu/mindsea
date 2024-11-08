@@ -5,10 +5,12 @@
                 <i
                     class="fa-solid fa-bars cursor-pointer text-lg text-orange-500 transition-colors hover:text-[#f58a66] lg:text-2xl"></i>
             </button>
-            <a href="/"
-                class="flex flex-col text-xl font-bold leading-none text-[#3b3b3b] lg:text-2xl lg:leading-tight">
+            <a href="/" class="flex flex-col text-xl font-bold leading-none text-[#3b3b3b] lg:text-2xl">
                 <span class="tracking-wide">mind</span>
-                <span class="tracking-wider text-[#f58a66]">sea</span>
+                <div class="flex items-center -mt-2 gap-1">
+                    <span class="tracking-wider text-[#f58a66]">sea</span>
+                    <i class="fa-solid fa-water text-[#8a9ff2] text-lg lg:text-xl"></i>
+                </div>
             </a>
         </div>
         <div class="relative hidden lg:block">

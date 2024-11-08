@@ -1,5 +1,5 @@
 <aside
-    class="fixed left-0 top-0 h-screen w-16 border-r border-gray-200 bg-amber-50 shadow-md transition-all duration-300 ease-in-out md:w-60 lg:w-[17rem]">
+    class="fixed left-0 top-0 h-screen w-16 border-r border-gray-200 bg-amber-50 shadow-md transition-all duration-300 ease-in-out md:w-60 lg:w-[16rem]">
     <section class="mt-20 flex flex-col gap-6 p-4 text-gray-600">
         @php
             $sidebar_items = [
