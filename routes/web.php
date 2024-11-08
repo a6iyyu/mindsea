@@ -37,6 +37,14 @@ Route::get('/chatbot', function () {
     return view('pages.chatbot');
 });
 
-Route::get('/materi', function() {
+Route::get('/materi', function () {
     return view('pages.materi');
+});
+
+Route::get('/progres-belajar', function () {
+    return view('pages.progres-belajar');
+});
+
+Route::get('/preferensi', function () {
+    return view('pages.preferensi');
 });
