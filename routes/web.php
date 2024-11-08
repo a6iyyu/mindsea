@@ -24,3 +24,19 @@ Route::get('/profil', function () {
 Route::get('/tentang-kami', function () {
     return view('pages.tentang-kami');
 });
+
+Route::get('/dukungan', function () {
+    return view('pages.dukungan');
+});
+
+Route::get('/notifikasi', function () {
+    return view('pages.notifikasi');
+});
+
+Route::get('/chatbot', function () {
+    return view('pages.chatbot');
+});
+
+Route::get('/materi', function() {
+    return view('pages.materi');
+});

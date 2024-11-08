@@ -6,7 +6,7 @@
                 ["ikon" => "fa-solid fa-home", "warna" => "text-orange-500", "label" => "Beranda"],
                 ["ikon" => "fa-solid fa-swatchbook", "warna" => "text-blue-500", "label" => "Materi"],
                 ["ikon" => "fa-solid fa-brain", "warna" => "text-pink-500", "label" => "Latihan Soal"],
-                ["ikon" => "fa-solid fa-chart-line", "warna" => "text-green-500", "label" => "Progres"],
+                ["ikon" => "fa-solid fa-chart-line", "warna" => "text-green-500", "label" => "Progres Belajar"],
                 ["ikon" => "fa-solid fa-book-open-reader", "warna" => "text-purple-500", "label" => "Preferensi"],
                 ["ikon" => "fa-solid fa-user", "warna" => "text-amber-500", "label" => "Tentang Kami"],
             ];

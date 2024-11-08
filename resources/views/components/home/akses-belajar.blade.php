@@ -7,16 +7,16 @@
         ];
     @endphp
     @foreach ($akses_belajar as $item)
-        <a href="{{ strtolower(str_replace(" ", "-", $item["judul"])) }}" class="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all hover:shadow-lg">
+        <a href="{{ $item['judul'] === 'Materi Pembelajaran' ? '/materi' : strtolower(str_replace(' ', '-', $item['judul'])) }}" class="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all hover:shadow-lg">
             <div class="mb-4 flex items-center gap-4">
-                <span class="bg-{{ $item["warna-latar-belakang"] }} rounded-lg p-4">
-                    <i class="{{ $item["ikon"] }} text-{{ $item["warna-teks"] }} text-2xl"></i>
+                <span class="bg-{{ $item['warna-latar-belakang'] }} rounded-lg p-4">
+                    <i class="{{ $item['ikon'] }} text-{{ $item['warna-teks'] }} text-2xl"></i>
                 </span>
                 <h3 class="text-xl font-semibold text-gray-800">
-                    {{ $item["judul"] }}
+                    {{ $item['judul'] }}
                 </h3>
             </div>
-            <figcaption class="text-gray-600">{{ $item["deskripsi"] }}</figcaption>
+            <figcaption class="text-gray-600">{{ $item['deskripsi'] }}</figcaption>
         </a>
     @endforeach
 </section>
