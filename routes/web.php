@@ -13,6 +13,10 @@ Route::get('/masuk', function () {
     return view('pages.masuk');
 });
 
+Route::get('/daftar', function () {
+    return view('pages.daftar');
+});
+
 Route::get('/profil', function () {
     return view('pages.profil');
 });

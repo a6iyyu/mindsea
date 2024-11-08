@@ -1,9 +1,9 @@
-@component("common.main-layout", ["judul" => "Masuk | mindsea", "deskripsi" => "", "halaman_khusus" => true, "auth" => false])
+@component("common.main-layout", ["judul" => "Daftar | mindsea", "deskripsi" => "", "halaman_khusus" => true, "auth" => false])
 <main class="flex flex-col justify-center items-center min-h-screen px-4 overflow-y-hidden">
     <a href="/" class="absolute top-8 left-8 text-gray-600 hover:text-[#f58a66] transition-colors">
         <i class="fa-solid fa-arrow-left text-2xl"></i>
     </a>
-    
-    @include("components.auth.login.form")
+
+    @include("components.auth.register.form")
 </main>
 @endcomponent

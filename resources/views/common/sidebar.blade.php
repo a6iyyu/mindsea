@@ -1,4 +1,5 @@
-<aside class="fixed left-0 top-0 h-screen w-16 border-r border-gray-200 bg-amber-50 shadow-md transition-all duration-300 ease-in-out md:w-60 lg:w-[17rem]">
+<aside
+    class="fixed left-0 top-0 h-screen w-16 border-r border-gray-200 bg-amber-50 shadow-md transition-all duration-300 ease-in-out md:w-60 lg:w-[17rem]">
     <section class="mt-20 flex flex-col gap-6 p-4 text-gray-600">
         @php
             $sidebar_items = [
@@ -12,10 +13,12 @@
         @endphp
         @foreach ($sidebar_items as $item)
             <div class="flex items-center justify-between">
-                <a href="{{ $item['label'] === 'Beranda' ? '/' : strtolower(str_replace(" ", "-", $item["label"])) }}" class="inline-flex items-center gap-3">
+                <a href="{{ $item['label'] === 'Beranda' ? '/' : strtolower(str_replace(" ", "-", $item["label"])) }}"
+                    class="inline-flex items-center gap-3">
                     <i class="{{ $item["ikon"] }} {{ $item["warna"] }} text-2xl"></i>
                     <h3 class="group hidden text-lg font-semibold transition-all duration-300 ease-in-out md:block">
-                        <span class="lg:bg-gradient-to-r lg:from-sky-500 lg:to-sky-500 lg:bg-[length:0%_0.125rem] lg:bg-left-bottom lg:bg-no-repeat lg:transition-all lg:duration-500 lg:ease-out lg:group-hover:bg-[length:100%_0.125rem]">
+                        <span
+                            class="lg:bg-gradient-to-r lg:from-{{ strtolower(str_replace('text-', '', $item['warna'])) }} lg:to-{{ strtolower(str_replace('text-', '', $item['warna'])) }} lg:bg-[length:0%_0.125rem] lg:bg-left-bottom lg:bg-no-repeat lg:transition-all lg:duration-500 lg:ease-out lg:group-hover:bg-[length:100%_0.125rem]">
                             {{ $item["label"] }}
                         </span>
                     </h3>
