@@ -40,10 +40,10 @@
 
 <body class="mx-auto overflow-x-hidden bg-amber-50/75">
     @if ($auth ?? true)
-        @include('common.header')
+        @include('pages.header.header')
     @endif
     @if (!$halaman_khusus)
-        @include("common.sidebar")
+        @include("pages.sidebar.sidebar")
     @endif
     {{ $slot }}
 </body>
