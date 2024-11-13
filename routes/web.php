@@ -2,10 +2,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\StatisticsController;
 
 // Halaman publik
 Route::get('/', function () {
-    return view('pages.landing.index');
+    $statistics = [];
+
+    if(Auth::check()) {
+        $statisticsController = new App\Models\StatisticsController();
+        $statistics = $statisticsController->getStatistics();
+    }
+
+    return view('pages.landing.index', compact('statistics'));
 })->name('home');
 
 // Auth routes
@@ -65,8 +73,19 @@ Route::get('/chatbot', function () {
     return view('pages.header.menu.chatbot.index');
 })->name('chatbot');
 
-Route::get('/progres-belajar', function () {
-    return view('pages.sidebar.menu.progres-belajar.index');
-})->name('progress');
+// Rute yang memerlukan autentikasi
+Route::middleware(['auth.progress'])->group(function () {
+    Route::get('/progres-belajar', function () {
+        return view('pages.sidebar.menu.progres-belajar.index');
+    })->name('progress');
+
+    // Route::get('/latihan-soal', function () {
+    //     return view('pages.sidebar.menu.latihan-soal.index');
+    // })->name('exercises');
+
+    // Route::get('/materi', function () {
+    //     return view('pages.sidebar.menu.materi.index');
+    // })->name('materials');
+});
 
 
