@@ -23,25 +23,5 @@ class DatabaseSeeder extends Seeder
             'description' => 'Pengenalan konsep matematika dasar',
             'difficulty_level' => 'mudah',
         ]);
-
-        Exercise::create([
-            'title' => 'Latihan Penjumlahan',
-            'description' => 'Latihan soal penjumlahan',
-            'total_question' => 10,
-        ]);
-
-        UserMaterial::create([
-            'user_id' => $user->id,
-            'material_id' => 1,
-            'status' => 'selesai',
-            'completed_at' => now(),
-        ]);
-
-        UserExercise::create([
-            'user_id' => $user->id,
-            'exercise_id' => 1,
-            'score' => 90,
-            'completed_at' => now(),
-        ]);
     }
 }

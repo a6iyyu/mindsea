@@ -29,41 +29,10 @@
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Sementara -->
-    <style>
-        * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-        }
-
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:active {
-            -webkit-text-fill-color: #374151 !important;
-            -webkit-box-shadow: 0 0 0 30px #fceede inset !important;
-            transition: background-color 5000s ease-in-out 0s;
-            caret-color: #374151;
-            box-shadow: 0 0 0 30px #fceede inset !important;
-        }
-
-        /* Untuk Firefox */
-        input:autofill {
-            -webkit-text-fill-color: #374151 !important;
-            box-shadow: 0 0 0 30px #fceede inset !important;
-        }
-    </style>
-    <!-- End of sementara -->
-
-    <script src="{{ asset('resources/js/showPassword.js') }}"></script>
-    <script src="{{ asset('resources/js/chart.js') }}"></script>
-    <script src="{{ asset('resources/js/material-search.js') }}"></script>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 

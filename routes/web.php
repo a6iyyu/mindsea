@@ -94,5 +94,6 @@ Route::middleware(['auth.progress'])->group(function () {
 Route::get('/materi/{id}/perkenalan', [MaterialController::class, 'showIntroduction'])->name('materi.show.introduction');
 Route::get('/materi/{id}/materi-utama', [MaterialController::class, 'showMainContent'])->name('materi.show.main');
 Route::get('/materi/{id}/latihan-soal', [MaterialController::class, 'showExercise'])->name('materi.show.exercise');
+Route::post('/materi/{id}/complete', [MaterialController::class, 'completeContent'])->name('materi.complete');
 
 
