@@ -3,14 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Material extends Model
 {
-    protected $fillable = ['title', 'description', 'difficulty_level'];
+    protected $table = 'materials';
+    
+    protected $fillable = [
+        'title',
+        'description',
+        'difficulty_level'
+    ];
 
-    public function userMaterials(): HasMany
+    public function contents()
     {
-        return $this->hasMany(UserMaterial::class);
+        return $this->hasMany(MaterialContent::class);
     }
 }

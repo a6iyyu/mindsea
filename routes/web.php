@@ -2,14 +2,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Models\StatisticsController;
+use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\MaterialController;
 
 // Halaman publik
 Route::get('/', function () {
     $statistics = [];
 
     if(Auth::check()) {
-        $statisticsController = new App\Models\StatisticsController();
+        $statisticsController = new StatisticsController();
         $statistics = $statisticsController->getStatistics();
     }
 
@@ -46,16 +47,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/preferensi', function () {
         return view('pages.sidebar.menu.preferensi.index');
     })->name('preferences');
+
+    Route::middleware(['auth'])->group(function() {
+        Route::get('/materi/search', [MaterialController::class, 'search'])->name('materi.search');
+        Route::get('/materi/{id}', [MaterialController::class, 'show'])->name('materi.show');
+        Route::get('/materi', [MaterialController::class, 'index'])->name('materi.index');
+    });
 });
 
 // Public routes
 Route::get('/latihan-soal', function () {
     return view('pages.sidebar.menu.latihan-soal.index');
 })->name('exercises');
-
-Route::get('/materi', function () {
-    return view('pages.sidebar.menu.materi.index');
-})->name('materials');
 
 Route::get('/tentang-kami', function () {
     return view('pages.sidebar.menu.tentang-kami.index');
@@ -87,5 +90,9 @@ Route::middleware(['auth.progress'])->group(function () {
     //     return view('pages.sidebar.menu.materi.index');
     // })->name('materials');
 });
+
+Route::get('/materi/{id}/perkenalan', [MaterialController::class, 'showIntroduction'])->name('materi.show.introduction');
+Route::get('/materi/{id}/materi-utama', [MaterialController::class, 'showMainContent'])->name('materi.show.main');
+Route::get('/materi/{id}/latihan-soal', [MaterialController::class, 'showExercise'])->name('materi.show.exercise');
 
 

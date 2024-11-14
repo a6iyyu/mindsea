@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserMaterial;
+use App\Models\UserExercise;
 
-class StatisticsController extends Model
+class StatisticsController extends Controller
 {
     public function getStatistics()
     {
