@@ -4,8 +4,8 @@
     "halaman_khusus" => false
 ])
     <main class="lg:ml-68 ml-16 min-h-screen bg-white p-8 px-10 py-28 md:pl-60">
-        @include("pages.landing.components.selamat-datang")
-        @include("pages.landing.components.menu-utama") 
-        @include("pages.landing.components.statistik")
+        @include("pages.dashboard.components.selamat-datang")
+        @include("pages.dashboard.components.menu-utama") 
+        @include("pages.dashboard.components.statistik")
     </main>
 @endcomponent

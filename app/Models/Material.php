@@ -18,4 +18,9 @@ class Material extends Model
     {
         return $this->hasMany(MaterialContent::class);
     }
+
+    public function progress()
+    {
+        return $this->hasOne(MaterialProgress::class);
+    }
 }

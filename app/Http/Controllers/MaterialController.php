@@ -12,8 +12,11 @@ class MaterialController extends Controller
 {
     public function index()
     {
-        $materi = Material::all();
-        return view('pages.sidebar.menu.materi.index', compact('materi'));
+        $materi = Material::with(['progress' => function($query) {
+            $query->where('user_id', Auth::id());
+        }])->get();
+        
+        return view('pages.materi.index', compact('materi'));
     }
 
     public function show($id)
@@ -24,7 +27,7 @@ class MaterialController extends Controller
             }
         ])->findOrFail($id);
 
-        return view('pages.sidebar.menu.materi.show.detail', compact('materi'));
+        return view('pages.materi.show.detail', compact('materi'));
     }
 
     public function search(Request $request)
@@ -48,7 +51,7 @@ class MaterialController extends Controller
             return redirect()->back()->with('error', 'Konten pengenalan tidak ditemukan');
         }
 
-        return view('pages.sidebar.menu.materi.show.section.pengenalan.index', compact('materi', 'introduction'));
+        return view('pages.materi.show.section.pengenalan.index', compact('materi', 'introduction'));
 
     }
 
@@ -62,7 +65,7 @@ class MaterialController extends Controller
 
         $mainContent = $materi->contents->first();
 
-        return view('pages.sidebar.menu.materi.show.section.materi-utama.index', compact('materi', 'mainContent'));
+        return view('pages.materi.show.section.materi-utama.index', compact('materi', 'mainContent'));
     }
 
     public function showExercise($id)
@@ -75,7 +78,7 @@ class MaterialController extends Controller
 
         $exercise = $materi->contents->first();
 
-        return view('pages.sidebar.menu.materi.show.section.latihan.index', compact('materi', 'exercise'));
+        return view('pages.materi.show.section.latihan.index', compact('materi', 'exercise'));
     }
 
     public function completeContent($id)

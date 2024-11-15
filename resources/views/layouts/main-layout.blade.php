@@ -38,10 +38,10 @@
 
 <body class="mx-auto overflow-x-hidden bg-amber-50/75">
     @if ($auth ?? true)
-        @include('pages.header.header')
+        @include('pages.shared.header.header')
     @endif
     @if (!$halaman_khusus)
-        @include("pages.sidebar.sidebar")
+        @include("pages.shared.sidebar.sidebar")
     @endif
     {{ $slot }}
 </body>

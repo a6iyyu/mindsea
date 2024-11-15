@@ -3,18 +3,18 @@
     <section class="mx-auto flex h-full max-w-[90vw] items-center justify-between lg:max-w-[96vw]">
         <!-- Bagian kiri: Logo dan Menu -->
         <div class="flex items-center gap-3 lg:gap-6">
-            @include('pages.header.components.menu-button')
-            @include('pages.header.components.logo')
+            @include('pages.shared.header.components.menu-button')
+            @include('pages.shared.header.components.logo')
         </div>
 
         <!-- Bagian tengah: Search bar -->
-        @include('pages.header.components.search-bar')
+        @include('pages.shared.header.components.search-bar')
 
         <!-- Bagian kanan: Navigasi -->
         <nav class="flex h-[80%] items-center gap-4">
-            @include('pages.header.components.mobile-search')
-            @include('pages.header.components.nav-items')
-            @include('pages.header.components.user-profile')
+            @include('pages.shared.header.components.mobile-search')
+            @include('pages.shared.header.components.nav-items')
+            @include('pages.shared.header.components.user-profile')
         </nav>
     </section>
 </header>
