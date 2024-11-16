@@ -1,21 +1,21 @@
 <!-- Konten Materi -->
-<section class="grid grid-cols-1 lg:grid-cols-4 gap-8 p-6">
+<main class="grid grid-cols-1 lg:grid-cols-4 gap-8 p-6">
     <!-- Sidebar Materi -->
-    <div class="lg:col-span-1 space-y-6">
+    <aside class="lg:col-span-1 space-y-6">
         <!-- Daftar Isi -->
-        <div class="bg-blue-50 rounded-2xl border-4 border-blue-200 p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div class="flex items-center gap-3 mb-6">
+        <nav class="bg-blue-50 rounded-2xl border-4 border-blue-200 p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <header class="flex items-center gap-3 mb-6">
                 <span class="bg-blue-100 p-3 rounded-xl">
                     <i class="fa-solid fa-list-ul text-blue-500 text-2xl"></i>
                 </span>
-                <h3 class="text-2xl font-bold text-blue-700">
+                <h2 class="text-2xl font-bold text-blue-700">
                     Daftar Isi
-                </h3>
+                </h2>
                 <button onclick="speakText('Daftar Isi')"
                     class="p-3 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
                     <i class="fa-solid fa-volume-high text-blue-500 text-xl"></i>
                 </button>
-            </div>
+            </header>
 
             <ul class="space-y-4">
                 <li>
@@ -46,17 +46,16 @@
                     </a>
                 </li>
             </ul>
-        </div>
+        </nav>
 
         <!-- Kontrol Aksesibilitas -->
-        <div class="bg-pink-50 rounded-2xl border-4 border-pink-200 p-6 shadow-lg">
-            <div class="flex items-center gap-3 mb-6">
+        <section class="bg-pink-50 rounded-2xl border-4 border-pink-200 p-6 shadow-lg">
+            <header class="flex items-center gap-3 mb-6">
                 <span class="bg-pink-100 p-3 rounded-xl">
                     <i class="fa-solid fa-universal-access text-pink-500 text-2xl"></i>
                 </span>
-                <h4 class="text-xl font-bold text-pink-700">Pengaturan</h4>
-            </div>
-
+                <h3 class="text-xl font-bold text-pink-700">Pengaturan</h3>
+            </header>
 
             <div class="flex items-center gap-2">
                 <button
@@ -70,17 +69,16 @@
                     <i class="fa-solid fa-arrow-down text-pink-500 text-xl"></i>
                 </button>
                 <span class="text-pink-700">Ukuran teks</span>
-
             </div>
-        </div>
-    </div>
+        </section>
+    </aside>
 
     <!-- Konten Utama -->
-    <div class="lg:col-span-3 space-y-8">
+    <article class="lg:col-span-3 space-y-8">
         <!-- Pengenalan -->
-        <div id="pengenalan"
+        <section id="pengenalan"
             class="bg-blue-50 rounded-2xl border-4 border-blue-200 p-8 shadow-lg hover:shadow-xl transition-shadow">
-            <div class="flex items-center gap-4 mb-8">
+            <header class="flex items-center gap-4 mb-8">
                 <span class="bg-blue-100 p-4 rounded-xl">
                     <i class="fa-solid fa-circle-play text-blue-500 text-3xl"></i>
                 </span>
@@ -91,7 +89,7 @@
                     class="p-4 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
                     <i class="fa-solid fa-volume-high text-blue-500 text-2xl"></i>
                 </button>
-            </div>
+            </header>
             <div class="prose max-w-none bg-white p-6 rounded-xl">
                 <p class="text-xl leading-relaxed text-gray-700">
                     Selamat datang di materi {{ $materi->title }}!
@@ -103,12 +101,12 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
-        </div>
+        </section>
 
         <!-- Materi Utama -->
-        <div id="materi"
+        <section id="materi"
             class="bg-green-50 rounded-2xl border-4 border-green-200 p-8 shadow-lg hover:shadow-xl transition-shadow">
-            <div class="flex items-center gap-4 mb-8">
+            <header class="flex items-center gap-4 mb-8">
                 <span class="bg-green-100 p-4 rounded-xl">
                     <i class="fa-solid fa-book text-green-500 text-3xl"></i>
                 </span>
@@ -119,7 +117,7 @@
                     class="p-4 bg-green-100 rounded-xl hover:bg-green-200 transition-colors">
                     <i class="fa-solid fa-volume-high text-green-500 text-2xl"></i>
                 </button>
-            </div>
+            </header>
             <div class="prose max-w-none bg-white p-6 rounded-xl">
                 <p class="text-xl leading-relaxed text-gray-700">
                     Konten materi utama akan ditampilkan di sini dengan bahasa yang sederhana dan mudah dipahami. 📚
@@ -131,12 +129,12 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
-        </div>
+        </section>
 
         <!-- Latihan -->
-        <div id="latihan"
+        <section id="latihan"
             class="bg-purple-50 rounded-2xl border-4 border-purple-200 p-8 shadow-lg hover:shadow-xl transition-shadow">
-            <div class="flex items-center gap-4 mb-8">
+            <header class="flex items-center gap-4 mb-8">
                 <span class="bg-purple-100 p-4 rounded-xl">
                     <i class="fa-solid fa-pencil text-purple-500 text-3xl"></i>
                 </span>
@@ -147,7 +145,7 @@
                     class="p-4 bg-purple-100 rounded-xl hover:bg-purple-200 transition-colors">
                     <i class="fa-solid fa-volume-high text-purple-500 text-2xl"></i>
                 </button>
-            </div>
+            </header>
             <div class="prose max-w-none bg-white p-6 rounded-xl">
                 <p class="text-xl leading-relaxed text-gray-700">
                     Mari berlatih dengan soal-soal yang menyenangkan! ✏️
@@ -159,6 +157,6 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+    </article>
+</main>

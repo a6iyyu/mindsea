@@ -1,25 +1,33 @@
-<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <i class="fas fa-chart-pie mr-2 text-[#f58a66]"></i>Progress Overview
-        </h3>
-        <canvas id="progressChart"></canvas>
-    </div>
+<main class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <article class="bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
+        <header>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-chart-pie mr-2 text-[#f58a66]"></i>Progress Overview
+            </h3>
+        </header>
+        <figure>
+            <canvas id="progressChart"></canvas>
+        </figure>
+    </article>
 
-    <div
-        class="bg-white p-6 rounded-xl border-4 flex flex-col border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <i class="fas fa-book-open mr-2 text-[#f58a66]"></i>Progress per Mata Pelajaran
-        </h3>
-        <canvas id="subjectProgress"></canvas>
-    </div>
+    <article class="bg-white p-6 rounded-xl border-4 flex flex-col border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
+        <header>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-book-open mr-2 text-[#f58a66]"></i>Progress per Mata Pelajaran
+            </h3>
+        </header>
+        <figure>
+            <canvas id="subjectProgress"></canvas>
+        </figure>
+    </article>
 
-    <div
-        class="lg:col-span-2 bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <i class="fas fa-history mr-2 text-[#f58a66]"></i>Aktivitas Terakhir
-        </h3>
-        <div class="space-y-4">
+    <article class="lg:col-span-2 bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md hover:shadow-lg transition-shadow">
+        <header>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-history mr-2 text-[#f58a66]"></i>Aktivitas Terakhir
+            </h3>
+        </header>
+        <section class="space-y-4">
             @php
                 $activities = [
                     [
@@ -47,26 +55,24 @@
             @endphp
 
             @foreach($activities as $activity)
-                <div
-                    class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <article class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div class="flex items-center">
-                        <div class="bg-{{ $activity['color'] }}-100 p-3 rounded-full mr-4">
+                        <figure class="bg-{{ $activity['color'] }}-100 p-3 rounded-full mr-4">
                             <i class="fas {{ $activity['icon'] }} text-{{ $activity['color'] }}-500"></i>
-                        </div>
+                        </figure>
                         <div>
                             <h4 class="font-semibold text-gray-800">{{ $activity['subject'] }}</h4>
                             <p class="text-sm text-gray-600">{{ $activity['activity'] }}</p>
                         </div>
                     </div>
                     <div class="w-32">
-                        <div class="h-2 bg-gray-200 rounded-full">
-                            <div class="h-2 bg-{{ $activity['color'] }}-500 rounded-full"
-                                style="width: {{ $activity['progress'] }}%"></div>
-                        </div>
+                        <meter class="w-full h-2 bg-gray-200 rounded-full" min="0" max="100" value="{{ $activity['progress'] }}">
+                            <div class="h-2 bg-{{ $activity['color'] }}-500 rounded-full" style="width: {{ $activity['progress'] }}%"></div>
+                        </meter>
                         <p class="text-xs text-gray-500 mt-1 text-right">{{ $activity['progress'] }}%</p>
                     </div>
-                </div>
+                </article>
             @endforeach
-        </div>
-    </div>
-</section>
+        </section>
+    </article>
+</main>

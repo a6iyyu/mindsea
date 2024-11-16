@@ -1,6 +1,6 @@
-<section
+<div
     class="rounded-2xl border-4 border-orange-200 bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-    <div class="flex items-center gap-4 mb-8">
+    <header class="flex items-center gap-4 mb-8">
         <div class="relative">
             <span class="bg-orange-100 p-4 rounded-xl inline-block">
                 <i class="fas fa-chart-bar text-orange-600 text-3xl"></i>
@@ -17,13 +17,13 @@
                 Lihat progres belajarmu sejauh ini
             </p>
         </div>
-    </div>
+    </header>
 
     @auth
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <article
                 class="bg-green-50 p-6 rounded-xl border-2 border-green-200 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-4">
+                <header class="flex items-center gap-4 mb-4">
                     <div
                         class="bg-green-100 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-book-reader text-green-500 text-2xl"></i>
@@ -31,7 +31,7 @@
                     <h3 class="text-lg font-semibold text-gray-700">
                         Materi Selesai
                     </h3>
-                </div>
+                </header>
 
                 <div class="space-y-2">
                     <p class="text-4xl font-bold text-green-600">
@@ -39,11 +39,11 @@
                     </p>
                     <p class="text-sm text-gray-500">materi telah dipelajari</p>
                 </div>
-            </div>
+            </article>
 
-            <div
+            <article
                 class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-4">
+                <header class="flex items-center gap-4 mb-4">
                     <div
                         class="bg-blue-100 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-tasks text-blue-500 text-2xl"></i>
@@ -51,7 +51,7 @@
                     <h3 class="text-lg font-semibold text-gray-700">
                         Latihan Dikerjakan
                     </h3>
-                </div>
+                </header>
 
                 <div class="space-y-2">
                     <p class="text-4xl font-bold text-blue-600">
@@ -59,11 +59,11 @@
                     </p>
                     <p class="text-sm text-gray-500">latihan diselesaikan</p>
                 </div>
-            </div>
+            </article>
 
-            <div
+            <article
                 class="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-4">
+                <header class="flex items-center gap-4 mb-4">
                     <div
                         class="bg-yellow-100 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-star text-yellow-500 text-2xl"></i>
@@ -71,7 +71,7 @@
                     <h3 class="text-lg font-semibold text-gray-700">
                         Nilai Rata-rata
                     </h3>
-                </div>
+                </header>
 
                 <div class="space-y-2">
                     <p class="text-4xl font-bold text-yellow-600">
@@ -80,10 +80,10 @@
                     </p>
                     <p class="text-sm text-gray-500">dari total nilai</p>
                 </div>
-            </div>
-        </div>
+            </article>
+        </main>
     @else
-        <div class="text-center py-12">
+        <main class="text-center py-12">
             <div class="mb-6">
                 <i class="fas fa-lock text-6xl text-orange-400 mb-4 animate-bounce"></i>
             </div>
@@ -105,6 +105,6 @@
                     Daftar
                 </a>
             </div>
-        </div>
+        </main>
     @endauth
-</section>
+</div>

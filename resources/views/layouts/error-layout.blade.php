@@ -20,19 +20,23 @@
 </head>
 
 <body class="bg-amber-50/75">
-    <div class="flex min-h-screen flex-col items-center justify-center px-4">
-        <div class="text-center">
-            <h1 class="mb-4 text-6xl font-bold text-[#f58a66]">
-                {{ explode(':', $judul)[0] }}
-            </h1>
+    <main class="flex min-h-screen flex-col items-center justify-center px-4">
+        <section class="text-center">
+            <header>
+                <h1 class="mb-4 text-6xl font-bold text-[#f58a66]">
+                    {{ explode(':', $judul)[0] }}
+                </h1>
+            </header>
             <p class="mb-8 text-xl text-gray-600">{{ $deskripsi }}</p>
-            <a href="/"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#f58a66] px-6 py-3 text-white transition-colors hover:bg-[#f58a66]/90">
-                <i class="fa-solid fa-home"></i>
-                Kembali ke Beranda
-            </a>
-        </div>
-    </div>
+            <nav>
+                <a href="/"
+                    class="inline-flex items-center gap-2 rounded-lg bg-[#f58a66] px-6 py-3 text-white transition-colors hover:bg-[#f58a66]/90">
+                    <i class="fa-solid fa-home"></i>
+                    Kembali ke Beranda
+                </a>
+            </nav>
+        </section>
+    </main>
 </body>
 
 </html>

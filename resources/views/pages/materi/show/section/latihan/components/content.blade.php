@@ -1,35 +1,51 @@
-<div class="h-fit mt-8 p-6 border-4 bg-white border-purple-200 rounded-xl" role="article">
+<div class="space-y-8">
+    <!-- Konten Latihan -->
+    <div class="bg-orange-50 rounded-2xl border-4 border-orange-200 p-8 shadow-lg hover:shadow-xl transition-shadow"
+        role="article">
+        <header class="flex items-center gap-4 mb-8">
+            <span class="bg-orange-100 p-4 rounded-xl">
+                <i class="fa-solid fa-pencil text-orange-500 text-3xl"></i>
+            </span>
+            <h1 class="text-3xl font-bold text-orange-700">
+                {{ $exercise->title }}
+            </h1>
+            <button onclick="speakText('{{ $exercise->audio_text }}')"
+                class="p-4 bg-orange-100 rounded-xl hover:bg-orange-200 transition-colors" aria-label="Putar audio teks"
+                title="Klik untuk mendengarkan teks">
+                <i class="fa-solid fa-volume-high text-orange-500 text-2xl"></i>
+            </button>
+        </header>
 
-<h1 class="text-4xl font-bold text-purple-900 tracking-wide leading-relaxed" aria-level="1">
-        {{ $exercise->title }}
-    </h1>
-    <div class="prose max-w-none mt-6 text-lg leading-loose text-gray-900"
-        style="font-family: 'Open Sans', sans-serif;">
-        {!! $exercise->content !!}
+        <div class="prose max-w-none bg-white p-6 rounded-xl">
+            <div class="text-xl leading-relaxed text-gray-700">
+                {!! $exercise->content !!}
+            </div>
+        </div>
     </div>
-    <div class="mt-6">
-        <button onclick="speakText('{{ $exercise->audio_text }}')"
-            class="bg-blue-100 p-4 rounded-xl hover:bg-blue-200 focus:ring-4 focus:ring-blue-300 transition-all"
-            aria-label="Putar audio teks" title="Klik untuk mendengarkan teks">
-            <i class="fa-solid fa-volume-high text-blue-600 text-xl"></i>
-            <span class="sr-only">Putar audio</span>
-        </button>
-    </div>
-</div>
 
-<div class="mt-10 flex justify-between items-center">
-    <a href="{{ route('materi.show.main', $materi->id) }}"
-        class="text-blue-600 hover:text-blue-800 text-lg font-medium transition-colors focus:ring-4 focus:ring-blue-300 p-2 rounded"
-        aria-label="Kembali ke materi utama">
-        <i class="fa-solid fa-arrow-left mr-2"></i>
-        <span>Kembali ke Materi Utama</span>
-    </a>
-    <button onclick="completeContent({{ $materi->id }})"
-        class="bg-green-600 text-white px-8 py-4 text-lg font-medium rounded-xl hover:bg-green-700 transition-colors focus:ring-4 focus:ring-green-300"
-        id="complete-btn">
-        Selesai
-        <i class="fa-solid fa-check ml-2"></i>
-    </button>
+    <!-- Navigasi -->
+    <div class="flex justify-between items-center">
+        <a href="{{ route('materi.show.main', $materi->id) }}"
+            class="flex items-center gap-2 text-orange-500 bg-orange-100 rounded-xl px-6 py-4 hover:bg-orange-200 transition-colors"
+            aria-label="Kembali ke materi utama">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Materi Utama</span>
+        </a>
+        <nav class="flex items-center gap-4">
+            <a href="/"
+                class="flex items-center justify-center bg-[#f58a66] text-white w-14 h-14 text-lg font-medium rounded-xl hover:bg-[#f47951] transition-colors focus:ring-4 focus:ring-[#fceede]"
+                aria-label="Kembali ke beranda">
+                <i class="fa-solid fa-home text-2xl"></i>
+            </a>
+            <button onclick="completeContent({{ $materi->id }})"
+                class="flex items-center gap-2 bg-green-600 text-white px-8 py-4 text-lg font-medium rounded-xl hover:bg-green-700 transition-colors focus:ring-4 focus:ring-green-300"
+                id="complete-btn">
+                <span>Selesai</span>
+                <i class="fa-solid fa-check"></i>
+            </button>
+        </nav>
+
+    </div>
 </div>
 
 <script>

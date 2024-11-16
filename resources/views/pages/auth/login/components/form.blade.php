@@ -1,18 +1,18 @@
-<div class="w-full max-w-lg p-8 bg-white rounded-2xl shadow-lg border-2 border-[#f58a66]/20">
+<section class="w-full max-w-lg p-8 bg-white rounded-2xl shadow-lg border-2 border-[#f58a66]/20">
     @if(session('error'))
         <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-500">
             <p class="text-sm text-red-500">{{ session('error') }}</p>
         </div>
     @endif
 
-    <div class="text-center mb-8">
+    <header class="text-center mb-8">
         <h1 class="text-3xl font-bold text-[#3b3b3b]">
             Selamat Datang! 👋
         </h1>
         <p class="text-gray-600 mt-2">
             Masuk untuk melanjutkan petualangan belajarmu
         </p>
-    </div>
+    </header>
 
     <form action="/login" method="POST" class="space-y-6">
         @csrf
@@ -27,15 +27,15 @@
             </div>
         @endif
 
-        <div>
+        <fieldset>
             <label for="email" class="block text-sm font-medium text-gray-700">
                 Email
             </label>
             <input type="email" id="email" name="email" required placeholder="Masukkan email"
                 class="mt-1 block w-full px-4 py-3 bg-[#fceede]/30 border-2 border-[#f58a66]/20 rounded-xl shadow-sm focus:outline-none focus:border-[#f58a66] focus:ring-2 focus:ring-[#f58a66]/20 transition-colors">
-        </div>
+        </fieldset>
 
-        <div>
+        <fieldset>
             <label for="password" class="block text-sm font-medium text-gray-700">
                 Kata Sandi
             </label>
@@ -47,16 +47,16 @@
                     <i class="fa-solid fa-eye" id="password-icon"></i>
                 </button>
             </div>
-        </div>
+        </fieldset>
 
         <div class="flex items-center justify-between">
-            <div class="flex items-center">
+            <fieldset class="flex items-center">
                 <input type="checkbox" id="remember" name="remember"
                     class="h-4 w-4 text-[#f58a66] focus:ring-[#f58a66] border-gray-300 rounded">
                 <label for="remember" class="ml-2 block text-sm text-gray-700">
                     Ingat Saya
                 </label>
-            </div>
+            </fieldset>
             <a href="/lupa-password"
                 class="text-sm font-medium text-[#f58a66] hover:text-[#f58a66]/80 transition-colors">
                 Lupa Kata Sandi?
@@ -68,13 +68,13 @@
             Masuk
         </button>
 
-        <div class="text-center text-gray-600">
+        <footer class="text-center text-gray-600">
             <p>Belum punya akun?
                 <a href="/daftar" class="font-medium text-[#f58a66] hover:text-[#f58a66]/80 transition-colors">
                     Daftar di sini
                 </a>
             </p>
-        </div>
+        </footer>
     </form>
 
     <div class="mt-6">
@@ -87,14 +87,12 @@
             </div>
         </div>
 
-
-
-        <div class="mt-6 grid gap-3">
+        <nav class="mt-6 grid gap-3">
             <a href="/auth/google"
                 class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                 <i class="fab fa-google text-red-500 mr-2"></i>
                 Google
             </a>
-        </div>
+        </nav>
     </div>
-</div>
+</section>
