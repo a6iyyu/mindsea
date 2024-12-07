@@ -37,6 +37,9 @@
 </head>
 
 <body class="mx-auto overflow-x-hidden bg-amber-50/75">
+    <!-- SVG Background -->
+    @include('layouts.forest-background')
+
     @if ($auth ?? true)
         @include('pages.shared.header.header')
     @endif
