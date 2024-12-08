@@ -1,4 +1,4 @@
-<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
     @foreach($materi as $item)
         <article class="rounded-xl border-4 {{ $item->progress && $item->progress->is_completed ? 'border-gray-200 bg-gray-50' : 'border-blue-200 bg-white' }} p-8 shadow-lg transition-all hover:shadow-xl focus-within:ring-4 focus-within:ring-blue-200">
             <header class="mb-6 flex flex-col lg:flex-row items-center justify-between">
