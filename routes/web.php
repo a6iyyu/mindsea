@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ExerciseController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -62,7 +63,9 @@ Route::middleware(['auth.progress'])->group(function () {
         return view('pages.progres-belajar.index');
     })->name('progress');
 
-    Route::get('/latihan-soal', function () {
-        return view('pages.latihan.index');
-    })->name('exercises');
+    Route::get('/latihan-soal', [ExerciseController::class, 'index'])->name('latihan.index');
+    Route::get('/latihan-soal/{section}', [ExerciseController::class, 'showSection'])->name('latihan.section');
+    Route::get('/latihan/{exercise}', [ExerciseController::class, 'show'])->name('latihan.show');
+    Route::post('/latihan/{exercise}/complete', [ExerciseController::class, 'completeExercise'])
+        ->name('latihan.complete');
 });

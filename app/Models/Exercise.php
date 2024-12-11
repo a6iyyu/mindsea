@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Exercise extends Model
 {
-    protected $fillable = ['title', 'description', 'total_question'];
+    protected $fillable = ['title', 'description', 'icon', 'color', 'total_question'];
 
-    public function userExercises(): HasMany
+    public function questions()
     {
-        return $this->hasMany(UserExercise::class);
+        return $this->hasMany(Question::class);
     }
 }
