@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\ChatController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -55,13 +57,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/latihan-soal', [MaterialController::class, 'showExercise'])->name('show.exercise');
         Route::post('/{id}/complete', [MaterialController::class, 'completeContent'])->name('complete');
     });
+
+    Route::post('/chat', [ChatController::class, 'chat'])->name('chat');
 });
 
 // Rute yang memerlukan autentikasi
 Route::middleware(['auth.progress'])->group(function () {
-    Route::get('/progres-belajar', function () {
-        return view('pages.progres-belajar.index');
-    })->name('progress');
+    Route::get('/progres-belajar', [ProgressController::class, 'index'])->name('progress');
 
     Route::get('/latihan-soal', [ExerciseController::class, 'index'])->name('latihan.index');
     Route::get('/latihan-soal/{section}', [ExerciseController::class, 'showSection'])->name('latihan.section');

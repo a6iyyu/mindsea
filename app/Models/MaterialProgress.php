@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MaterialProgress extends Model
 {
+    protected $table = 'material_progress';
     protected $fillable = [
         'user_id',
         'material_id',

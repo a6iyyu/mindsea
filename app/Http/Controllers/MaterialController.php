@@ -91,7 +91,7 @@ class MaterialController extends Controller
 
             if (!$progress->is_completed) {
                 $progress->is_completed = true;
-                $progress->completed_at = Carbon::now();
+                $progress->completed_at = now();
                 $progress->save();
 
                 return response()->json([
