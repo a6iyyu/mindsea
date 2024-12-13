@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Http\Kernel;
 
 define('LARAVEL_START', microtime(true));
 
@@ -12,8 +11,3 @@ require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
 (require_once __DIR__.'/../bootstrap/app.php')->handleRequest(Request::capture());
-
-$app = require_once __DIR__ . "/../bootstrap/app.php";
-$kernel = $app->make(Kernel::class);
-$response = $kernel->handle($request = Request::capture())->send();
-$kernel->terminate($request, $response);
