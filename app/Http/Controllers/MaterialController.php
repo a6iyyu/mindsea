@@ -32,9 +32,19 @@ class MaterialController extends Controller
 
     public function search(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $materi = Material::where('title', 'like', "%$keyword%")->orWhere('description', 'like', "%$keyword%")->get();
-        return response()->json($materi);
+        $keyword = $request->get('keyword');
+        
+        if (!$keyword) {
+            return response()->json([]);
+        }
+
+        $results = Material::where('title', 'like', "%{$keyword}%")
+            ->orWhere('description', 'like', "%{$keyword}%")
+            ->select('id', 'title', 'description')
+            ->limit(5)
+            ->get();
+
+        return response()->json($results);
     }
 
     public function showIntroduction($id)

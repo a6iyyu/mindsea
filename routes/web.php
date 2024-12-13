@@ -7,6 +7,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProfileController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -70,4 +71,10 @@ Route::middleware(['auth.progress'])->group(function () {
     Route::get('/latihan/{exercise}', [ExerciseController::class, 'show'])->name('latihan.show');
     Route::post('/latihan/{exercise}/complete', [ExerciseController::class, 'completeExercise'])
         ->name('latihan.complete');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
