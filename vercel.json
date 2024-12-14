@@ -7,7 +7,7 @@
         { "src": "/build/(.*)", "dest": "/public/build/$1" },
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
-    "buildCommand": "composer install --no-dev --optimize-autoloader && vite build",
+    "buildCommand": "curl -sS https://getcomposer.org/installer | php && php composer.phar install --no-dev --optimize-autoloader && vite build",
     "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
