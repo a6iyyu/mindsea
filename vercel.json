@@ -1,19 +1,19 @@
 {
     "version": 2,
+    "framework": null,
     "functions": {
         "api/index.php": { "runtime": "vercel-php@0.6.0" }
     },
     "routes": [
-        { "src": "/build/(.*)", "dest": "/public/build/$1" },
-        { "src": "/(.*)", "dest": "/api/index.php" }
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
+        }
     ],
-    "buildCommand": "curl -sS https://getcomposer.org/installer | php && php composer.phar install --no-dev --optimize-autoloader && vite build",
-    "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_DEBUG": "true",
         "APP_URL": "https://mindsea.vercel.app",
-        "APP_KEY": "base64:L7cdZDnvolN6aViuX6GEDwjovZnBvyIZCH2EJV3zib4=",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
