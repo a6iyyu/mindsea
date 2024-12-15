@@ -24,11 +24,9 @@ Saat ini, website masih mengalami kendala karena _database_ belum di-_hosting_. 
 
 ---
 
-<br />
-
-<img src="https://github.com/a6iyyu/mindsea/blob/main/public/favicon.ico" alt="Logo" align="center" width="50" />
-
-<br />
+<p align="center">
+<img src="https://github.com/a6iyyu/mindsea/blob/main/public/favicon.ico" alt="Logo" width="150" />
+</p>
 
 <p align="justify">
 <strong>Mindsea</strong> adalah sebuah <i>platform</i> pembelajaran yang dirancang untuk membantu anak-anak berkebutuhan khusus mendapatkan pendidikan yang layak. Kami berharap, dengan adanya <i>platform</i> ini, pendidikan di Indonesia dapat lebih merata tanpa diskriminasi, sesuai dengan cita-cita mencerdaskan kehidupan bangsa sebagaimana tertuang dalam Pembukaan UUD NRI Tahun 1945.
