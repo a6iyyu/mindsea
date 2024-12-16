@@ -22,6 +22,10 @@ Saat ini, website masih mengalami kendala karena _database_ belum di-_hosting_. 
     php artisan serve
     ```
 
+<p align="justify">
+Untuk mengakses akses secara penuh, Anda dapat mengisi pada halaman <i>Login</i> dengan menggunakan <i>email</i> <b>test@example.com</b> dan <i>password</i> 1234.
+</p>
+
 ---
 
 <p align="center">
@@ -64,6 +68,8 @@ Saat ini, website masih mengalami kendala karena _database_ belum di-_hosting_. 
 
 ### Penutup
 
+<p align="justify">
 Mindsea menjadi pilihan alternatif dari sekian banyaknya _platform_ pembelajaran di Indonesia, terlebih lagi mendukung adanya bantuan untuk anak berkebutuhan khusus. Diharapkan dengan adanya _platform_ ini, pembelajaran menjadi lebih menyenangkan dan semua anak di Indonesia mendapatkan pendidikan layak tanpa pandang bulu.
+</p>
 
 **Mindsea? Mencerdaskan dengan Hati!**
