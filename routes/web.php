@@ -11,9 +11,7 @@ use App\Http\Controllers\ProfileController;
 
 // Halaman publik
 Route::get('/', function () {
-
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
-
     return view('pages.dashboard.index', compact('statistics'));
 })->name('home');
 

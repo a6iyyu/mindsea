@@ -11,17 +11,12 @@
         margin: 0;
         padding: 0;
         opacity: 1;
-
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -webkit-touch-callout: none;
     }
 
     ::-webkit-scrollbar {
         display: none !important;
     }
+
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
