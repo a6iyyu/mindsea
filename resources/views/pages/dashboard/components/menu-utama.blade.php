@@ -22,14 +22,14 @@
         <article class="group relative p-8 rounded-2xl border-4 border-{{ $item['warna'] }}-200 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
             <a href="{{ $item['link'] }}">
                 <div class="flex items-center gap-4 mb-6">
-                    <figure class="bg-{{ $item['warna'] }}-100 p-6 rounded-xl">
-                        <i class="fas {{ $item['ikon'] }} text-{{ $item['warna'] }}-600 text-4xl"></i>
+                    <figure class="bg-{{ $item['warna'] }}-100 p-4 rounded-xl lg:p-6">
+                        <i class="fas {{ $item['ikon'] }} text-{{ $item['warna'] }}-600 text-xl lg:text-4xl"></i>
                     </figure>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-3">
+                <h3 class="text-lg font-bold text-gray-800 mb-3 lg:text-2xl">
                     {{ $item['judul'] }}
                 </h3>
-                <h5 class="text-lg text-gray-600">
+                <h5 class="text-base text-gray-600 lg:text-lg">
                     {{ $item['deskripsi'] }}
                 </h5>
                 <div class="mt-4 flex items-center gap-2 text-{{ $item['warna'] }}-600">
