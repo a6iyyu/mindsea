@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\OAuthController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\MaterialController;
@@ -12,24 +13,24 @@ use App\Http\Controllers\ProfileController;
 // Halaman publik
 Route::get('/', function () {
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
-    return view('pages.dashboard.index', compact('statistics'));
+    return view('pages.dashboard', compact('statistics'));
 })->name('home');
 
-Route::get('/tentang-kami', fn() => view('pages.tentang-kami.index'))->name('about');
-Route::get('/dukungan', fn() => view('pages.dukungan.index'))->name('support');
+Route::get('/tentang-kami', fn() => view('pages.tentang-kami'))->name('about');
+Route::get('/dukungan', fn() => view('pages.dukungan'))->name('support');
 Route::get('/chatbot', fn() => view('pages.chatbot.index'))->name('chatbot');
 
 // Rute Auth
 Route::middleware('guest')->group(function () {
     // Rute login
     Route::get('/masuk', function () {
-        return view('pages.auth.login.index');
+        return view('pages.login');
     })->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
     // Rute register
     Route::get('/daftar', function () {
-        return view('pages.auth.register.index');
+        return view('pages.register');
     })->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
@@ -45,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profil', fn() => view('pages.profil.index'))->name('profile');
     Route::get('/preferensi', fn() => view('pages.preferensi.index'))->name('preferences');
-    Route::get('/notifikasi', fn() => view('pages.notifikasi.index'))->name('notifications');
+    Route::get('/notifikasi', fn() => view('pages.notifikasi'))->name('notifications');
 
     Route::prefix('materi')->name('materi.')->group(function () {
         Route::get('/', [MaterialController::class, 'index'])->name('index');
