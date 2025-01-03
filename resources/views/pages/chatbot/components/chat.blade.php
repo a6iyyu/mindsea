@@ -14,7 +14,7 @@
                 rows="3"></textarea>
             
             <button type="submit" 
-                class="absolute right-4 bottom-4 bg-[#f58a66] text-white p-3 rounded-lg hover:bg-[#f58a66]/90 transition-colors disabled:bg-gray-300"
+                class="absolute right-4 bottom-9 bg-[#f58a66] text-white p-3 rounded-lg hover:bg-[#f58a66]/90 transition-colors disabled:bg-gray-300"
                 id="send-button">
                 <i class="fa-solid fa-paper-plane" id="send-icon"></i>
                 <i class="fa-solid fa-spinner fa-spin hidden" id="loading-icon"></i>
@@ -40,11 +40,11 @@ function setLoading(isLoading) {
     loadingIcon.classList.toggle('hidden', !isLoading);
 }
 
-function addMessage(content, isUser = false, isError = false) {
+function addMessage(content, isUser = false, isError = false, retryMessage = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
     
-    messageDiv.innerHTML = `
+    const messageContent = `
         <div class="max-w-[80%] ${isUser ? 'bg-[#f58a66]/10' : isError ? 'bg-red-50' : 'bg-gray-100'} rounded-xl p-4">
             <div class="flex items-center gap-3 mb-2">
                 <span class="font-semibold ${isError ? 'text-red-600' : 'text-gray-800'}">
@@ -52,9 +52,18 @@ function addMessage(content, isUser = false, isError = false) {
                 </span>
             </div>
             <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap">${content}</p>
+            ${isError && retryMessage ? `
+                <button 
+                    onclick="retryMessage('${retryMessage}')" 
+                    class="mt-2 flex items-center gap-2 text-red-600 hover:text-red-700">
+                    <i class="fas fa-redo-alt"></i>
+                    Coba Lagi
+                </button>
+            ` : ''}
         </div>
     `;
     
+    messageDiv.innerHTML = messageContent;
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
@@ -64,10 +73,15 @@ chatForm.addEventListener('submit', async (e) => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    setLoading(true);
-    addMessage(message, true);
+    const lastMessage = message;
     
     try {
+        setLoading(true);
+        addMessage(message, true);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); 
+
         const response = await fetch('/chat', {
             method: 'POST',
             headers: {
@@ -77,30 +91,44 @@ chatForm.addEventListener('submit', async (e) => {
             },
             body: JSON.stringify({
                 message,
-                history: conversationHistory
-            })
+                conversation_id: window.conversationId
+            }),
+            signal: controller.signal
         });
 
+        clearTimeout(timeoutId);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Terjadi kesalahan. Silakan coba lagi.');
+            throw new Error(data.error || 'Terjadi kesalahan saat menghubungi AI. Silakan coba lagi.');
         }
 
-        conversationHistory.push({
-            role: "assistant",
-            content: data.response
-        });
-
+        window.conversationId = data.conversation_id;
         addMessage(data.response);
 
     } catch (error) {
-        console.error('Error:', error);
-        addMessage('Maaf, terjadi kesalahan. Silakan coba lagi.', false, true);
+        console.error('Chat Error:', error);
+        
+        let errorMessage;
+        if (error.name === 'AbortError') {
+            errorMessage = 'Waktu permintaan habis. Silakan coba lagi.';
+        } else {
+            errorMessage = error.message.includes('API') 
+                ? 'Maaf, layanan AI sedang tidak tersedia. Tim kami sedang menangani masalah ini.'
+                : error.message;
+        }
+            
+        addMessage(errorMessage, false, true, lastMessage);
+        
     } finally {
         userInput.value = '';
         setLoading(false);
         userInput.focus();
     }
 });
+
+async function retryMessage(message) {
+    userInput.value = message;
+    await chatForm.dispatchEvent(new Event('submit'));
+}
 </script>

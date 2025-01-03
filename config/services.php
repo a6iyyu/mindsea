@@ -39,4 +39,7 @@ return [
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
         'redirect' => env('GITHUB_REDIRECT_URI', 'http://127.0.0.1:8000/auth/github/callback'),
     ],
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+    ],
 ];

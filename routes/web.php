@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/complete', [MaterialController::class, 'completeContent'])->name('complete');
     });
 
-    Route::post('/chat', [ChatController::class, 'chat'])->name('chat');
+    Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 });
 
 // Rute yang memerlukan autentikasi

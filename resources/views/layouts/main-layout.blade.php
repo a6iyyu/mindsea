@@ -70,6 +70,52 @@
   @endif
 
   {{ $slot }}
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const isHidden = sidebar.classList.contains("-translate-x-full");
+
+      if (isHidden) {
+        sidebar.classList.remove("-translate-x-full");
+        sidebar.classList.add("translate-x-0");
+        mainContainer.classList.remove("ml-0");
+        mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
+      } else {
+        sidebar.classList.remove("translate-x-0");
+        sidebar.classList.add("-translate-x-full");
+        mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
+        mainContainer.classList.add("ml-0");
+      }
+    }
+
+    // document.addEventListener('click', (e) => {
+    //   const sidebar = document.getElementById("sidebar");
+    //   const menuButton = document.querySelector("button[aria-label='Menu']");
+
+    //   if (!sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+    //     sidebar.classList.remove('translate-x-0');
+    //     sidebar.classList.add('-translate-x-full');
+    //     mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
+    //     mainContainer.classList.add("ml-0");
+    //   }
+    // })
+
+    window.addEventListener('resize', () => {
+      const sidebar = document.getElementById("sidebar");
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        mainContainer.classList.remove("ml-0");
+        mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
+      } else {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+        mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
+        mainContainer.classList.add("ml-0");
+      }
+    })
+  </script>
 </body>
 
 </html>
