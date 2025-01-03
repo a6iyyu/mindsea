@@ -9,6 +9,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NotificationController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -59,6 +60,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
 
 // Rute yang memerlukan autentikasi
@@ -77,3 +82,4 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
+
