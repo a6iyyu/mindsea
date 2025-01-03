@@ -7,14 +7,14 @@
         </div>
     </div>
 
-    <div id="content-state" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-        <article class="bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md">
+    <div id="content-state" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 w-full lg:w-[200%] ">
+        <article class="bg-white p-6 rounded-xl border-4 border-[#f58a66]/20 shadow-md w-full">
             <header>
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">
                     <i class="fas fa-chart-pie mr-2 text-[#f58a66]"></i>Progress Overview
                 </h3>
             </header>
-            <figure>
+            <figure class="w-full flex items-center justify-center">
                 <canvas id="progressChart"></canvas>
             </figure>
         </article>

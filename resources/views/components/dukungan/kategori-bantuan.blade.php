@@ -35,12 +35,13 @@
     @endphp
 
     @foreach($categories as $category)
-        <article class="p-6 bg-white rounded-xl border-4 border-[#f58a66]/20 hover:shadow-md transition-all">
+        <a href="{{ route('dukungan.show', Str::slug($category['title'])) }}" 
+            class="p-6 bg-white rounded-xl border-4 border-[#f58a66]/20 hover:shadow-md transition-all">
             <section class="flex items-center gap-4 mb-4">
                 <i class="{{ $category['icon'] }} bg-[#fceede] p-4 rounded-lg text-[#f58a66] text-xl"></i>
                 <h3 class="text-lg font-semibold text-gray-800">{{ $category['title'] }}</h3>
             </section>
             <h5 class="text-gray-600">{{ $category['desc'] }}</h5>
-        </article>
+        </a>
     @endforeach
 </section>

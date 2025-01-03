@@ -10,6 +10,7 @@ use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SupportController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -82,4 +83,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
+
+Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('dukungan.show');
 
