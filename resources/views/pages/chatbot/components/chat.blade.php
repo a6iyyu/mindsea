@@ -51,7 +51,7 @@ function addMessage(content, isUser = false, isError = false, retryMessage = nul
                     ${isUser ? 'Kamu' : 'AI Assistant'}
                 </span>
             </div>
-            <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap">${content}</p>
+            <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap typing-text"></p>
             ${isError && retryMessage ? `
                 <button 
                     onclick="retryMessage('${retryMessage}')" 
@@ -65,7 +65,45 @@ function addMessage(content, isUser = false, isError = false, retryMessage = nul
     
     messageDiv.innerHTML = messageContent;
     chatHistory.appendChild(messageDiv);
+    
+    if (!isUser && !isError) {
+        const textElement = messageDiv.querySelector('.typing-text');
+        animateTyping(textElement, content);
+    } else {
+        messageDiv.querySelector('.typing-text').textContent = content;
+    }
+    
     chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+
+function animateTyping(element, text, delay = 30) {
+    let index = 0;
+    element.textContent = ''; 
+    
+    const typingIndicator = document.createElement('span');
+    typingIndicator.className = 'typing-indicator';
+    typingIndicator.textContent = '|';
+    element.appendChild(typingIndicator);
+
+    const scrollToBottom = () => {
+        const chatHistory = document.getElementById('chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+    
+    const typeNextChar = () => {
+        if (index < text.length) {
+            element.textContent = text.slice(0, index + 1) + '▋';
+            index++;
+            scrollToBottom();
+            setTimeout(typeNextChar, delay);
+        } else {
+            element.textContent = text; 
+            scrollToBottom();
+        }
+    };
+    
+    typeNextChar();
 }
 
 chatForm.addEventListener('submit', async (e) => {
@@ -112,6 +150,8 @@ chatForm.addEventListener('submit', async (e) => {
         let errorMessage;
         if (error.name === 'AbortError') {
             errorMessage = 'Waktu permintaan habis. Silakan coba lagi.';
+        } else if (error.message.includes('Silakan login terlebih dahulu')) {
+            errorMessage = 'Anda harus login untuk menggunakan chatbot. Silakan login dan coba lagi.';
         } else {
             errorMessage = error.message.includes('API') 
                 ? 'Maaf, layanan AI sedang tidak tersedia. Tim kami sedang menangani masalah ini.'

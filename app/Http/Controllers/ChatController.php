@@ -26,7 +26,9 @@ class ChatController extends Controller
 
             // Check if user is authenticated (if required)
             if (!auth()->check()) {
-                throw new \Exception('Silakan login terlebih dahulu.');
+                return response()->json([
+                    'error' => 'Silakan login terlebih dahulu untuk menggunakan chatbot.'
+                ], 401);
             }
 
             $message = $validated['message'];

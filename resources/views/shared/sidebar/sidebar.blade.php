@@ -29,12 +29,6 @@
                     "route" => "/progres-belajar"
                 ],
                 [
-                    "ikon" => "fa-solid fa-book-open-reader", 
-                    "warna" => "text-purple-500", 
-                    "label" => "Preferensi",
-                    "route" => "/preferensi"
-                ],
-                [
                     "ikon" => "fa-solid fa-user", 
                     "warna" => "text-amber-500", 
                     "label" => "Tentang Kami",

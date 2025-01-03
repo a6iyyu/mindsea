@@ -20,7 +20,6 @@ Route::get('/', function () {
 
 Route::get('/tentang-kami', fn() => view('pages.tentang-kami'))->name('about');
 Route::get('/dukungan', fn() => view('pages.dukungan'))->name('support');
-Route::get('/chatbot', fn() => view('pages.chatbot.index'))->name('chatbot');
 
 // Rute Auth
 Route::middleware('guest')->group(function () {
@@ -47,7 +46,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profil', fn() => view('pages.profil.index'))->name('profile');
-    Route::get('/preferensi', fn() => view('pages.preferensi.index'))->name('preferences');
     Route::get('/notifikasi', fn() => view('pages.notifikasi'))->name('notifications');
 
     Route::prefix('materi')->name('materi.')->group(function () {
@@ -60,6 +58,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/complete', [MaterialController::class, 'completeContent'])->name('complete');
     });
 
+    Route::get('/chatbot', fn() => view('pages.chatbot.index'))->name('chatbot');
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
