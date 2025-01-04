@@ -104,6 +104,14 @@ class MaterialController extends Controller
         $progress->completed_at = now();
         $progress->save();
 
+        $material = Material::find($id);
+        $user = Auth::user();
+        $user->logActivity(
+          'Materi Selesai',
+          "{$user->name} telah menyelesaikan materi {$material->title}",
+          'material_completed'
+        );
+
         return response()->json([
           'status' => 'success',
           'message' => 'Materi berhasil diselesaikan'

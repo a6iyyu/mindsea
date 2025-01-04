@@ -11,6 +11,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\Admin\AdminController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -88,7 +89,5 @@ Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('du
 
 // Route Admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
-    Route::get('/', function() {
-        return view('pages.admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });

@@ -73,6 +73,13 @@ class ExerciseController extends Controller
             ]
         );
 
+        $user = Auth::user();
+        $user->logActivity(
+            'Latihan Selesai',
+            "{$user->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}",
+            'exercise_completed'
+        );
+
         return response()->json([
             'status' => 'success',
             'message' => 'Latihan berhasil diselesaikan',

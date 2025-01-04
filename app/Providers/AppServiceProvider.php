@@ -3,6 +3,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\User;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,5 +15,6 @@ class AppServiceProvider extends ServiceProvider
   {
 
     Route::aliasMiddleware('admin', AdminMiddleware::class);
+    User::observe(UserObserver::class);
   }
 }

@@ -36,9 +36,9 @@
                 ],
             ];
         @endphp
-        <ul>
+        <ul class="space-y-6">
             @foreach ($sidebar_items as $item)
-                <li class="flex items-center justify-between mb-4">
+                <li class="flex items-center justify-between mb-2">
                     <a href="{{ $item['route'] }}"
                         class="inline-flex items-center gap-3 hover:translate-x-3 transition-all duration-300 ease-in-out">
                         <i class="{{ $item['ikon'] }} {{ $item['warna'] }} text-2xl" aria-hidden="true"></i>

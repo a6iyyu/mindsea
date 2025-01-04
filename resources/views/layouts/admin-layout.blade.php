@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    class="max-[8192px]:opacity-0 max-[3120px]:opacity-100 max-[3120px]:m-0 max-[3120px]:p-0 max-[3120px]:box-border max-[3120px]:[font-family:'Plus_Jakarta_Sans',Times,sans-serif,serif] max-[324px]:hidden">
 
 <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -21,105 +22,91 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap"
-        rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @media screen and (max-width: 3120px) {
-            ::-webkit-scrollbar {
-                display: none !important;
-            }
-
-            input:-webkit-autofill,
-            input:-webkit-autofill:hover,
-            input:-webkit-autofill:focus,
-            input:-webkit-autofill:active {
-                -webkit-text-fill-color: #374151 !important;
-                -webkit-box-shadow: 0 0 0 30px #fceede inset !important;
-                transition: background-color 5000s ease-in-out 0s;
-                caret-color: #374151;
-                box-shadow: 0 0 0 30px #fceede inset !important;
-            }
-
-            input:autofill {
-                -webkit-text-fill-color: #374151 !important;
-                box-shadow: 0 0 0 30px #fceede inset !important;
-            }
-
-            input[type="search"]::-webkit-search-cancel-button {
-                -webkit-appearance: none;
-                appearance: none;
-            }
-        }
-    </style>
     @viteReactRefresh
     @vite(["resources/js/app.js"])
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>
 
-<body class="bg-amber-100">
-    <header class="fixed left-0 top-0 z-50 h-[4.5rem] w-screen bg-[#f47951] text-white shadow-lg">
-        <div class="mx-auto flex h-full max-w-[95vw] items-center justify-between">
-            <div class="flex items-center gap-4">
-                <span class="text-2xl font-bold flex items-center gap-2">
-                    <i class="fas fa-brain"></i>
-                    Mindsea Admin
-                </span>
+<body class="mx-auto overflow-x-hidden">
+    <!-- Header -->
+    <header class="fixed left-0 top-0 z-50 h-[4.5rem] w-screen border-b-2 border-gray-200 bg-[#fceede] shadow-md">
+        <div class="mx-auto flex h-full max-w-[90vw] items-center justify-between lg:max-w-[96vw]">
+            <!-- Logo dan Menu -->
+            <div class="flex items-center gap-3 lg:gap-6">
+                <button type="button" onclick="toggleSidebar()"
+                    class="rounded-xl p-3 text-gray-600 transition-colors hover:bg-[#f58a66]/10 lg:hidden"
+                    aria-label="Toggle Sidebar">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <a href="/admin" class="flex items-center gap-2">
+                    <i class="fas fa-brain text-[#f58a66] text-2xl"></i>
+                    <span class="hidden text-xl font-bold text-gray-800 lg:inline">Mindsea Admin</span>
+                </a>
             </div>
-            <nav class="flex items-center gap-6">
-                <a href="/" class="hover:text-amber-100 transition-colors flex items-center gap-2">
-                    <i class="fas fa-home"></i> 
-                    <span>Beranda</span>
+
+            <!-- Navigasi -->
+            <nav class="flex items-center gap-4">
+                <a href="/"
+                    class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
+                    <i class="fas fa-home"></i>
+                    <span class="hidden lg:inline">Beranda</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
-                    <button type="submit" class="hover:text-amber-100 transition-colors flex items-center gap-2">
+                    <button type="submit"
+                        class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Keluar</span>
+                        <span class="hidden lg:inline">Keluar</span>
                     </button>
                 </form>
             </nav>
         </div>
     </header>
 
-    <aside class="fixed left-0 top-[4.5rem] h-screen w-64 bg-[#fceede] shadow-lg">
-        <nav class="p-6">
-            <a href="{{ route('admin.dashboard') }}" 
-               class="flex items-center gap-3 p-4 rounded-xl hover:bg-[#f58a66]/10 transition-all group">
-                <i class="fas fa-tachometer-alt text-[#f58a66] group-hover:scale-110 transition-transform"></i>
-                <span class="text-gray-700">Dashboard</span>
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="fixed z-40 left-0 top-0 h-screen w-16 border-r border-gray-200 bg-amber-50 shadow-md transition-all duration-300 ease-in-out md:w-60 lg:w-[16rem]">
+        <nav class="mt-20 flex flex-col gap-2 p-4 text-gray-600">
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-tachometer-alt text-[#f58a66]"></i>
+                <span class="hidden md:inline">Dashboard</span>
             </a>
-            
-            <a href="#" class="flex items-center gap-3 p-4 rounded-xl hover:bg-[#f58a66]/10 transition-all group">
-                <i class="fas fa-users text-[#f58a66] group-hover:scale-110 transition-transform"></i>
-                <span class="text-gray-700">Pengguna</span>
+            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-users text-[#f58a66]"></i>
+                <span class="hidden md:inline">Pengguna</span>
             </a>
-
-            <a href="#" class="flex items-center gap-3 p-4 rounded-xl hover:bg-[#f58a66]/10 transition-all group">
-                <i class="fas fa-book text-[#f58a66] group-hover:scale-110 transition-transform"></i>
-                <span class="text-gray-700">Konten</span>
+            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-book text-[#f58a66]"></i>
+                <span class="hidden md:inline">Konten</span>
             </a>
-
-            <a href="#" class="flex items-center gap-3 p-4 rounded-xl hover:bg-[#f58a66]/10 transition-all group">
-                <i class="fas fa-chart-bar text-[#f58a66] group-hover:scale-110 transition-transform"></i>
-                <span class="text-gray-700">Laporan</span>
+            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-chart-bar text-[#f58a66]"></i>
+                <span class="hidden md:inline">Laporan</span>
             </a>
-
-            <a href="#" class="flex items-center gap-3 p-4 rounded-xl hover:bg-[#f58a66]/10 transition-all group">
-                <i class="fas fa-cog text-[#f58a66] group-hover:scale-110 transition-transform"></i>
-                <span class="text-gray-700">Pengaturan</span>
+            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-cog text-[#f58a66]"></i>
+                <span class="hidden md:inline">Pengaturan</span>
             </a>
         </nav>
     </aside>
 
-    <main class="ml-64 pt-[4.5rem] min-h-screen bg-amber-50/50 p-8">
+    <!-- Main Content -->
+    <main class="ml-16 min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-68 lg:py-28 lg:pr-10 lg:pl-60">
         {{ $slot }}
     </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("-translate-x-full");
+        }
+    </script>
 </body>
 
 </html>

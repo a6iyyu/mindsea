@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
+use App\Models\Material;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MaterialProgress;
 use App\Models\UserExercise;
+use App\Models\User;
 
 class StatisticsController extends Controller
 {
