@@ -12,7 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\Admin\AdminController;
-
+use App\Http\Controllers\Admin\UserController;
 // Halaman publik
 Route::get('/', function () {
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
@@ -88,6 +88,9 @@ Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('du
 
 
 // Route Admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function() {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // User Management Routes - remove duplicate routes and keep only resource
+    Route::resource('users', UserController::class);
 });

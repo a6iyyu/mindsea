@@ -77,7 +77,7 @@
                 <i class="fas fa-tachometer-alt text-[#f58a66]"></i>
                 <span class="hidden md:inline">Dashboard</span>
             </a>
-            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
                 <i class="fas fa-users text-[#f58a66]"></i>
                 <span class="hidden md:inline">Pengguna</span>
             </a>

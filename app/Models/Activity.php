@@ -21,6 +21,8 @@ class Activity extends Model
             'material_added' => 'fa-book',
             'exercise_completed' => 'fa-check-circle',
             'material_completed' => 'fa-graduation-cap',
+            'user_updated' => 'fa-user-pen',
+            'user_deleted' => 'fa-user-xmark',
             default => 'fa-circle-info'
         };
     }
@@ -32,6 +34,8 @@ class Activity extends Model
             'material_added' => 'green',
             'exercise_completed' => 'yellow',
             'material_completed' => 'purple',
+            'user_updated' => 'blue',
+            'user_deleted' => 'red',
             default => 'gray'
         };
     }
