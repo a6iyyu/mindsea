@@ -14,6 +14,10 @@ class AuthenticateProgress
             return redirect('/masuk')->with('error', 'Silakan masuk terlebih dahulu untuk mengakses halaman ini.');
         }
 
+        if ($request->is('admin') && !Auth::user()->is_admin) {
+            return redirect('/masuk')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
         return $next($request);
     }
 } 

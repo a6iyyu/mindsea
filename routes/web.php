@@ -85,3 +85,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('dukungan.show');
 
+
+// Route Admin
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
+    Route::get('/', function() {
+        return view('pages.admin.dashboard');
+    })->name('admin.dashboard');
+});

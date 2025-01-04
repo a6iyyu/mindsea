@@ -35,6 +35,15 @@
                             Profil
                         </a>
                     </li>
+                    @if (Auth::user()->is_admin)
+                    <li>
+                        <a href="/admin"
+                            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[#fceede]/30 transition-colors">
+                            <i class="fa-solid fa-gear text-[#f58a66]"></i>
+                            Admin
+                        </a>
+                    </li>
+                    @endif
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
