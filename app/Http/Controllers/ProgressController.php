@@ -41,7 +41,7 @@ class ProgressController extends Controller
                 ];
             });
 
-        return view('pages.progres-belajar.index', compact(
+        return view('pages.progres-belajar', compact(
             'completedPercentage',
             'inProgressPercentage',
             'notStartedPercentage',

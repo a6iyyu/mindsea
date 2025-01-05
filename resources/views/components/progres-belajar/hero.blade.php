@@ -1,8 +1,8 @@
 <header class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-800">
+    <h1 class="text-xl font-bold text-gray-800 lg:text-4xl">
         Progress Belajar 📊
     </h1>
-    <p class="mt-2 text-lg text-gray-600">
+    <h5 class="mt-2 text-lg text-gray-600">
         Pantau perkembangan belajarmu di sini
-    </p>
+    </h5>
 </header>

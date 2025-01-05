@@ -18,7 +18,7 @@ class ExerciseController extends Controller
         $completedExercises = UserExercise::where('user_id', Auth::id())->count();
         $bestScore = UserExercise::where('user_id', Auth::id())->max('score') ?? 0;
 
-        return view('pages.latihan.index', compact('exercise_lists', 'completedExercises', 'bestScore'));
+        return view('pages.latihan', compact('exercise_lists', 'completedExercises', 'bestScore'));
     }
 
     public function showSection(ExerciseList $section)
@@ -31,7 +31,7 @@ class ExerciseController extends Controller
 
         $questions = $exercise->questions()->paginate(5);
 
-        return view('pages.latihan.section.index', [
+        return view('pages.latihan.content', [
             'exercise' => $section,
             'questions' => $questions
         ]);
@@ -41,7 +41,7 @@ class ExerciseController extends Controller
     {
         $questions = $exercise->questions()->paginate(5);
 
-        return view('pages.latihan.section.index', [
+        return view('pages.latihan.content', [
             'exercise' => $exercise,
             'questions' => $questions
         ]);

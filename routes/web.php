@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/complete', [MaterialController::class, 'completeContent'])->name('complete');
     });
 
-    Route::get('/chatbot', fn() => view('pages.chatbot.index'))->name('chatbot');
+    Route::get('/chatbot', fn() => view('pages.chatbot'))->name('chatbot');
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth.progress'])->group(function () {
     Route::get('/progres-belajar', [ProgressController::class, 'index'])->name('progress');
 
-    Route::get('/latihan-soal', [ExerciseController::class, 'index'])->name('latihan.index');
+    Route::get('/latihan-soal', [ExerciseController::class, 'index'])->name('latihan');
     Route::get('/latihan-soal/{section}', [ExerciseController::class, 'showSection'])->name('latihan.section');
     Route::get('/latihan/{exercise}', [ExerciseController::class, 'show'])->name('latihan.show');
     Route::post('/latihan/{exercise}/complete', [ExerciseController::class, 'completeExercise'])

@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <section class="max-w-4xl relative z-10">
     <article class="bg-white p-8 rounded-xl border-4 border-[#f58a66]/20 shadow-md mb-8">
         <header class="flex items-center gap-4 mb-8">
