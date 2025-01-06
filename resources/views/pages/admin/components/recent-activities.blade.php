@@ -6,7 +6,9 @@
             </div>
             <h2 class="text-xl font-semibold text-gray-800">Aktivitas Terbaru</h2>
         </div>
-        <a href="#" class="text-blue-600 hover:underline text-sm">Lihat Semua</a>
+        <button onclick="showAllActivities()" class="text-blue-600 hover:underline text-sm">
+            Lihat Semua
+        </button>
     </header>
 
     <div class="space-y-4">

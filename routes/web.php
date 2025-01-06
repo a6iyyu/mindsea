@@ -13,6 +13,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ManageMaterial;
+use App\Http\Controllers\Admin\ActivityController;
+
 // Halaman publik
 Route::get('/', function () {
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
@@ -88,9 +91,15 @@ Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('du
 
 
 // Route Admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // User Management Routes - remove duplicate routes and keep only resource
     Route::resource('users', UserController::class);
+
+    // Materials Management
+    Route::resource('materials', ManageMaterial::class);
+
+    Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
+    Route::get('activities/data', [ActivityController::class, 'getActivities'])->name('activities.data');
 });

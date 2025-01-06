@@ -10,7 +10,8 @@ class Material extends Model
   protected $fillable = [
     'title',
     'description',
-    'difficulty_level'
+    'difficulty_level',
+    'is_active'
   ];
 
   public function contents()

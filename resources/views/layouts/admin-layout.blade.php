@@ -77,13 +77,19 @@
                 <i class="fas fa-tachometer-alt text-[#f58a66]"></i>
                 <span class="hidden md:inline">Dashboard</span>
             </a>
-            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+            <a href="{{ route('admin.users.index') }}"
+                class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
                 <i class="fas fa-users text-[#f58a66]"></i>
                 <span class="hidden md:inline">Pengguna</span>
             </a>
-            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+            <a href="{{ route('admin.materials.index') }}"
+                class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
                 <i class="fas fa-book text-[#f58a66]"></i>
-                <span class="hidden md:inline">Konten</span>
+                <span class="hidden md:inline">Materi</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
+                <i class="fas fa-tasks text-[#f58a66]"></i>
+                <span class="hidden md:inline">Latihan Soal</span>
             </a>
             <a href="#" class="flex items-center gap-3 rounded-xl p-4 transition-colors hover:bg-[#f58a66]/10">
                 <i class="fas fa-chart-bar text-[#f58a66]"></i>
@@ -107,6 +113,103 @@
             sidebar.classList.toggle("-translate-x-full");
         }
     </script>
+
+    <button onclick="showActivities()"
+        class="rounded-xl bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 transition-colors">
+        <i class="fas fa-history mr-2"></i>
+        Riwayat Aktivitas
+    </button>
+
+    <script>
+        function showAllActivities() {
+            fetch('/admin/activities/data')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'error') {
+                        throw new Error(result.message);
+                    }
+
+                    const activities = result.data;
+                    
+                    const existingModal = document.getElementById('activityModal');
+                    if (existingModal) {
+                        existingModal.remove();
+                    }
+
+                    // Create modal
+                    const modalContent = document.createElement('div');
+                    modalContent.innerHTML = `
+                        <div id="activityModal" class="fixed inset-0 z-50 overflow-y-auto">
+                            <div class="min-h-screen px-4 text-center">
+                                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                                <div class="inline-block w-full max-w-2xl my-8 p-6 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                                    <h2 class="text-xl font-semibold mb-4">Riwayat Aktivitas</h2>
+                                    <div class="activities-container max-h-[60vh] overflow-y-auto space-y-4 p-2">
+                                    </div>
+                                    <div class="mt-6 flex justify-end">
+                                        <button type="button" onclick="closeModal('activityModal')"
+                                            class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
+                                            Tutup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modalContent);
+
+                    // Populate activities
+                    const activitiesContainer = document.querySelector('.activities-container');
+                    activitiesContainer.innerHTML = activities.map(activity => `
+                        <div class="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-100 transition-colors">
+                            <div class="flex-shrink-0">
+                                ${getActivityIcon(activity.type)}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-medium text-gray-900">${activity.title}</h3>
+                                <p class="text-gray-600">${activity.description}</p>
+                                <time datetime="${activity.created_at}" class="text-sm text-gray-500">
+                                    ${moment(activity.created_at).fromNow()}
+                                </time>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Show modal
+                    const modal = document.getElementById('activityModal');
+                    modal.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat memuat aktivitas');
+                });
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'material_created': '<i class="fas fa-plus-circle text-green-500 text-xl"></i>',
+                'material_updated': '<i class="fas fa-edit text-blue-500 text-xl"></i>',
+                'material_deleted': '<i class="fas fa-trash text-red-500 text-xl"></i>',
+                'material_completed': '<i class="fas fa-check-circle text-green-500 text-xl"></i>'
+            };
+            return icons[type] || '<i class="fas fa-info-circle text-gray-500 text-xl"></i>';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.remove();
+            }
+        }
+    </script>
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/id.js"></script>
+    <script>
+        moment.locale('id');
+    </script>
+
 </body>
 
 </html>
