@@ -9,7 +9,7 @@
     <article class="flex items-center gap-4 bg-blue-50 rounded-xl p-6 border-2 border-blue-100">
         <i class="fa-solid fa-check-circle bg-blue-100 p-3 rounded-lg text-blue-500 text-2xl"></i>
         <span>
-            <h2 class="text-blue-600 text-lg">Soal Selesai</h2>
+            <h2 class="text-blue-600 text-lg">Nilai Tertinggi</h2>
             <p class="text-2xl font-bold text-blue-700"> {{ $bestScore }}</p>
         </span>
     </article>

@@ -18,8 +18,8 @@ class ExerciseList extends Model
     'is_active' => 'boolean'
   ];
 
-  public function exercises()
+  public function exercise()
   {
-    return $this->hasMany(MaterialExercise::class);
+    return $this->hasOne(Exercise::class, 'title', 'title');
   }
 }

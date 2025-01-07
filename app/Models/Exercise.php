@@ -11,4 +11,9 @@ class Exercise extends Model
   {
     return $this->hasMany(Question::class);
   }
+
+  public function exerciseList()
+  {
+    return $this->belongsTo(ExerciseList::class, 'title', 'title');
+  }
 }

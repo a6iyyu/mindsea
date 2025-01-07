@@ -17,21 +17,20 @@
                     "color" => "green",
                     "route" => "admin.materials.index"
                 ],
-                /**[
+                [
                     "title" => "Tambah Latihan",
                     "description" => "Buat soal latihan baru",
                     "icon" => "fa-file-circle-plus",
                     "color" => "purple",
-                    "route" => ""
+                    "route" => "admin.exercises.index"
                 ],
                 [
                     "title" => "Kelola Latihan",
                     "description" => "Atur soal latihan yang ada",
                     "icon" => "fa-file-pen",
                     "color" => "orange",
-                    "route" => ""
+                    "route" => "admin.exercises.index"
                 ]
-                **/
             ];
         @endphp
 

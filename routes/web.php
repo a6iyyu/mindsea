@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ManageMaterial;
 use App\Http\Controllers\Admin\ActivityController;
-
+use App\Http\Controllers\Admin\ManageExerciseController;
 // Halaman publik
 Route::get('/', function () {
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
@@ -101,6 +101,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Materials Management
     Route::resource('materials', ManageMaterial::class);
 
+    // Activity Log
     Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('activities/data', [ActivityController::class, 'getActivities'])->name('activities.data');
+
+    // Exercise Management
+    Route::resource('exercises', ManageExerciseController::class);
 });

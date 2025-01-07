@@ -24,7 +24,7 @@
                     "ikon" => "fas fa-tasks",
                     "warna" => "text-green-500",
                     "label" => "Latihan Soal",
-                    "route" => '#',
+                    "route" => route('admin.exercises.index'),
                 ],
                 [
                     "ikon" => "fas fa-chart-bar",

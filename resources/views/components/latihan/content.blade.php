@@ -32,6 +32,7 @@
                 </button>
             @endforeach
         </ol>
+        <br>
     @endforeach
 </section>
 
