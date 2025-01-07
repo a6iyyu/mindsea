@@ -1,4 +1,4 @@
-<main class="min-h-screen ">
+<main class="min-h-screen">
     <!-- Header -->
     <header class="mb-8">
         <div class="flex items-center justify-between">

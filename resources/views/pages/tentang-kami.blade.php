@@ -1,6 +1,6 @@
 @component("layouts.main-layout", [
-    "judul" => "Tentang Kami | mindsea",
-    "deskripsi" => "",
+    "judul" => "Tentang Kami",
+    "deskripsi" => "Mari kenali lebih jauh tentang tim pengembang dibalik layar mindsea!",
     "halaman_khusus" => false
 ])
 <main class="min-h-screen px-6 pt-28 bg-white lg:ml-12 lg:pr-10 lg:pl-60">

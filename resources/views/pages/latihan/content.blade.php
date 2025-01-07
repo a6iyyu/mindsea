@@ -1,5 +1,5 @@
 @component("layouts.main-layout", [
-    "judul" => "Latihan {$exercise->title} | mindsea",
+    "judul" => "Latihan {$exercise->title}",
     "deskripsi" => $exercise->description,
     "halaman_khusus" => false
 ])

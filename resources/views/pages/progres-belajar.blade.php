@@ -1,5 +1,5 @@
 @component("layouts.main-layout", [
-    "judul" => "Progress Belajar | mindsea",
+    "judul" => "Progres Belajar",
     "deskripsi" => "Pantau perkembangan belajarmu",
     "halaman_khusus" => false
 ])

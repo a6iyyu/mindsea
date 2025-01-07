@@ -49,7 +49,8 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // Rute yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/profil', fn() => view('pages.profil.index'))->name('profile');
+    Route::get('/profil', fn() => view('pages.profil'))->name('profile');
+    Route::get('/profil/edit', fn() => view('pages.profil.edit'))->name('edit');
     Route::get('/notifikasi', fn() => view('pages.notifikasi'))->name('notifications');
 
     Route::prefix('materi')->name('materi.')->group(function () {
@@ -82,8 +83,8 @@ Route::middleware(['auth.progress'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profil/edit', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profil/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 

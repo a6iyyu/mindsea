@@ -1,5 +1,5 @@
 @component("layouts.main-layout", [
-    "judul" => "Beranda | mindsea", 
+    "judul" => "Beranda", 
     "deskripsi" => "Selamat datang di mindsea, platform pembelajaran yang menyediakan berbagai materi informatif untuk Anak Berkebutuhan Khusus.", 
     "halaman_khusus" => false
 ])

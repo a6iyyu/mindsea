@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +11,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        return view('pages.profil.index');
+        return view('pages.profil');
     }
 
     public function update(Request $request)
@@ -23,6 +22,7 @@ class ProfileController extends Controller
             'bio' => ['nullable', 'string', 'max:1000'],
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->update($request->only(['name', 'email', 'bio']));
 

@@ -1,8 +1,10 @@
-@component("layouts.main-layout", ["judul" => "{$content['title']} | Pusat Bantuan mindsea", "deskripsi" => "Bantuan seputar {$content['title']}", "halaman_khusus" => false])
+@component("layouts.main-layout", [
+    "judul" => "{$content['title']}",
+    "deskripsi" => "Bantuan seputar {$content['title']}",
+    "halaman_khusus" => false
+])
 <main class="ml-16 min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-68 lg:pt-28 lg:pr-10 lg:pl-60">
-    <!-- Back Button -->
-    <a href="{{ route('support') }}" 
-        class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-8">
+    <a href="{{ route('support') }}"  class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-8">
         <i class="fas fa-arrow-left"></i>
         <span>Kembali ke Pusat Bantuan</span>
     </a>

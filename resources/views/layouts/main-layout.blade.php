@@ -8,17 +8,16 @@
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=7" />
-  <meta property="og:image" content="" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="index" />
   <meta name="description" content="{{ $deskripsi }}" />
-  <meta property="og:title" content="{{ $judul }}" />
+  <meta property="og:title" content="{{ $judul }} | mindsea" />
   <meta property="og:description" content="{{ $deskripsi }}" />
   <meta property="og:image" content="{{ asset("favicon.ico") }}" />
-  <meta name="twitter:title" content="{{ $judul }}" />
+  <meta name="twitter:title" content="{{ $judul }} | mindsea" />
   <meta name="twitter:description" content="{{ $deskripsi }}" />
   <meta name="twitter:image" content="{{ asset("favicon.ico") }}" />
-  <title>{{ $judul }}</title>
+  <title>{{ $judul }} | mindsea</title>
   <link rel="icon" href="{{ asset("favicon.ico") }}" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -66,7 +65,7 @@
   @endif
 
   @if (!$halaman_khusus)
-    @include("shared.sidebar.sidebar")
+    @include("shared.sidebar.student")
   @endif
 
   {{ $slot }}

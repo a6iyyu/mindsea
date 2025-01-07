@@ -1,9 +1,12 @@
-@component('layouts.admin-layout', ['judul' => 'Admin Dashboard | mindsea', 'deskripsi' => 'Panel admin mindsea'])
-    @include('pages.admin.components.hero')
+@component('layouts.admin-layout', [
+    'judul' => 'Admin Dashboard',
+    'deskripsi' => 'Panel admin mindsea',
+])
+    @include('components.admin.dashboard.hero')
     @if(isset($statistics))
-        @include('pages.admin.components.statistics', ['statistics' => $statistics])
-        @include('pages.admin.components.recent-activities', ['recentActivities' => $statistics['recentActivities']])
-        @include('pages.admin.components.quick-action')
+        @include('components.admin.dashboard.statistics', ['statistics' => $statistics])
+        @include('components.admin.dashboard.recent-activities', ['recentActivities' => $statistics['recentActivities']])
+        @include('components.admin.dashboard.quick-action')
     @else
         <div class="p-6 bg-red-100 text-red-700 rounded-lg">
             <p>Error: Statistics data not available</p>
