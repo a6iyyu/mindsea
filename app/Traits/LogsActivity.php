@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Activity;
+use Illuminate\Support\Facades\Auth;
 
 trait LogsActivity
 {
@@ -12,7 +13,7 @@ trait LogsActivity
             'title' => $title,
             'description' => $description,
             'type' => $type,
-            'user_id' => auth()->id() ?? null,
+            'user_id' => Auth::id() ?? null,
         ]);
     }
 }

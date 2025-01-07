@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -13,7 +15,7 @@ class ChatController extends Controller
     {
         try {
             // Debug incoming request
-            \Log::info('Chat request received', [
+            Log::info('Chat request received', [
                 'message' => $request->input('message'),
                 'conversation_id' => $request->input('conversation_id')
             ]);
@@ -25,7 +27,7 @@ class ChatController extends Controller
             ]);
 
             // Check if user is authenticated (if required)
-            if (!auth()->check()) {
+            if (!Auth::check()) {
                 return response()->json([
                     'error' => 'Silakan login terlebih dahulu untuk menggunakan chatbot.'
                 ], 401);
@@ -36,23 +38,23 @@ class ChatController extends Controller
 
             // Debug API key
             if (!env('GROQ_API_KEY')) {
-                \Log::error('GROQ API key is missing');
+                Log::error('GROQ API key is missing');
                 throw new \Exception('Konfigurasi API tidak ditemukan.');
             }
 
             // Store user message
             try {
                 $chatMessage = ChatMessage::create([
-                    'user_id' => auth()->id(),
+                    'user_id' => Auth::id(),
                     'role' => 'user',
                     'content' => $message,
                     'conversation_id' => $conversationId
                 ]);
 
-                \Log::info('User message stored', ['message_id' => $chatMessage->id]);
+                Log::info('User message stored', ['message_id' => $chatMessage->id]);
 
             } catch (\Exception $e) {
-                \Log::error('Database Error: ' . $e->getMessage());
+                Log::error('Database Error: ' . $e->getMessage());
                 throw new \Exception('Gagal menyimpan pesan ke database.');
             }
 
@@ -71,7 +73,7 @@ class ChatController extends Controller
                     ]);
 
                 if (!$response->successful()) {
-                    \Log::error('API Error Response', [
+                    Log::error('API Error Response', [
                         'status' => $response->status(),
                         'body' => $response->body()
                     ]);
@@ -82,7 +84,7 @@ class ChatController extends Controller
 
                 // Store AI response
                 ChatMessage::create([
-                    'user_id' => auth()->id(),
+                    'user_id' => Auth::id(),
                     'role' => 'assistant',
                     'content' => $assistantResponse,
                     'conversation_id' => $conversationId
@@ -94,12 +96,12 @@ class ChatController extends Controller
                 ]);
 
             } catch (\Exception $e) {
-                \Log::error('API Request Error: ' . $e->getMessage());
+                Log::error('API Request Error: ' . $e->getMessage());
                 throw new \Exception('Gagal berkomunikasi dengan AI: ' . $e->getMessage());
             }
 
         } catch (\Exception $e) {
-            \Log::error('Chat Controller Error: ' . $e->getMessage());
+            Log::error('Chat Controller Error: ' . $e->getMessage());
             return response()->json([
                 'error' => $e->getMessage()
             ], 500);
@@ -125,51 +127,51 @@ class ChatController extends Controller
                     'role' => 'system',
                     'content' => "Kamu adalah asisten pembelajaran AI untuk website mindsea, sebuah platform pembelajaran untuk siswa berkebutuhan khusus. Berikut informasi tentang platform:
 
-TENTANG MINDSEA:
-- Platform pembelajaran interaktif untuk siswa berkebutuhan khusus
-- Motto: 'Mencerdaskan dengan Hati!'
-- Fokus pada pembelajaran yang inklusif dan menyenangkan
+                    TENTANG MINDSEA:
+                    - Platform pembelajaran interaktif untuk siswa berkebutuhan khusus
+                    - Motto: 'Mencerdaskan dengan Hati!'
+                    - Fokus pada pembelajaran yang inklusif dan menyenangkan
 
-FITUR UTAMA:
-1. Materi Pembelajaran
-   - Modul interaktif dengan text-to-speech
-   - Konten visual dan audio yang mendukung
-   - Dapat diakses dengan tombol 'Dengarkan'
+                    FITUR UTAMA:
+                    1. Materi Pembelajaran
+                    - Modul interaktif dengan text-to-speech
+                    - Konten visual dan audio yang mendukung
+                    - Dapat diakses dengan tombol 'Dengarkan'
 
-2. Latihan Soal
-   - Soal-soal untuk menguji pemahaman
-   - Sistem penilaian otomatis
-   - Tips pembelajaran setiap hari
+                    2. Latihan Soal
+                    - Soal-soal untuk menguji pemahaman
+                    - Sistem penilaian otomatis
+                    - Tips pembelajaran setiap hari
 
-3. Progres Belajar
-   - Pelacakan kemajuan pembelajaran
-   - Penanda materi yang sudah selesai
-   - Notifikasi pencapaian
+                    3. Progres Belajar
+                    - Pelacakan kemajuan pembelajaran
+                    - Penanda materi yang sudah selesai
+                    - Notifikasi pencapaian
 
-PANDUAN INTERAKSI:
-1. Berikan jawaban yang sederhana dan mudah dipahami
-2. Gunakan bahasa yang ramah, positif, dan mendukung
-3. Jika siswa kesulitan, berikan petunjuk bertahap
-4. Fokus pada penguatan konsep dasar
-5. Berikan apresiasi untuk setiap usaha siswa
-6. Jika ada yang tidak dipahami, minta penjelasan dengan sopan
-7. Gunakan analogi sederhana dari kehidupan sehari-hari
-8. Hindari istilah teknis yang rumit
-9. Berikan semangat dan motivasi dalam setiap respons
-10. Ingatkan untuk beristirahat jika terlihat kesulitan
+                    PANDUAN INTERAKSI:
+                    1. Berikan jawaban yang sederhana dan mudah dipahami
+                    2. Gunakan bahasa yang ramah, positif, dan mendukung
+                    3. Jika siswa kesulitan, berikan petunjuk bertahap
+                    4. Fokus pada penguatan konsep dasar
+                    5. Berikan apresiasi untuk setiap usaha siswa
+                    6. Jika ada yang tidak dipahami, minta penjelasan dengan sopan
+                    7. Gunakan analogi sederhana dari kehidupan sehari-hari
+                    8. Hindari istilah teknis yang rumit
+                    9. Berikan semangat dan motivasi dalam setiap respons
+                    10. Ingatkan untuk beristirahat jika terlihat kesulitan
 
-BANTUAN NAVIGASI:
-- Jika ditanya cara menggunakan fitur, jelaskan dengan detail
-- Informasikan tentang fitur text-to-speech untuk membantu pemahaman
-- Arahkan ke menu yang sesuai dengan kebutuhan siswa
-- Ingatkan tentang fitur bantuan dan dukungan yang tersedia
+                    BANTUAN NAVIGASI:
+                    - Jika ditanya cara menggunakan fitur, jelaskan dengan detail
+                    - Informasikan tentang fitur text-to-speech untuk membantu pemahaman
+                    - Arahkan ke menu yang sesuai dengan kebutuhan siswa
+                    - Ingatkan tentang fitur bantuan dan dukungan yang tersedia
 
-Selalu prioritaskan pemahaman dan kenyamanan siswa dalam belajar. Jika ada pertanyaan teknis, arahkan ke menu Dukungan untuk bantuan lebih lanjut."
+                    Selalu prioritaskan pemahaman dan kenyamanan siswa dalam belajar. Jika ada pertanyaan teknis, arahkan ke menu Dukungan untuk bantuan lebih lanjut."
                 ]
             ], $messages);
 
         } catch (\Exception $e) {
-            \Log::error('Error getting conversation history: ' . $e->getMessage());
+            Log::error('Error getting conversation history: ' . $e->getMessage());
             throw new \Exception('Gagal mengambil riwayat percakapan.');
         }
     }

@@ -7,6 +7,7 @@ use App\Models\ExerciseList;
 use App\Models\UserExercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class ExerciseController extends Controller
 {
     public function index()
