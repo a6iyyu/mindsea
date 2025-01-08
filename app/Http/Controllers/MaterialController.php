@@ -16,7 +16,12 @@ class MaterialController extends Controller
       }
     ])->get();
 
-    return view('pages.materi', compact('materi'));
+    $totalMateri = $materi->count();
+    $completedMateri = $materi->filter(function($item) {
+        return $item->progress && $item->progress->is_completed;
+    })->count();
+
+    return view('pages.materi', compact('materi', 'totalMateri', 'completedMateri'));
   }
 
   public function show($id)

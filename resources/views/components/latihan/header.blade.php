@@ -4,7 +4,7 @@
         <i class="fa-solid fa-star absolute -top-2 -right-2 bg-blue-100 p-2 rounded-full text-blue-500"></i>
     </span>
     <span>
-        <h2 class="text-4xl font-bold text-gray-800 animate-pulse">Latihan Soal 📝</h2>
+        <h2 class="text-4xl font-bold text-gray-800">Latihan Soal 📝</h2>
         <h5 class="mt-3">
             Yuk, asah kemampuanmu dengan mengerjakan soal-soal seru!
         </h5>

@@ -1,4 +1,13 @@
 <header class="bg-{{ $exercise->color }}-50 rounded-2xl border-4 border-{{ $exercise->color }}-200 p-8 shadow-lg">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2 text-{{ $exercise->color }}-600">
+            <i class="fa-solid fa-clock"></i>
+            <span id="timer" class="font-medium text-lg"></span>
+        </div>
+        <div class="text-{{ $exercise->color }}-600">
+            <span id="progress">0</span>/<span>{{ count($questions) }}</span> Soal
+        </div>
+    </div>
     <a
         href="{{ route('latihan') }}"
         class="flex items-center gap-2 text-{{ $exercise->color }}-500 bg-{{ $exercise->color }}-100 rounded-xl w-fit px-4 py-3 hover:bg-{{ $exercise->color }}-200 transition-colors"
@@ -47,11 +56,45 @@
 </footer>
 
 <script>
+    const totalQuestions = {{ count($questions) }};
+    const totalSeconds = totalQuestions * 5 * 60;
+    let timeRemaining = totalSeconds;
+    let timerInterval;
+
+    function startTimer() {
+        const timerDisplay = document.getElementById('timer');
+        
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeRemaining === 300) {
+                alert('Sisa waktu 5 menit!');
+            } else if (timeRemaining === 60) {
+                alert('Sisa waktu 1 menit!');
+            } else if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert('Waktu habis! Latihan akan diselesaikan otomatis.');
+                submitExercise();
+            }
+        }, 1000);
+    }
+
+    function updateProgress() {
+        const answered = Object.keys(answers).length;
+        document.getElementById('progress').textContent = answered;
+    }
+
     let answers = {};
     const exerciseId = `{{ $exercise->id }}`;
 
     function checkAnswer(selected, correct, element, questionId) {
         answers[questionId] = selected;
+        updateProgress();
         const buttons = element.parentElement.querySelectorAll('button');
         buttons.forEach(btn => {
             btn.disabled = true;
@@ -88,4 +131,6 @@
                 alert('Terjadi kesalahan saat mengirim jawaban');
             });
     }
+
+    document.addEventListener('DOMContentLoaded', startTimer);
 </script>

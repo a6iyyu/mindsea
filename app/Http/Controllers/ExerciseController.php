@@ -32,9 +32,12 @@ class ExerciseController extends Controller
 
         $questions = $exercise->questions()->paginate(5);
 
+        $timeLimit = count($questions) * 5;
+
         return view('pages.latihan.content', [
             'exercise' => $section,
-            'questions' => $questions
+            'questions' => $questions,
+            'timeLimit' => $timeLimit
         ]);
     }
 

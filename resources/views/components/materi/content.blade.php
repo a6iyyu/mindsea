@@ -62,7 +62,7 @@
     <!-- Pengenalan -->
     <figure
       id="pengenalan"
-      class="bg-blue-50 rounded-2xl border-4 border-blue-200 p-8 shadow-lg hover:shadow-xl transition-shadow"
+      class="materi-item bg-blue-50 rounded-2xl border-4 border-blue-200 p-8 shadow-lg hover:shadow-xl transition-shadow"
     >
       <header class="flex gap-4 mb-8 flex-col-reverse items-start lg:flex-row lg:items-center">
         <i class="fa-solid fa-circle-play hidden text-blue-500 text-2xl bg-blue-100 p-4 rounded-xl lg:inline"></i>
