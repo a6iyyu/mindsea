@@ -49,9 +49,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // Rute yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/profil', fn() => view('pages.profil'))->name('profile');
-    Route::get('/profil/edit', fn() => view('pages.profil.edit'))->name('edit');
-    Route::get('/notifikasi', fn() => view('pages.notifikasi'))->name('notifications');
+    Route::prefix('profil')->name('profil.')->middleware('auth')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+    });
 
     Route::prefix('materi')->name('materi.')->group(function () {
         Route::get('/', [MaterialController::class, 'index'])->name('index');
@@ -66,9 +69,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/chatbot', fn() => view('pages.chatbot'))->name('chatbot');
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/notifikasi/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+        Route::post('/notifikasi/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+        Route::get('/notifikasi/unread-count', [NotificationController::class, 'getUnreadCount']);
+        Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi.index');
+        Route::delete('/notifikasi/delete-all', [NotificationController::class, 'deleteAll']);
+    });
 });
 
 // Rute yang memerlukan autentikasi
@@ -82,19 +89,13 @@ Route::middleware(['auth.progress'])->group(function () {
         ->name('latihan.complete');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profil/edit', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('/profil/edit', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-});
-
 Route::get('/dukungan/{category}', [SupportController::class, 'show'])->name('dukungan.show');
 
 
 // Route Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // User Management Routes - remove duplicate routes and keep only resource
     Route::resource('users', UserController::class);
 
@@ -108,3 +109,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Exercise Management
     Route::resource('exercises', ManageExerciseController::class);
 });
+

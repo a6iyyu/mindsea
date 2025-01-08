@@ -11,5 +11,12 @@ use Illuminate\Support\Facades\Auth;
             <h5 class="italic text-slate-700/50">{{ Auth::user()->bio }}</h5>
         </div>
     </article>
-    <a href="/profil/edit" class="px-6 py-3 bg-[#f58a66] text-white rounded-lg hover:bg-[#f47951] transition-colors focus:ring-4 focus:ring-[#fceede]">Edit Perubahan</a>
+
+    <!-- Konek Google -->
+    <div class="flex flex-col gap-4 sm:flex-row">
+        <a href="{{ route('profil.edit') }}" 
+           class="px-6 py-3 bg-[#f58a66] text-white rounded-lg hover:bg-[#f47951] transition-colors focus:ring-4 focus:ring-[#fceede] text-center">
+            <i class="fa-solid fa-edit mr-2"></i>Edit Profil
+        </a>
+    </div>
 </section>

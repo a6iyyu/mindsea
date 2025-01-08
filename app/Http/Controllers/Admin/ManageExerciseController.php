@@ -8,9 +8,12 @@ use App\Models\Question;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Exercise;
+use App\Traits\NotificationHelper;
 
 class ManageExerciseController extends Controller
 {
+    use NotificationHelper;
+
     public function index()
     {
         $exercises = ExerciseList::with('exercise.questions')
@@ -65,8 +68,16 @@ class ManageExerciseController extends Controller
 
             auth()->user()->logActivity(
                 'Latihan Baru Ditambahkan',
-                'Admin telah membuat laithan baru: {$exerciseList->title}',
+                "Admin telah membuat latihan baru: {$exerciseList->title}",
                 'exercise_created'
+            );
+
+            $this->sendNotification(
+                'Latihan Baru Tersedia',
+                "Latihan baru telah ditambahkan: {$exerciseList->title}",
+                'exercise_added',
+                'fa-pencil',
+                'purple'
             );
 
             return redirect()->route('admin.exercises.index')
@@ -93,20 +104,25 @@ class ManageExerciseController extends Controller
         try {
             DB::beginTransaction();
 
-            $exercise->update([
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'icon' => $validated['icon'],
-                'color' => $validated['color'],
-            ]);
-
             $exerciseModel = Exercise::where('title', $exercise->title)->first();
+            
+            if (!$exerciseModel) {
+                throw new \Exception('Exercise not found');
+            }
+
             $exerciseModel->update([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'icon' => $validated['icon'],
                 'color' => $validated['color'],
                 'total_question' => count($validated['questions']),
+            ]);
+
+            $exercise->update([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'icon' => $validated['icon'],
+                'color' => $validated['color'],
             ]);
 
             $exerciseModel->questions()->delete();
@@ -123,12 +139,20 @@ class ManageExerciseController extends Controller
 
             auth()->user()->logActivity(
                 'Latihan Diubah',
-                'Admin telah mengubah latihan: {$exercise->title}',
+                "Admin telah mengubah latihan: {$validated['title']}",
                 'exercise_updated'
             );
 
+            $this->sendNotification(
+                'Latihan Diperbarui',
+                "Latihan telah diperbarui: {$validated['title']}",
+                'exercise_updated',
+                'fa-edit',
+                'blue'
+            );
+
             return redirect()->route('admin.exercises.index')
-            ->with('success', 'Latihan berhasil diubah');
+                ->with('success', 'Latihan berhasil diubah');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal mengubah latihan: ' . $e->getMessage());
@@ -151,8 +175,16 @@ class ManageExerciseController extends Controller
 
             auth()->user()->logActivity(
                 'Latihan Dihapus',
-                'Admin telah menghapus latihan: {$exercise->title}',
+                "Admin telah menghapus latihan: {$exercise->title}",
                 'exercise_deleted'
+            );
+
+            $this->sendNotification(
+                'Latihan Dihapus',
+                "Latihan telah dihapus: {$exercise->title}",
+                'exercise_deleted',
+                'fa-trash',
+                'red'
             );
 
             return redirect()->route('admin.exercises.index')

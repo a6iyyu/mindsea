@@ -1,12 +1,29 @@
 @component("layouts.main-layout", [
     "judul" => "Edit Profil",
     "deskripsi" => "",
+    "halaman_khusus" => false
 ])
 @php
     use Illuminate\Support\Facades\Auth;
 @endphp
 
-<section class="max-w-4xl relative z-10">
+<section class="min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-12 lg:py-28 lg:pr-10 lg:pl-60">
+    @if(session('success'))
+        <div class="mb-8 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <article class="bg-white p-8 rounded-xl border-4 border-[#f58a66]/20 shadow-md mb-8">
         <header class="flex items-center gap-4 mb-8">
             <i class="fa-solid fa-user text-2xl text-[#f58a66] bg-[#fceede] p-4 rounded-xl"></i>
@@ -15,7 +32,7 @@
             </h2>
         </header>
 
-        <form action="{{ route('profile.update') }}" method="post" class="space-y-6">
+        <form action="{{ route('profil.update') }}" method="post" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -56,7 +73,7 @@
             <h2 class="text-2xl font-bold text-gray-800">Ubah Password</h2>
         </header>
 
-        <form action="{{ route('profile.password') }}" method="post" class="space-y-6">
+        <form action="{{ route('profil.password') }}" method="post" class="space-y-6">
             @csrf
             @method('PUT')
 

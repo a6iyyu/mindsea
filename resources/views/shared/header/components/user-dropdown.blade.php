@@ -29,7 +29,7 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="/profil"
+                        <a href="{{ route('profil.index') }}"
                             class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[#fceede]/30 transition-colors">
                             <i class="fa-solid fa-user text-[#f58a66]"></i>
                             Profil

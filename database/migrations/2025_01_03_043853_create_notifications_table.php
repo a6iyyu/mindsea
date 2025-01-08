@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('type');
-            $table->string('icon');
-            $table->string('color');
             $table->string('title');
-            $table->string('message');
+            $table->text('message');
+            $table->string('icon')->nullable();
+            $table->string('color')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });

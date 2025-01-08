@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\NotificationHelper;
 
 class ManageMaterial extends Controller
 {
+    use NotificationHelper;
+
     public function index()
     {
         $materials = Material::with(['contents'])->latest()->paginate(10);
@@ -49,6 +52,14 @@ class ManageMaterial extends Controller
                 'material_created'
             );
 
+            $this->sendNotification(
+                'Materi Baru Tersedia',
+                "Materi baru telah ditambahkan: {$material->title}",
+                'material_added',
+                'fa-book',
+                'green'
+            );
+
             return redirect()->route('admin.materials.index')
                 ->with('success', 'Materi berhasil dibuat');
         } catch (\Exception $e) {
@@ -80,7 +91,6 @@ class ManageMaterial extends Controller
         try {
             DB::beginTransaction();
             
-            // Store old values for comparison
             $oldTitle = $material->title;
             $oldDescription = $material->description;
             $oldContents = $material->contents()->get()->toArray();
@@ -92,7 +102,6 @@ class ManageMaterial extends Controller
                 'difficulty_level' => $validated['difficulty_level'],
             ]);
 
-            // Update contents
             foreach ($validated['contents'] as $content) {
                 if (isset($content['id'])) {
                     $material->contents()->where('id', $content['id'])->update($content);
@@ -103,7 +112,6 @@ class ManageMaterial extends Controller
 
             DB::commit();
 
-            // Determine what changed and create appropriate message
             $changes = [];
             
             if ($oldTitle !== $validated['title']) {
@@ -114,7 +122,6 @@ class ManageMaterial extends Controller
                 $changes[] = "deskripsi materi '{$material->title}'";
             }
 
-            // Check if any content changed
             $contentChanged = false;
             foreach ($validated['contents'] as $newContent) {
                 if (isset($newContent['id'])) {
@@ -132,7 +139,6 @@ class ManageMaterial extends Controller
                 $changes[] = "konten materi '{$material->title}'";
             }
 
-            // Create log message based on changes
             if (count($changes) > 0) {
                 $message = "Admin telah memperbarui " . implode(', ', $changes);
             } else {
@@ -143,6 +149,14 @@ class ManageMaterial extends Controller
                 'Materi Diperbarui',
                 $message,
                 'material_updated'
+            );
+
+            $this->sendNotification(
+                'Materi Diperbarui',
+                "Materi telah diperbarui: {$material->title}",
+                'material_updated',
+                'fa-edit',
+                'blue'
             );
 
             return redirect()->route('admin.materials.index')
@@ -158,10 +172,8 @@ class ManageMaterial extends Controller
         try {
             DB::beginTransaction();
             
-            // Delete all related contents first
             $material->contents()->delete();
             
-            // Then delete the material
             $material->delete();
             
             DB::commit();
@@ -170,6 +182,14 @@ class ManageMaterial extends Controller
                 'Materi Dihapus',
                 "Admin telah menghapus materi: {$material->title}",
                 'material_deleted'
+            );
+
+            $this->sendNotification(
+                'Materi Dihapus',
+                "Materi telah dihapus: {$material->title}",
+                'material_deleted',
+                'fa-trash',
+                'red'
             );
 
             return redirect()->route('admin.materials.index')

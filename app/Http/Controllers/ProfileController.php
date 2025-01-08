@@ -42,4 +42,9 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Password berhasil diperbarui');
     }
+
+    public function edit()
+    {
+        return view('pages.profil.edit');
+    }
 }

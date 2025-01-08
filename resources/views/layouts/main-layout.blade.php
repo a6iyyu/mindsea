@@ -57,7 +57,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>
 
-<body class="mx-auto overflow-x-hidden">
+<body class="{{ auth()->check() ? 'auth' : '' }}">
   @include("layouts.forest-background")
 
   @if ($auth ?? true)
