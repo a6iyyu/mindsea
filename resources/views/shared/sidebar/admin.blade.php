@@ -30,14 +30,14 @@
                     "ikon" => "fas fa-chart-bar",
                     "warna" => "text-amber-500",
                     "label" => "Laporan",
-                    "route" => '#',
+                    "route" => route('admin.reports.index'),
                 ],
-                [
+                /**[
                     "ikon" => "fas fa-cog",
                     "warna" => "text-yellow-500",
                     "label" => "Pengaturan",
                     "route" => '#',
-                ],
+                ],*/
             ];
         @endphp
         <ul class="space-y-6">

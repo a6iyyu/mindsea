@@ -4,7 +4,7 @@
 ])
     @include('components.admin.dashboard.hero')
     @if(isset($statistics))
-        @include('components.admin.dashboard.statistics', ['statistics' => $statistics])
+        @include('components.admin.dashboard.statistic-header')
         @include('components.admin.dashboard.recent-activities', ['recentActivities' => $statistics['recentActivities']])
         @include('components.admin.dashboard.quick-action')
     @else

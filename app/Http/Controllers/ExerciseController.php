@@ -66,30 +66,39 @@ class ExerciseController extends Controller
 
         $score = ($correctAnswer / $totalQuestion) * 100;
 
-        $userExercise = UserExercise::updateOrCreate(
-            [
+        $existingExercise = UserExercise::where([
+            'user_id' => Auth::id(),
+            'exercise_id' => $exercise->id,
+        ])->first();
+
+        if (!$existingExercise) {
+            UserExercise::create([
                 'user_id' => Auth::id(),
                 'exercise_id' => $exercise->id,
-            ],
-            [
                 'score' => $score,
                 'completed_at' => now(),
-            ]
-        );
+            ]);
 
-        $user = Auth::user();
-        $user->logActivity(
-            'Latihan Selesai',
-            "{$user->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}",
-            'exercise_completed'
-        );
+            $user = Auth::user();
+            $user->logActivity(
+                'Latihan Selesai',
+                "{$user->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}",
+                'exercise_completed'
+            );
+        }
+
+        $finalScore = $existingExercise ? $existingExercise->score : $score;
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Latihan berhasil diselesaikan',
-            'score' => $score,
+            'message' => $existingExercise ?
+                'Latihan selesai. Nilai yang ditampilkan adalah nilai terbaik Anda sebelumnya.' :
+                'Latihan berhasil diselesaikan',
+            'score' => $finalScore,
             'correct_answer' => $correctAnswer,
             'total_question' => $totalQuestion,
         ]);
     }
+
+
 }

@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ManageMaterial;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\ManageExerciseController;
+use App\Http\Controllers\Admin\ReportsController;
+
 // Halaman publik
 Route::get('/', function () {
     $statistics = Auth::check() ? (new StatisticsController())->getStatistics() : [];
@@ -101,6 +103,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Materials Management
     Route::resource('materials', ManageMaterial::class);
+    Route::post('/admin/materials/{material}/toggle-status', [ManageMaterial::class, 'toggle'])->name('admin.materials.toggle');
 
     // Activity Log
     Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
@@ -108,5 +111,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Exercise Management
     Route::resource('exercises', ManageExerciseController::class);
+    Route::post('/admin/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggle'])
+        ->name('admin.exercises.toggle-status');
+
+    // Reports
+    Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
 });
 

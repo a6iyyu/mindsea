@@ -90,7 +90,7 @@ class ManageMaterial extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $oldTitle = $material->title;
             $oldDescription = $material->description;
             $oldContents = $material->contents()->get()->toArray();
@@ -113,11 +113,11 @@ class ManageMaterial extends Controller
             DB::commit();
 
             $changes = [];
-            
+
             if ($oldTitle !== $validated['title']) {
                 $changes[] = "judul dari '{$oldTitle}' menjadi '{$validated['title']}'";
             }
-            
+
             if ($oldDescription !== $validated['description']) {
                 $changes[] = "deskripsi materi '{$material->title}'";
             }
@@ -126,9 +126,11 @@ class ManageMaterial extends Controller
             foreach ($validated['contents'] as $newContent) {
                 if (isset($newContent['id'])) {
                     $oldContent = collect($oldContents)->firstWhere('id', $newContent['id']);
-                    if ($oldContent && 
-                        ($oldContent['content'] !== $newContent['content'] || 
-                         $oldContent['title'] !== $newContent['title'])) {
+                    if (
+                        $oldContent &&
+                        ($oldContent['content'] !== $newContent['content'] ||
+                            $oldContent['title'] !== $newContent['title'])
+                    ) {
                         $contentChanged = true;
                         break;
                     }
@@ -171,11 +173,11 @@ class ManageMaterial extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $material->contents()->delete();
-            
+
             $material->delete();
-            
+
             DB::commit();
 
             auth()->user()->logActivity(
@@ -199,6 +201,5 @@ class ManageMaterial extends Controller
             return back()->with('error', 'Terjadi kesalahan saat menghapus materi');
         }
     }
-
 }
 

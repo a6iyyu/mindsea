@@ -1,6 +1,6 @@
 <main class="container mx-auto">
     <header class="mb-8 flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-800">Kelola Materi</h2>
+        <h2 class="text-3xl font-bold text-gray-800">Kelola Materi</h2>
         <button onclick="openModal('addMaterialModal')"
             class="rounded-xl bg-blue-500 px-6 py-3 text-white hover:bg-blue-600 transition-colors">
             <i class="fas fa-plus mr-2"></i>
@@ -30,14 +30,14 @@
                         <td class="px-6 py-4">{{ $material->title }}</td>
                         <td class="px-6 py-4">
                             <span class="rounded-full px-3 py-1 text-sm
-                                @if($material->difficulty_level === 'mudah')
-                                    bg-green-100 text-green-700
-                                @elseif($material->difficulty_level === 'sedang')
-                                    bg-yellow-100 text-yellow-700
-                                @else
-                                    bg-red-100 text-red-700
-                                @endif
-                            ">
+                                        @if($material->difficulty_level === 'mudah')
+                                            bg-green-100 text-green-700
+                                        @elseif($material->difficulty_level === 'sedang')
+                                            bg-yellow-100 text-yellow-700
+                                        @else
+                                            bg-red-100 text-red-700
+                                        @endif
+                                    ">
                                 {{ ucfirst($material->difficulty_level) }}
                             </span>
                         </td>
@@ -50,12 +50,12 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <button onclick='editMaterial(@json($material->id), @json($material->title), @json($material->description), @json($material->difficulty_level), @json($material->contents))'
+                                <button
+                                    onclick='editMaterial(@json($material->id), @json($material->title), @json($material->description), @json($material->difficulty_level), @json($material->contents))'
                                     class="text-blue-500 hover:text-blue-600">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <form action="{{ route('admin.materials.destroy', $material) }}" 
-                                    method="POST" 
+                                <form action="{{ route('admin.materials.destroy', $material) }}" method="POST"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus materi ini?')"
                                     class="inline">
                                     @csrf
@@ -81,46 +81,46 @@
 </main>
 
 <script>
-function editMaterial(id, title, description, difficulty_level, contents) {
-    const form = document.getElementById('editMaterialForm');
-    form.action = `/admin/materials/${id}`;
-    
-    document.getElementById('edit_title').value = title;
-    document.getElementById('edit_description').value = description;
-    document.getElementById('edit_difficulty_level').value = difficulty_level;
-    
-    contents.forEach(content => {
-        const sectionType = content.section_type;
-        switch(sectionType) {
-            case 'pengenalan':
-                document.getElementById('edit_introduction_id').value = content.id;
-                document.getElementById('edit_introduction_title').value = content.title;
-                document.getElementById('edit_introduction_content').value = content.content;
-                document.getElementById('edit_introduction_audio').value = content.audio_text || '';
-                break;
-            case 'materi_utama':
-                document.getElementById('edit_main_id').value = content.id;
-                document.getElementById('edit_main_title').value = content.title;
-                document.getElementById('edit_main_content').value = content.content;
-                document.getElementById('edit_main_audio').value = content.audio_text || '';
-                break;
-            case 'latihan':
-                document.getElementById('edit_exercise_id').value = content.id;
-                document.getElementById('edit_exercise_title').value = content.title;
-                document.getElementById('edit_exercise_content').value = content.content;
-                document.getElementById('edit_exercise_audio').value = content.audio_text || '';
-                break;
-        }
-    });
-    
-    openModal('editMaterialModal');
-}
+    function editMaterial(id, title, description, difficulty_level, contents) {
+        const form = document.getElementById('editMaterialForm');
+        form.action = `/admin/materials/${id}`;
 
-function openModal(modalId) {
-    document.getElementById(modalId).classList.remove('hidden');
-}
+        document.getElementById('edit_title').value = title;
+        document.getElementById('edit_description').value = description;
+        document.getElementById('edit_difficulty_level').value = difficulty_level;
 
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-}
+        contents.forEach(content => {
+            const sectionType = content.section_type;
+            switch (sectionType) {
+                case 'pengenalan':
+                    document.getElementById('edit_introduction_id').value = content.id;
+                    document.getElementById('edit_introduction_title').value = content.title;
+                    document.getElementById('edit_introduction_content').value = content.content;
+                    document.getElementById('edit_introduction_audio').value = content.audio_text || '';
+                    break;
+                case 'materi_utama':
+                    document.getElementById('edit_main_id').value = content.id;
+                    document.getElementById('edit_main_title').value = content.title;
+                    document.getElementById('edit_main_content').value = content.content;
+                    document.getElementById('edit_main_audio').value = content.audio_text || '';
+                    break;
+                case 'latihan':
+                    document.getElementById('edit_exercise_id').value = content.id;
+                    document.getElementById('edit_exercise_title').value = content.title;
+                    document.getElementById('edit_exercise_content').value = content.content;
+                    document.getElementById('edit_exercise_audio').value = content.audio_text || '';
+                    break;
+            }
+        });
+
+        openModal('editMaterialModal');
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
 </script>

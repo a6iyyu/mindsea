@@ -42,4 +42,8 @@ class User extends Authenticatable
     'password' => 'hashed',
     'is_admin' => 'boolean',
   ];
+  public function activities()
+  {
+    return $this->hasMany(Activity::class);
+  }
 }

@@ -1,6 +1,6 @@
 <main class="container mx-auto">
     <header class="mb-8 flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-800">Kelola Latihan</h2>
+        <h2 class="text-3xl font-bold text-gray-800">Kelola Latihan</h2>
         <button onclick="openModal('addExerciseModal')"
             class="rounded-xl bg-blue-500 px-6 py-3 text-white hover:bg-blue-600 transition-colors">
             <i class="fas fa-plus mr-2"></i>

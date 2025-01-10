@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800">Kelola Pengguna</h1>
             <a href="{{ route('admin.users.create') }}" 
-               class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+               class="rounded-xl bg-blue-500 px-6 py-3 text-white hover:bg-blue-600 transition-colors">
                 <i class="fas fa-plus"></i>
                 <span>Tambah Pengguna</span>
             </a>
