@@ -19,7 +19,7 @@
        border-{{ $notification->color }}-100 bg-{{ $notification->color }}-50 
        {{ $notification->is_read ? 'opacity-75' : '' }} lg:flex-row">
       <figure class="rounded-full bg-{{ $notification->color }}-100 p-3">
-      <i class="{{ $notification->icon }} text-{{ $notification->color }}-500 text-xl"></i>
+        <i class="{{ $notification->icon }} text-{{ $notification->color }}-500 text-2xl"></i>
       </figure>
       <div class="flex-1">
       <header class="flex flex-col items-start justify-between lg:items-center lg:flex-row">

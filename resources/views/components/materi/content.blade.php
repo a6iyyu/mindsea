@@ -6,7 +6,7 @@
       <figure class="bg-blue-50 rounded-2xl border-4 border-blue-200 p-6 shadow-lg hover:shadow-xl transition-shadow">
         <header class="mb-6 flex items-center justify-between gap-3">
           <h4 class="text-2xl font-bold text-blue-700">Daftar Isi</h4>
-          <i onclick="SpeakText('Daftar Isi')"
+          <i onclick="SpeakText('Daftar Isi, pengenalan materi, materi utama, latihan')"
             class="fa-solid fa-volume-high text-blue-500 text-xl p-3 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors cursor-pointer"></i>
         </header>
         <nav class="flex flex-col gap-4 bg-transparent rounded-xl transition-all lg:gap-2 lg:bg-white">
@@ -31,9 +31,18 @@
 
       <!-- Text Size Settings -->
       <figure class="bg-pink-50 rounded-2xl border-4 border-pink-200 p-6 shadow-lg">
-        <header class="flex items-center gap-3 mb-6">
-          <i class="fa-solid fa-universal-access text-pink-500 text-2xl bg-pink-100 p-3 rounded-xl"></i>
-          <h3 class="text-xl font-bold text-pink-700">Pengaturan</h3>
+        <header class="flex items-center justify-between mb-6 w-full">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-universal-access text-pink-500 text-2xl bg-pink-100 p-3 rounded-xl"></i>
+            <h3 class="text-xl font-bold text-pink-700">Pengaturan</h3>
+          </div>
+          <button 
+            onclick="SpeakText('Pengaturan ukuran teks, klik tombol minus atau kurang untuk memperkecil teks, klik tombol plus atau tambah untuk memperbesar teks')"
+            class="flex items-center justify-center bg-pink-100 text-pink-500 text-xl p-3 rounded-xl hover:bg-pink-200 transition-colors"
+            aria-label="Dengarkan petunjuk pengaturan ukuran teks"
+          >
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
         </header>
         <section class="flex items-center gap-2">
           <button onclick="adjustFontSize('decrease')"
@@ -61,7 +70,7 @@
         <h2 class="text-xl font-bold text-blue-700 lg:text-3xl">
           Pengenalan
         </h2>
-        <button onclick="SpeakText('Pengenalan. ' + document.querySelector('#pengenalan .prose p').textContent)"
+        <button onclick="SpeakText('Pengenalan. ' + document.querySelector('#pengenalan .prose h5').textContent + ' ' + document.querySelector('#pengenalan .prose a').textContent)"
           class="p-4 bg-blue-100 rounded-xl hover:bg-blue-200 transition-colors">
           <i class="fa-solid fa-volume-high text-blue-500 text-base lg:text-xl"></i>
         </button>
@@ -87,7 +96,7 @@
         <h2 class="text-xl font-bold text-green-700 lg:text-3xl">
           Materi Utama
         </h2>
-        <button onclick="SpeakText('Materi Utama. ' + document.querySelector('#materi .prose p').textContent)"
+        <button onclick="SpeakText('Materi Utama. ' + document.querySelector('#materi .prose p').textContent + ' ' + document.querySelector('#materi .prose a').textContent)"
           class="p-4 bg-green-100 rounded-xl hover:bg-green-200 transition-colors">
           <i class="fa-solid fa-volume-high text-green-500 text-2xl"></i>
         </button>
@@ -112,7 +121,7 @@
         <h2 class="text-xl font-bold text-purple-700 lg:text-3xl">
           Latihan
         </h2>
-        <button onclick="SpeakText('Latihan. ' + document.querySelector('#latihan .prose p').textContent)"
+        <button onclick="SpeakText('Latihan. ' + document.querySelector('#latihan .prose h5').textContent + ' ' + document.querySelector('#latihan .prose a').textContent)"
           class="p-4 bg-purple-100 rounded-xl hover:bg-purple-200 transition-colors">
           <i class="fa-solid fa-volume-high text-purple-500 text-2xl"></i>
         </button>

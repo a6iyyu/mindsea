@@ -1,11 +1,17 @@
 <!-- Materi Pembelajaran -->
-<section class="flex flex-col gap-4 lg:flex-row lg:items-center mb-12">
+<section class="flex flex-col gap-4 lg:flex-row lg:items-center mb-4">
   <i class="fa-solid fa-book-open w-fit bg-[#fceede] p-4 rounded-xl text-[#f58a66] text-3xl" aria-hidden="true"></i>
   <div>
     <h2 class="text-xl font-bold text-gray-800 lg:text-4xl">Materi Pembelajaran 📚</h2>
     <h5 class="mt-2 text-xl text-gray-600">Pilih materi yang ingin kamu pelajari</h5>
   </div>
 </section>
+<button
+  onclick="window.SpeakText('Materi Pembelajaran, Pilih materi yang ingin kamu pelajari, total materi: {{ $totalMateri }}, materi selesai: {{ $completedMateri }} dari {{ $totalMateri }} materi, progress belajar: {{ round(($completedMateri / $totalMateri) * 100) }}% dari total materi')"
+  class="mt-4 mb-4 flex items-center gap-2 px-4 py-2 transform rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">
+  <i class="fas fa-volume-up" aria-hidden="true"></i>
+  <h4>Dengarkan</h4>
+</button>
 
 <!-- Statistik Pembelajaran -->
 <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -18,7 +24,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="bg-green-100 rounded-xl p-6 border-2 border-green-200/20">
     <div class="flex items-center gap-3">
       <i class="fa-solid fa-check-circle bg-green-50 p-3 rounded-lg text-green-500 text-xl"></i>
@@ -28,7 +34,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="bg-blue-100 rounded-xl p-6 border-2 border-blue-200/20">
     <div class="flex items-center gap-3">
       <i class="fa-solid fa-trophy bg-blue-50 p-3 rounded-lg text-blue-500 text-xl"></i>
@@ -39,5 +45,3 @@
     </div>
   </div>
 </section>
-
-

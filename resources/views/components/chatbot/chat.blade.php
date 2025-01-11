@@ -43,31 +43,46 @@
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
 
+        const listenButtonHtml = !isUser && !isError ? `
+            <button 
+                onclick="window.SpeakText(this.parentElement.querySelector('.typing-text').textContent)"
+                class="mt-4 flex items-center gap-2 px-4 py-2 transform rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors hidden listen-button"
+            >
+                <i class="fas fa-volume-up"></i>
+                <span>Dengarkan</span>
+            </button>
+        ` : '';
+
         const messageContent = `
-        <div class="max-w-[80%] ${isUser ? 'bg-[#f58a66]/10' : isError ? 'bg-red-50' : 'bg-gray-100'} rounded-xl p-4">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="font-semibold ${isError ? 'text-red-600' : 'text-gray-800'}">
-                    ${isUser ? 'Kamu' : 'Mindsea Assistant'}
-                </span>
+            <div class="max-w-[80%] ${isUser ? 'bg-[#f58a66]/10' : isError ? 'bg-red-50' : 'bg-gray-100'} rounded-xl p-4">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="font-semibold ${isError ? 'text-red-600' : 'text-gray-800'}">
+                        ${isUser ? 'Kamu' : 'Mindsea Assistant'}
+                    </span>
+                </div>
+                <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap typing-text"></p>
+                ${listenButtonHtml}
+                ${isError && retryMessage ? `
+                    <button 
+                        onclick="retryMessage('${retryMessage}')" 
+                        class="mt-2 flex items-center gap-2 text-red-600 hover:text-red-700">
+                        <i class="fas fa-redo-alt"></i>
+                        Coba Lagi
+                    </button>
+                ` : ''}
             </div>
-            <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap typing-text"></p>
-            ${isError && retryMessage ? `
-                <button 
-                    onclick="retryMessage('${retryMessage}')" 
-                    class="mt-2 flex items-center gap-2 text-red-600 hover:text-red-700">
-                    <i class="fas fa-redo-alt"></i>
-                    Coba Lagi
-                </button>
-            ` : ''}
-        </div>
-    `;
+        `;
 
         messageDiv.innerHTML = messageContent;
         chatHistory.appendChild(messageDiv);
 
         if (!isUser && !isError) {
             const textElement = messageDiv.querySelector('.typing-text');
-            animateTyping(textElement, content);
+            const listenButton = messageDiv.querySelector('.listen-button');
+            
+            animateTyping(textElement, content, 30, () => {
+                listenButton.classList.remove('hidden');
+            });
         } else {
             messageDiv.querySelector('.typing-text').textContent = content;
         }
@@ -75,20 +90,9 @@
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-
-    function animateTyping(element, text, delay = 30) {
+    function animateTyping(element, text, delay = 30, onComplete = null) {
         let index = 0;
         element.textContent = '';
-
-        const typingIndicator = document.createElement('span');
-        typingIndicator.className = 'typing-indicator';
-        typingIndicator.textContent = '|';
-        element.appendChild(typingIndicator);
-
-        const scrollToBottom = () => {
-            const chatHistory = document.getElementById('chat-history');
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
 
         const typeNextChar = () => {
             if (index < text.length) {
@@ -99,10 +103,16 @@
             } else {
                 element.textContent = text;
                 scrollToBottom();
+                if (onComplete) onComplete();
             }
         };
 
         typeNextChar();
+    }
+
+    function scrollToBottom() {
+        const chatHistory = document.getElementById('chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
     chatForm.addEventListener('submit', async (e) => {

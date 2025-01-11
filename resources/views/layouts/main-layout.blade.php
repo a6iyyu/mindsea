@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html
-  lang="{{ str_replace("_", "-", app()->getLocale()) }}"
-  class="max-[8192px]:opacity-0 max-[3120px]:opacity-100 max-[3120px]:m-0 max-[3120px]:p-0 max-[3120px]:box-border max-[3120px]:[font-family:'Plus_Jakarta_Sans',Times,sans-serif,serif] max-[324px]:hidden"
->
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}"
+  class="max-[8192px]:opacity-0 max-[3120px]:opacity-100 max-[3120px]:m-0 max-[3120px]:p-0 max-[3120px]:box-border max-[3120px]:[font-family:'Plus_Jakarta_Sans',Times,sans-serif,serif] max-[324px]:hidden">
 
 <head>
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -21,9 +19,12 @@
   <link rel="icon" href="{{ asset("favicon.ico") }}" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -32,6 +33,7 @@
       ::-webkit-scrollbar {
         display: none !important;
       }
+
       input:-webkit-autofill,
       input:-webkit-autofill:hover,
       input:-webkit-autofill:focus,
@@ -42,10 +44,12 @@
         caret-color: #374151;
         box-shadow: 0 0 0 30px #fceede inset !important;
       }
+
       input:autofill {
         -webkit-text-fill-color: #374151 !important;
         box-shadow: 0 0 0 30px #fceede inset !important;
       }
+
       input[type="search"]::-webkit-search-cancel-button {
         -webkit-appearance: none;
         appearance: none;
@@ -102,6 +106,56 @@
         mainContainer.classList.add("ml-0");
       }
     })
+  </script>
+
+  <script>
+    const defaultOptions = {
+      lang: 'id-ID',
+      rate: 0.9,
+      pitch: 1,
+      volume: 1,
+      onEnd: () => console.log('Selesai membaca teks'),
+      onError: (error) => console.error('Text-to-Speech Error:', error)
+    };
+
+    let isSpeaking = false;
+
+    function speakText(text, customOptions = {}) {
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        return;
+      }
+
+      if (!('speechSynthesis' in window)) {
+        console.error('Browser tidak mendukung Text-to-Speech');
+        alert('Maaf, browser Anda tidak mendukung fitur Text-to-Speech');
+        return;
+      }
+
+      const options = { ...defaultOptions, ...customOptions };
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      utterance.lang = options.lang;
+      utterance.rate = options.rate;
+      utterance.pitch = options.pitch;
+      utterance.volume = options.volume;
+
+      utterance.onstart = () => {
+        isSpeaking = true;
+      };
+
+      utterance.onend = () => {
+        isSpeaking = false;
+        options.onEnd();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    window.SpeakText = (text, options = {}) => {
+      speakText(text, options);
+    }; 
   </script>
 </body>
 

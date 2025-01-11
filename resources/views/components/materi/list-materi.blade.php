@@ -26,9 +26,15 @@
       {{ $item->title }}
       </h3>
       <h5
-      class="mb-8 text-base leading-relaxed {{ $item->progress && $item->progress->is_completed ? 'text-gray-500' : 'text-gray-600' }} lg:text-lg">
+      class="mb-2 text-base leading-relaxed {{ $item->progress && $item->progress->is_completed ? 'text-gray-500' : 'text-gray-600' }} lg:text-lg">
       {{ $item->description }}
       </h5>
+
+      <button onclick="window.SpeakText('{{ $item->title }}, {{ $item->description }}, tingkat kesulitan: {{ $item->difficulty_level }}, {{ $item->progress ? 'Sudah selesai ' . $item->progress->completed_at->diffForHumans(['locale' => 'id']) . ', Apakah anda ingin mengulangi materi ini lagi?' : '' }}')"
+      class="mb-2 flex items-center gap-2 px-4 py-2 transform rounded-lg {{$item->progress && $item->progress->is_completed ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors'}}">
+      <i class="fas fa-volume-up transition-all duration-300" aria-hidden="true"></i>
+      <h4>Dengarkan</h4>
+      </button>
     </section>
 
     <footer>
@@ -38,7 +44,7 @@
       <i class="fa-solid fa-check-circle"></i>
       <span>Sudah Selesai</span>
       <time datetime="{{ $item->progress->completed_at }}"
-      class="text-sm">({{ $item->progress->completed_at->diffForHumans() }})</time>
+      class="text-sm">({{ $item->progress->completed_at->diffForHumans(['locale' => 'id']) }})</time>
       </div>
       <a href="{{ route('materi.show', $item->id) }}"
       class="flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">

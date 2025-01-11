@@ -1,13 +1,3 @@
-// Fungsi Text-to-Speech
-function speakText(text) {
-    if ("speechSynthesis" in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "id-ID";
-        utterance.rate = 0.9;
-        speechSynthesis.speak(utterance);
-    }
-}
-
 // Fungsi untuk memperbesar teks
 function adjustFontSize(direction) {
     const root = document.documentElement;

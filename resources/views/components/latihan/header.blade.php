@@ -10,3 +10,10 @@
         </h5>
     </span>
 </header>
+
+<button
+        onclick="window.SpeakText('Latihan Soal, Yuk, asah kemampuanmu dengan mengerjakan soal-soal seru! Soal selesai: {{ $completedExercises }}, nilai tertinggi: {{ $bestScore }}')"
+        class="mt-4 mb-4 flex items-center gap-2 px-4 py-2 transform rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">
+        <i class="fas fa-volume-up" aria-hidden="true"></i>
+      <h4>Dengarkan</h4>
+</button>
