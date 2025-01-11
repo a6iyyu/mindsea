@@ -47,7 +47,7 @@
         <div class="max-w-[80%] ${isUser ? 'bg-[#f58a66]/10' : isError ? 'bg-red-50' : 'bg-gray-100'} rounded-xl p-4">
             <div class="flex items-center gap-3 mb-2">
                 <span class="font-semibold ${isError ? 'text-red-600' : 'text-gray-800'}">
-                    ${isUser ? 'Kamu' : 'AI Assistant'}
+                    ${isUser ? 'Kamu' : 'Mindsea Assistant'}
                 </span>
             </div>
             <p class="${isError ? 'text-red-600' : 'text-gray-700'} whitespace-pre-wrap typing-text"></p>

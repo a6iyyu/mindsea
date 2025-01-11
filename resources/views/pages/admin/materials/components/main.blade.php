@@ -42,11 +42,11 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="rounded-full px-3 py-1 text-sm
+                            <a onclick="toggleAktif({{ $material->id }})" class="rounded-full px-3 py-1 text-sm cursor-pointer
                                 {{ $material->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}
                             ">
                                 {{ $material->is_active ? 'Aktif' : 'Nonaktif' }}
-                            </span>
+                            </a>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
@@ -122,5 +122,31 @@
 
     function closeModal(modalId) {
         document.getElementById(modalId).classList.add('hidden');
+    }
+
+    function toggleAktif(id) {
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(`/admin/materials/${id}/toggle-aktif`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== undefined) {
+                    const statusElement = document.querySelector(`a[onclick="toggleAktif(${id})"]`);
+                    if (statusElement) {
+                        statusElement.textContent = data.status ? 'Aktif' : 'Nonaktif';
+                        statusElement.classList.remove(data.status ? 'bg-gray-100' : 'bg-green-100');
+                        statusElement.classList.remove(data.status ? 'text-gray-700' : 'text-green-700');
+                        statusElement.classList.add(data.status ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700');
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
     }
 </script>

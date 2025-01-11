@@ -104,6 +104,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Materials Management
     Route::resource('materials', ManageMaterial::class);
     Route::post('/admin/materials/{material}/toggle-status', [ManageMaterial::class, 'toggle'])->name('admin.materials.toggle');
+    Route::post('/admin/materials/{material}/toggle-aktif', [ManageMaterial::class, 'toggleAktif'])->name('admin.materials.toggle-aktif')->middleware('auth', 'admin');
 
     // Activity Log
     Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');

@@ -38,6 +38,18 @@ class NotificationController extends Controller
                         $notification->icon = 'fa-trash';
                         $notification->color = 'red';
                         break;
+                    case 'user_added':
+                        $notification->icon = 'fa-user-plus';
+                        $notification->color = 'green';
+                        break;
+                    case 'user_deleted':
+                        $notification->icon = 'fa-user-minus';
+                        $notification->color = 'red';
+                        break;
+                    case 'user_updated':
+                        $notification->icon = 'fa-user-edit';
+                        $notification->color = 'blue';
+                        break;
                     default:
                         $notification->icon = 'fa-bell';
                         $notification->color = 'blue';

@@ -15,7 +15,7 @@
       <div class="flex items-center gap-4 text-base">
       <span
         class="flex items-center gap-2 {{ $item->progress && $item->progress->is_completed ? 'text-gray-500' : 'text-gray-600' }}">
-        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-circle-info"></i>
         {{ $item->difficulty_level }}
       </span>
       </div>

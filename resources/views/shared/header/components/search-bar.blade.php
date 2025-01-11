@@ -30,7 +30,7 @@ searchInput.addEventListener('keydown', (e) => {
 searchInput.addEventListener('input', debounce(async (e) => {
     const keyword = e.target.value;
     
-    if (keyword.length < 2) {
+    if (keyword.length < 1) {
         searchResults.classList.add('hidden');
         return;
     }

@@ -7,6 +7,7 @@ use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\NotificationHelper;
+use Exception;
 
 class ManageMaterial extends Controller
 {
@@ -200,6 +201,24 @@ class ManageMaterial extends Controller
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan saat menghapus materi');
         }
+    }
+
+    public function toggleAktif(Material $material)
+    {
+        try {
+            $material->update(['is_active' => !$material->is_active]);
+            return response()->json([
+                'success' => true,
+                'status' => $material->is_active,
+                'message' => $material->is_active ? 'Materi diaktifkan' : 'Materi dinonaktifkan'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengubah status materi: ' . $e->getMessage()
+            ], 500);
+        }
+
     }
 }
 

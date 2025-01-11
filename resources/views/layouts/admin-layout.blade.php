@@ -79,7 +79,7 @@
             <nav class="flex items-center gap-4">
                 <a href="/" class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
                     <i class="fas fa-home"></i>
-                    <span class="hidden lg:inline">Beranda</span>
+                    <span class="hidden lg:inline">User View</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
@@ -182,7 +182,14 @@
                 'material_created': '<i class="fas fa-plus-circle text-green-500 text-xl"></i>',
                 'material_updated': '<i class="fas fa-edit text-blue-500 text-xl"></i>',
                 'material_deleted': '<i class="fas fa-trash text-red-500 text-xl"></i>',
-                'material_completed': '<i class="fas fa-check-circle text-green-500 text-xl"></i>'
+                'material_completed': '<i class="fas fa-check-circle text-green-500 text-xl"></i>',
+                'user_registered': '<i class="fas fa-user-plus text-green-500 text-xl"></i>',
+                'user_updated': '<i class="fas fa-user-pen text-blue-500 text-xl"></i>',
+                'user_deleted': '<i class="fas fa-user-xmark text-red-500 text-xl"></i>',
+                'exercise_completed': '<i class="fas fa-check-circle text-green-500 text-xl"></i>',
+                'exercise_created': '<i class="fas fa-plus-circle text-green-500 text-xl"></i>',
+                'exercise_updated': '<i class="fas fa-edit text-blue-500 text-xl"></i>',
+                'exercise_deleted': '<i class="fas fa-trash text-red-500 text-xl"></i>'
             };
             return icons[type] || '<i class="fas fa-info-circle text-gray-500 text-xl"></i>';
         }
