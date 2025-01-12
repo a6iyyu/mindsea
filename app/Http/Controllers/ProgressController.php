@@ -14,12 +14,8 @@ class ProgressController extends Controller
         
         // Hitung persentase progress
         $totalMaterials = Material::count();
-        $completedMaterials = MaterialProgress::where('user_id', $user->id)
-            ->where('is_completed', true)
-            ->count();
-            
-        $completedPercentage = ($totalMaterials > 0) ? 
-            round(($completedMaterials / $totalMaterials) * 100) : 0;
+        $completedMaterials = MaterialProgress::where('user_id', $user->id)->where('is_completed', true)->count();
+        $completedPercentage = ($totalMaterials > 0) ? round(($completedMaterials / $totalMaterials) * 100) : 0;
         
         $inProgressPercentage = 35; // Contoh statis, sesuaikan dengan logika aplikasi
         $notStartedPercentage = 100 - ($completedPercentage + $inProgressPercentage);

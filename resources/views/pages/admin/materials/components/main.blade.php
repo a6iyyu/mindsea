@@ -1,7 +1,7 @@
 <main class="container mx-auto">
     <header class="mb-8 flex items-center justify-between">
         <h2 class="text-3xl font-bold text-gray-800">Kelola Materi</h2>
-        <button onclick="openModal('addMaterialModal')"
+        <button onclick="open_modal('add_material_modal')"
             class="rounded-xl bg-blue-500 px-6 py-3 text-white hover:bg-blue-600 transition-colors">
             <i class="fas fa-plus mr-2"></i>
             Tambah Materi
@@ -42,7 +42,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <a onclick="toggleAktif({{ $material->id }})" class="rounded-full px-3 py-1 text-sm cursor-pointer
+                            <a onclick="toggleAktif('{{ $material->id }}')" class="rounded-full px-3 py-1 text-sm cursor-pointer
                                 {{ $material->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}
                             ">
                                 {{ $material->is_active ? 'Aktif' : 'Nonaktif' }}
@@ -113,15 +113,15 @@
             }
         });
 
-        openModal('editMaterialModal');
+        open_modal('edit_material_modal');
     }
 
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.remove('hidden');
+    function open_modal(id_modal) {
+        document.getElementById(id_modal).classList.remove('hidden');
     }
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
+    function close_modal(id_modal) {
+        document.getElementById(id_modal).classList.add('hidden');
     }
 
     function toggleAktif(id) {

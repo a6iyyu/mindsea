@@ -6,7 +6,7 @@
             <div class="relative w-full max-w-2xl rounded-xl bg-white p-8 shadow-lg">
                 <div class="mb-6 flex items-center justify-between">
                     <h3 class="text-2xl font-bold text-gray-800">{{ $title }}</h3>
-                    <button onclick="closeModal('{{ $id }}')" class="text-gray-500 hover:text-gray-700">
+                    <button onclick="close_modal('{{ $id }}')" class="text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>

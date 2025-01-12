@@ -1,7 +1,7 @@
 @component('pages.admin.materials.components.modal', ['id' => 'activityModal', 'title' => 'Riwayat Aktivitas'])
-    <div class="max-h-[60vh] overflow-y-auto space-y-4 p-2">
+    <section class="max-h-[60vh] overflow-y-auto space-y-4 p-2">
         @foreach($activities as $activity)
-            <div class="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-100 transition-colors">
+            <article class="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-100 transition-colors">
                 <div class="flex-shrink-0">
                     @switch($activity->type)
                         @case('material_created')
@@ -27,13 +27,12 @@
                         {{ $activity->created_at->diffForHumans() }}
                     </time>
                 </div>
-            </div>
+            </article>
         @endforeach
-    </div>
-    <div class="mt-6 flex justify-end">
-        <button type="button" onclick="closeModal('activityModal')"
-            class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
+    </section>
+    <footer class="mt-6 flex justify-end">
+        <button type="button" onclick="close_modal('activityModal')" class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
             Tutup
         </button>
-    </div>
-@endcomponent 
+    </footer>
+@endcomponent

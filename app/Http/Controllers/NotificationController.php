@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::where('user_id', auth()->id())
+        $notifications = Notification::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($notification) {
@@ -63,9 +64,7 @@ class NotificationController extends Controller
     public function markAsRead($id)
     {
         try {
-            $notification = Notification::where('user_id', auth()->id())
-                                     ->where('id', $id)
-                                     ->first();
+            $notification = Notification::where('user_id', Auth::id())->where('id', $id)->first();
                                      
             if (!$notification) {
                 return response()->json([
@@ -78,7 +77,7 @@ class NotificationController extends Controller
             
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            \Log::error('Error marking notification as read: ' . $e->getMessage());
+            Log::error('Error marking notification as read: ' . $e->getMessage());
             return response()->json([
                 'success' => false, 
                 'message' => 'Failed to mark notification as read'
@@ -89,7 +88,7 @@ class NotificationController extends Controller
     public function markAllAsRead()
     {
         try {
-            $count = Notification::where('user_id', auth()->id())
+            $count = Notification::where('user_id', Auth::id())
                 ->where('is_read', false)
                 ->update(['is_read' => true]);
 
@@ -99,7 +98,7 @@ class NotificationController extends Controller
                 'count' => $count
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error marking all notifications as read: ' . $e->getMessage());
+            Log::error('Error marking all notifications as read: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to mark all notifications as read'
@@ -110,17 +109,12 @@ class NotificationController extends Controller
     public function getUnreadCount()
     {
         try {
-            if (!auth()->check()) {
-                return response()->json(['count' => 0]);
-            }
-
-            $count = Notification::where('user_id', auth()->id())
-                               ->where('is_read', false)
-                               ->count();
+            if (!Auth::check()) return response()->json(['count' => 0]);
+            $count = Notification::where('user_id', Auth::id())->where('is_read', false)->count();
                                
             return response()->json(['count' => $count]);
         } catch (\Exception $e) {
-            \Log::error('Error getting unread notification count: ' . $e->getMessage());
+            Log::error('Error getting unread notification count: ' . $e->getMessage());
             return response()->json(['count' => 0]);
         }
     }
@@ -128,7 +122,7 @@ class NotificationController extends Controller
     public function deleteAll()
     {
         try {
-            $count = Notification::where('user_id', auth()->id())->delete();
+            $count = Notification::where('user_id', Auth::id())->delete();
 
             return response()->json([
                 'success' => true,
@@ -136,7 +130,7 @@ class NotificationController extends Controller
                 'count' => $count
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error deleting all notifications: ' . $e->getMessage());
+            Log::error('Error deleting all notifications: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete notifications'

@@ -1,4 +1,4 @@
-@component('pages.admin.materials.components.modal', ['id' => 'addMaterialModal', 'title' => 'Tambah Materi'])
+@component('pages.admin.materials.components.modal', ['id' => 'add_material_modal', 'title' => 'Tambah Materi'])
     <form action="{{ route('admin.materials.store') }}" method="POST" class="space-y-6">
         @csrf
         
@@ -95,7 +95,7 @@
         </div>
 
         <div class="flex justify-end gap-4">
-            <button type="button" onclick="closeModal('addMaterialModal')"
+            <button type="button" onclick="close_modal('add_material_modal')"
                 class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
                 Batal
             </button>

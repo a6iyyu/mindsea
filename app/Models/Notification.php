@@ -9,19 +9,8 @@ class Notification extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'type',
-        'title',
-        'message',
-        'is_read',
-        'icon',
-        'color'
-    ];
-
-    protected $casts = [
-        'is_read' => 'boolean'
-    ];
+    protected $fillable = ['user_id', 'type', 'title', 'message', 'is_read', 'icon', 'color'];
+    protected $casts = ['is_read' => 'boolean'];
 
     public function user()
     {

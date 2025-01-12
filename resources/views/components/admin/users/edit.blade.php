@@ -4,7 +4,7 @@
             <h1 class="text-3xl font-bold text-gray-800">Edit Pengguna</h1>
         </header>
 
-        @include('pages.admin.users.components.user-form', [
+        @include('components.admin.users.user-form', [
             'action' => route('admin.users.update', $user),
             'method' => 'PUT',
             'submitText' => 'Simpan Perubahan',

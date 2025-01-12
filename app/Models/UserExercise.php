@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserExercise extends Model
 {
-  protected $fillable = ['user_id', 'exercise_id', 'score', 'completed_at'];
+    protected $fillable = ['user_id', 'exercise_id', 'score', 'completed_at'];
+    protected $casts = ['completed_at' => 'datetime'];
 
-  protected $casts = [
-    'completed_at' => 'datetime',
-  ];
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-  public function user(): BelongsTo
-  {
-    return $this->belongsTo(User::class);
-  }
-
-  public function exercise(): BelongsTo
-  {
-    return $this->belongsTo(Exercise::class);
-  }
+    public function exercise(): BelongsTo
+    {
+        return $this->belongsTo(Exercise::class);
+    }
 }

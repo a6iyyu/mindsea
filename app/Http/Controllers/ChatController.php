@@ -99,7 +99,6 @@ class ChatController extends Controller
                 Log::error('API Request Error: ' . $e->getMessage());
                 throw new \Exception('Gagal berkomunikasi dengan AI: ' . $e->getMessage());
             }
-
         } catch (\Exception $e) {
             Log::error('Chat Controller Error: ' . $e->getMessage());
             return response()->json([

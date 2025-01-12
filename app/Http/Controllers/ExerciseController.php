@@ -12,10 +12,7 @@ class ExerciseController extends Controller
 {
     public function index()
     {
-        $exercise_lists = ExerciseList::where('is_active', true)
-            ->orderBy('order')
-            ->get();
-
+        $exercise_lists = ExerciseList::where('is_active', true)->orderBy('order')->get();
         $completedExercises = UserExercise::where('user_id', Auth::id())->count();
         $bestScore = UserExercise::where('user_id', Auth::id())->max('score') ?? 0;
 
@@ -25,13 +22,9 @@ class ExerciseController extends Controller
     public function showSection(ExerciseList $section)
     {
         $exercise = Exercise::where('title', $section->title)->first();
-
-        if (!$exercise) {
-            abort(404);
-        }
+        if (!$exercise) abort(404);
 
         $questions = $exercise->questions()->paginate(5);
-
         $timeLimit = count($questions) * 5;
 
         return view('pages.latihan.content', [
@@ -59,9 +52,7 @@ class ExerciseController extends Controller
 
         foreach ($answers as $questionId => $answer) {
             $question = $exercise->questions()->find($questionId);
-            if ($question && $question->correct_answer === $answer) {
-                $correctAnswer++;
-            }
+            if ($question && $question->correct_answer === $answer) $correctAnswer++;
         }
 
         $score = ($correctAnswer / $totalQuestion) * 100;
@@ -91,14 +82,12 @@ class ExerciseController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => $existingExercise ?
-                'Latihan selesai. Nilai yang ditampilkan adalah nilai terbaik Anda sebelumnya.' :
-                'Latihan berhasil diselesaikan',
+            'message' => $existingExercise
+                ? 'Latihan selesai. Nilai yang ditampilkan adalah nilai terbaik Anda sebelumnya.'
+                : 'Latihan berhasil diselesaikan',
             'score' => $finalScore,
             'correct_answer' => $correctAnswer,
             'total_question' => $totalQuestion,
         ]);
     }
-
-
 }

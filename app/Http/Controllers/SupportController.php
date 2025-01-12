@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class SupportController extends Controller
 {
     public function show($category)
@@ -126,4 +124,3 @@ class SupportController extends Controller
         return view('pages.dukungan.category', compact('content'));
     }
 }
-

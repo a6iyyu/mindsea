@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Material;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Traits\NotificationHelper;
-use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ManageMaterial extends Controller
 {
@@ -41,13 +41,11 @@ class ManageMaterial extends Controller
                 'difficulty_level' => $validated['difficulty_level']
             ]);
 
-            foreach ($validated['contents'] as $content) {
-                $material->contents()->create($content);
-            }
+            foreach ($validated['contents'] as $content) $material->contents()->create($content);
 
             DB::commit();
 
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Materi Dibuat',
                 "Admin telah membuat materi baru: {$material->title}",
                 'material_created'
@@ -61,8 +59,7 @@ class ManageMaterial extends Controller
                 'green'
             );
 
-            return redirect()->route('admin.materials.index')
-                ->with('success', 'Materi berhasil dibuat');
+            return redirect()->route('admin.materials.index')->with('success', 'Materi berhasil dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat materi: ' . $e->getMessage());
@@ -104,51 +101,34 @@ class ManageMaterial extends Controller
             ]);
 
             foreach ($validated['contents'] as $content) {
-                if (isset($content['id'])) {
-                    $material->contents()->where('id', $content['id'])->update($content);
-                } else {
-                    $material->contents()->create($content);
-                }
+                $content['id']
+                    ? $material->contents()->where('id', $content['id'])->update($content)
+                    : $material->contents()->create($content);
             }
 
             DB::commit();
 
             $changes = [];
 
-            if ($oldTitle !== $validated['title']) {
-                $changes[] = "judul dari '{$oldTitle}' menjadi '{$validated['title']}'";
-            }
-
-            if ($oldDescription !== $validated['description']) {
-                $changes[] = "deskripsi materi '{$material->title}'";
-            }
+            if ($oldTitle !== $validated['title']) $changes[] = "Judul dari '{$oldTitle}' menjadi '{$validated['title']}'";
+            if ($oldDescription !== $validated['description']) $changes[] = "Deskripsi materi '{$material->title}'";
 
             $contentChanged = false;
             foreach ($validated['contents'] as $newContent) {
                 if (isset($newContent['id'])) {
                     $oldContent = collect($oldContents)->firstWhere('id', $newContent['id']);
-                    if (
-                        $oldContent &&
-                        ($oldContent['content'] !== $newContent['content'] ||
-                            $oldContent['title'] !== $newContent['title'])
-                    ) {
+                    if ($oldContent && ($oldContent['content'] !== $newContent['content'] || $oldContent['title'] !== $newContent['title']))
+                    {
                         $contentChanged = true;
                         break;
                     }
                 }
             }
 
-            if ($contentChanged) {
-                $changes[] = "konten materi '{$material->title}'";
-            }
+            $changes = $contentChanged ? ["konten materi '{$material->title}'"] : [];
+            $message = $changes ? "Admin telah memperbarui " . implode(', ', $changes) : "Admin telah memperbarui materi '{$material->title}'";
 
-            if (count($changes) > 0) {
-                $message = "Admin telah memperbarui " . implode(', ', $changes);
-            } else {
-                $message = "Admin telah memperbarui materi '{$material->title}'";
-            }
-
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Materi Diperbarui',
                 $message,
                 'material_updated'
@@ -162,8 +142,7 @@ class ManageMaterial extends Controller
                 'blue'
             );
 
-            return redirect()->route('admin.materials.index')
-                ->with('success', 'Materi berhasil diperbarui');
+            return redirect()->route('admin.materials.index')->with('success', 'Materi berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan saat memperbarui materi');
@@ -174,14 +153,11 @@ class ManageMaterial extends Controller
     {
         try {
             DB::beginTransaction();
-
             $material->contents()->delete();
-
             $material->delete();
-
             DB::commit();
 
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Materi Dihapus',
                 "Admin telah menghapus materi: {$material->title}",
                 'material_deleted'
@@ -195,11 +171,10 @@ class ManageMaterial extends Controller
                 'red'
             );
 
-            return redirect()->route('admin.materials.index')
-                ->with('success', 'Materi berhasil dihapus');
+            return redirect()->route('admin.materials.index') ->with('success', 'Materi berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan saat menghapus materi');
+            return back()->with('error', 'Terjadi kesalahan saat menghapus materi!');
         }
     }
 
@@ -210,15 +185,13 @@ class ManageMaterial extends Controller
             return response()->json([
                 'success' => true,
                 'status' => $material->is_active,
-                'message' => $material->is_active ? 'Materi diaktifkan' : 'Materi dinonaktifkan'
+                'message' => $material->is_active ? 'Materi diaktifkan.' : 'Materi dinonaktifkan.'
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat mengubah status materi: ' . $e->getMessage()
             ], 500);
         }
-
     }
 }
-

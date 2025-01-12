@@ -6,13 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-    protected $fillable = [
-        'title',
-        'description',
-        'type',
-        'user_id',
-        'created_at'
-    ];
+    protected $fillable = ['title', 'description', 'type', 'user_id', 'created_at'];
 
     public function getIconAttribute()
     {

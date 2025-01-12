@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Material;
-use App\Models\Exercise;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +13,10 @@ class ReportsController extends Controller
 {
     public function index()
     {
-        $monthlyStats = $this->getMonthlyStats();     
+        $monthlyStats = $this->getMonthlyStats();
         $performanceStats = $this->getPerformanceStats();
         $activitySummary = $this->getActivitySummary();
-        
+
         return view('pages.admin.reports.index', compact(
             'monthlyStats',
             'performanceStats',
@@ -29,13 +28,13 @@ class ReportsController extends Controller
     {
         $currentYear = Carbon::now()->year;
         $months = range(1, 12);
-        
+
         $userSignups = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->whereYear('created_at', $currentYear)
             ->groupBy('month')
             ->pluck('count', 'month')
             ->toArray();
-            
+
         $materialCompletions = DB::table('material_progress')
             ->selectRaw('MONTH(completed_at) as month, COUNT(*) as count')
             ->whereYear('completed_at', $currentYear)
@@ -43,7 +42,7 @@ class ReportsController extends Controller
             ->groupBy('month')
             ->pluck('count', 'month')
             ->toArray();
-            
+
         $exerciseCompletions = DB::table('user_exercises')
             ->selectRaw('MONTH(completed_at) as month, COUNT(*) as count')
             ->whereYear('completed_at', $currentYear)
@@ -51,7 +50,7 @@ class ReportsController extends Controller
             ->groupBy('month')
             ->pluck('count', 'month')
             ->toArray();
-            
+
         return [
             'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'datasets' => [
@@ -81,11 +80,10 @@ class ReportsController extends Controller
     {
         return [
             'average_score' => round(DB::table('user_exercises')->avg('score') ?? 0, 1),
-            'completion_rate' => round((DB::table('material_progress')->where('is_completed', true)->count() / 
-                (User::count() * Material::count())) * 100, 1),
-            'active_users' => User::whereHas('activities', function($query) {
+            'active_users' => User::whereHas('activities', function ($query) {
                 $query->where('created_at', '>=', Carbon::now()->subDays(30));
             })->count(),
+            'completion_rate' => round((DB::table('material_progress')->where('is_completed', true)->count() / (User::count() * Material::count())) * 100, 1),
             'total_activities' => Activity::count()
         ];
     }

@@ -37,7 +37,6 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-
         return redirect('/');
     }
 
@@ -50,17 +49,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            
-            if (Auth::user()->is_admin) {
-                return redirect()->intended('/admin');
-            }
-            
+            if (Auth::user()->is_admin) return redirect()->intended('/admin');
             return redirect()->intended('/');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah',
-        ])->onlyInput('email');
+        return back()->withErrors(['email' => 'Email atau password salah'])->onlyInput('email');
     }
 
     public function logout(Request $request)

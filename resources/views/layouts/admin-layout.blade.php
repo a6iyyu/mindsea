@@ -21,11 +21,8 @@
     <link rel="icon" href="{{ asset("favicon.ico") }}" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @viteReactRefresh
@@ -106,11 +103,11 @@
         }
     </script>
 
-    <button onclick="showActivities()"
+    <!-- <button onclick="showActivities()"
         class="rounded-xl bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 transition-colors">
         <i class="fas fa-history mr-2"></i>
         Riwayat Aktivitas
-    </button>
+    </button> -->
 
     <script>
         function showAllActivities() {
@@ -139,7 +136,7 @@
                                     <div class="activities-container max-h-[60vh] overflow-y-auto space-y-4 p-2">
                                     </div>
                                     <div class="mt-6 flex justify-end">
-                                        <button type="button" onclick="closeModal('activityModal')"
+                                        <button type="button" onclick="close_modal('activityModal')"
                                             class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
                                             Tutup
                                         </button>
@@ -194,8 +191,8 @@
             return icons[type] || '<i class="fas fa-info-circle text-gray-500 text-xl"></i>';
         }
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
+        function close_modal(id_modal) {
+            const modal = document.getElementById(id_modal);
             if (modal) {
                 modal.remove();
             }

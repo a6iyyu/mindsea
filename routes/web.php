@@ -112,10 +112,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Exercise Management
     Route::resource('exercises', ManageExerciseController::class);
-    Route::post('/admin/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggle'])
-        ->name('admin.exercises.toggle-status');
+    Route::post('/admin/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggle'])->name('admin.exercises.toggle-status');
 
     // Reports
     Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
 });
-

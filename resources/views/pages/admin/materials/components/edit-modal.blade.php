@@ -1,4 +1,4 @@
-@component('pages.admin.materials.components.modal', ['id' => 'editMaterialModal', 'title' => 'Edit Materi'])
+@component('pages.admin.materials.components.modal', ['id' => 'edit_material_modal', 'title' => 'Edit Materi'])
 <form id="editMaterialForm" method="POST" class="space-y-6">
     @csrf
     @method('PUT')
@@ -104,7 +104,7 @@
     </div>
 
     <div class="flex justify-end gap-4">
-        <button type="button" onclick="closeModal('editMaterialModal')"
+        <button type="button" onclick="close_modal('edit_material_modal')"
             class="rounded-xl bg-gray-100 px-6 py-3 text-gray-700 hover:bg-gray-200">
             Batal
         </button>
@@ -150,6 +150,6 @@
             }
         });
 
-        openModal('editMaterialModal');
+        open_modal('edit_material_modal');
     }
 </script>

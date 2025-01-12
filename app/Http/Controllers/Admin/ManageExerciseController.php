@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ExerciseList;
-use App\Models\Question;
-use DB;
-use Illuminate\Http\Request;
 use App\Models\Exercise;
+use App\Models\Question;
 use App\Traits\NotificationHelper;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManageExerciseController extends Controller
 {
@@ -16,10 +17,8 @@ class ManageExerciseController extends Controller
 
     public function index()
     {
-        $exercises = ExerciseList::with('exercise.questions')
-            ->latest()
-            ->paginate(10);
-        return view('pages.admin.exercises.index', compact('exercises'));
+        $exercises = ExerciseList::with('exercise.questions')->latest()->paginate(10);
+        return view('pages.admin.exercises', compact('exercises'));
     }
 
     public function store(Request $request)
@@ -54,7 +53,6 @@ class ManageExerciseController extends Controller
                 'total_question' => count($validated['questions'])
             ]);
 
-
             foreach ($validated['questions'] as $questionData) {
                 Question::create([
                     'exercise_id' => $exercise->id,
@@ -66,7 +64,7 @@ class ManageExerciseController extends Controller
 
             DB::commit();
 
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Latihan Baru Ditambahkan',
                 "Admin telah membuat latihan baru: {$exerciseList->title}",
                 'exercise_created'
@@ -80,8 +78,7 @@ class ManageExerciseController extends Controller
                 'purple'
             );
 
-            return redirect()->route('admin.exercises.index')
-            ->with('success', 'Latihan baru berhasil dibuat');
+            return redirect()->route('pages.admin.exercises')->with('success', 'Latihan baru berhasil dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal membuat latihan: ' . $e->getMessage());
@@ -105,10 +102,7 @@ class ManageExerciseController extends Controller
             DB::beginTransaction();
 
             $exerciseModel = Exercise::where('title', $exercise->title)->first();
-            
-            if (!$exerciseModel) {
-                throw new \Exception('Exercise not found');
-            }
+            if (!$exerciseModel) throw new \Exception('Exercise not found');
 
             $exerciseModel->update([
                 'title' => $validated['title'],
@@ -137,7 +131,7 @@ class ManageExerciseController extends Controller
 
             DB::commit();
 
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Latihan Diubah',
                 "Admin telah mengubah latihan: {$validated['title']}",
                 'exercise_updated'
@@ -151,8 +145,7 @@ class ManageExerciseController extends Controller
                 'blue'
             );
 
-            return redirect()->route('admin.exercises.index')
-                ->with('success', 'Latihan berhasil diubah');
+            return redirect()->route('admin.exercises.index')->with('success', 'Latihan berhasil diubah');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal mengubah latihan: ' . $e->getMessage());
@@ -173,7 +166,7 @@ class ManageExerciseController extends Controller
             $exercise->delete();
             DB::commit();
 
-            auth()->user()->logActivity(
+            Auth::user()->logActivity(
                 'Latihan Dihapus',
                 "Admin telah menghapus latihan: {$exercise->title}",
                 'exercise_deleted'
@@ -187,12 +180,10 @@ class ManageExerciseController extends Controller
                 'red'
             );
 
-            return redirect()->route('admin.exercises.index')
-            ->with('success', 'Latihan berhasil dihapus');
+            return redirect()->route('admin.exercises.index')->with('success', 'Latihan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus latihan: ' . $e->getMessage());
         }
     }
 }
-

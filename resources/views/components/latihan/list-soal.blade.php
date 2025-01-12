@@ -2,37 +2,32 @@
     @foreach($exercise_lists as $exercise_list)
         @php
             $exercise = App\Models\Exercise::where('title', $exercise_list->title)->first();
-            $userExercise = $exercise ? App\Models\UserExercise::where('user_id', auth()->id())
-                ->where('exercise_id', $exercise->id)
-                ->first() : null;
+            $userExercise = $exercise
+                ? App\Models\UserExercise::where('user_id', auth()->id())->where('exercise_id', $exercise->id)->first()
+                : null;
         @endphp
-        <article
-            class="rounded-xl border-4 {{ $userExercise ? 'border-gray-200 bg-gray-50' : 'border-' . $exercise_list->color . '-200 bg-white' }} p-8 shadow-lg transition-all hover:shadow-xl">
+        <article class="rounded-xl border-4 {{ $userExercise ? 'border-gray-200 bg-gray-50' : 'border-' . $exercise_list->color . '-200 bg-white' }} p-8 shadow-lg transition-all hover:shadow-xl">
             <header class="mb-6 flex flex-col lg:flex-row items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <span
-                        class="{{ $userExercise ? 'bg-gray-100' : 'bg-' . $exercise_list->color . '-100' }} rounded-xl p-5">
-                        <i
-                            class="fa-solid {{ $exercise_list->icon }} {{ $userExercise ? 'text-gray-500' : 'text-' . $exercise_list->color . '-500' }} text-3xl"></i>
-                    </span>
-                </div>
+                <i class="fa-solid {{ $exercise_list->icon }} {{ $userExercise ? 'bg-gray-100 text-gray-500' : 'bg-' . $exercise_list->color . '-100 text-' . $exercise_list->color . '-500' }} rounded-xl text-3xl p-5"></i>
                 @if($userExercise)
-                    <div class="flex items-center gap-2 text-gray-500">
+                    <span class="flex items-center gap-2 text-gray-500">
                         <i class="fa-solid fa-check-circle"></i>
                         <span>Nilai: {{ $userExercise->score }}</span>
-                    </div>
+                    </span>
                 @endif
             </header>
 
             <h3 class="mb-4 text-2xl font-bold {{ $userExercise ? 'text-gray-600' : 'text-gray-800' }}">
                 Latihan {{ $exercise_list->title }}
             </h3>
-            <p class="mb-4 text-lg leading-relaxed {{ $userExercise ? 'text-gray-500' : 'text-gray-600' }}">
+            <h5 class="mb-4 text-lg leading-relaxed {{ $userExercise ? 'text-gray-500' : 'text-gray-600' }}">
                 {{ $exercise_list->description }}
-            </p>
+            </h5>
 
-            <button onclick="window.SpeakText('Latihan {{ $exercise_list->title }}, {{ $exercise_list->description }} {{ $userExercise ? ', Latihan sudah selesai pada ' . $userExercise->completed_at->diffForHumans(['locale' => 'id']) . ', nilai: ' . $userExercise->score . ', Apakah anda ingin mengulangi latihan ini lagi?' : 'Latihan ini belum selesai, Apakah anda ingin , mencoba latihan ini?' }}')"
-                class="mb-4 flex items-center gap-2 px-4 py-2 transform rounded-lg {{ $userExercise ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700' }} hover:bg-amber-200 transition-colors">
+            <button
+                onclick="window.SpeakText('Latihan {{ $exercise_list->title }}, {{ $exercise_list->description }} {{ $userExercise ? ', Latihan, sudah, selesai, pada, ' . $userExercise->completed_at->diffForHumans(['locale' => 'id']) . ', nilai: ' . $userExercise->score . ', apakah, anda, ingin, mengulangi, latihan, ini, lagi?' : ': Latihan, ini, belum, selesai. apakah, anda, ingin, mencoba, latihan, ini?' }}')"
+                class="mb-6 flex items-center gap-2 px-4 py-2 transform rounded-lg {{ $userExercise ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700' }} hover:bg-amber-200 transition-colors"
+            >
                 <i class="fas fa-volume-up" aria-hidden="true"></i>
                 <h4>Dengarkan</h4>
             </button>
@@ -53,10 +48,10 @@
                         </a>
                     </div>
                 @else
-                    <a href="{{ route('latihan.section', $exercise_list->id) }}" class="inline-flex w-full items-center justify-center gap-3 rounded-xl 
-                                      bg-{{ $exercise_list->color }}-500 px-6 py-4 text-lg font-medium 
-                                      text-white transition-colors hover:bg-{{ $exercise_list->color }}-600
-                                      focus:ring-4 focus:ring-{{ $exercise_list->color }}-200">
+                    <a
+                        href="{{ route('latihan.section', $exercise_list->id) }}"
+                        class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-{{ $exercise_list->color }}-500 py-4 text-lg font-medium text-white transition-colors hover:bg-{{ $exercise_list->color }}-600 focus:ring-4 focus:ring-{{ $exercise_list->color }}-200"
+                    >
                         <span>Mulai Latihan</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
