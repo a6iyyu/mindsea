@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Models\Material;
 use App\Models\MaterialProgress;
 use Illuminate\Http\Request;
-use App\Models\Material;
 use Illuminate\Support\Facades\Auth;
 
 class MaterialController extends Controller
@@ -93,10 +95,9 @@ class MaterialController extends Controller
                 $progress->save();
 
                 $material = Material::find($id);
-                $user = Auth::user();
-                $user->logActivity(
+                Auth::user()->logActivity(
                     'Materi Selesai',
-                    "{$user->name} telah menyelesaikan materi {$material->title}",
+                    "{Auth::user()->name} telah menyelesaikan materi {$material->title}",
                     'material_completed'
                 );
 

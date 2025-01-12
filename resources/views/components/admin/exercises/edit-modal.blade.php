@@ -1,4 +1,4 @@
-@component('pages.admin.materials.components.modal', ['id' => 'edit_exercise_modal', 'title' => 'Edit Latihan'])
+@component('components.admin.materials.modal', ['id' => 'edit_exercise_modal', 'title' => 'Edit Latihan'])
     <form id="edit_exercise_form" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
@@ -13,7 +13,7 @@
                 <div>
                     <label class="block text-sm text-gray-600">Deskripsi</label>
                     <textarea name="description" id="edit_description" rows="2" required
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
+                        class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -107,7 +107,7 @@ function addEditQuestion(questionData = null) {
         <div>
             <label class="block text-sm text-gray-600">Pertanyaan</label>
             <textarea name="questions[${editQuestionCount-1}][question]" required rows="2"
-                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3">${questionData?.question || ''}</textarea>
+                class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3">${questionData?.question || ''}</textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div>

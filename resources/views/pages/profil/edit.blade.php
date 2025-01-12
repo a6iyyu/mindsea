@@ -53,7 +53,7 @@
             <fieldset>
                 <label for="bio" class="block text-lg font-medium text-gray-700 mb-2">Bio</label>
                 <textarea id="bio" name="bio" rows="4"
-                    class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-[#f58a66] focus:ring-2 focus:ring-[#f58a66]/20 transition-colors">{{ Auth::user()->bio ?? '' }}</textarea>
+                    class="w-full px-4 py-3 resize-none rounded-lg border-2 border-gray-300 focus:border-[#f58a66] focus:ring-2 focus:ring-[#f58a66]/20 transition-colors">{{ Auth::user()->bio ?? '' }}</textarea>
             </fieldset>
 
             <span class="flex justify-end">

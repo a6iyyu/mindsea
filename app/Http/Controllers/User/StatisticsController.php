@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\MaterialProgress;
 use App\Models\UserExercise;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class StatisticsController extends Controller
 {

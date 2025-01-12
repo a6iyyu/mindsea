@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Exercise;
 use App\Models\ExerciseList;
 use App\Models\UserExercise;
@@ -70,10 +71,9 @@ class ExerciseController extends Controller
                 'completed_at' => now(),
             ]);
 
-            $user = Auth::user();
-            $user->logActivity(
+            Auth::user()->logActivity(
                 'Latihan Selesai',
-                "{$user->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}",
+                '{Auth::user()->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}',
                 'exercise_completed'
             );
         }

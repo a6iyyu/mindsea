@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
+
+use Illuminate\Routing\Controller;
 
 class SupportController extends Controller
 {

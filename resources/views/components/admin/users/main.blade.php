@@ -9,11 +9,11 @@
     </a>
 </section>
 @if(session('success'))
-    <h4 class="mb-4 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
+    <h4 class="mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
         {{ session('success') }}
     </h4>
 @endif
-<div class="rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
+<section class="rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
@@ -58,8 +58,7 @@
             @endforeach
         </tbody>
     </table>
-</div>
-
-<div class="mt-4">
+</section>
+<section class="mt-4">
     {{ $users->links() }}
-</div>
+</section>

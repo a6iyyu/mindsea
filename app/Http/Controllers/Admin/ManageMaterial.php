@@ -16,7 +16,7 @@ class ManageMaterial extends Controller
     public function index()
     {
         $materials = Material::with(['contents'])->latest()->paginate(10);
-        return view('pages.admin.materials.index', compact('materials'));
+        return view('pages.admin.materials', compact('materials'));
     }
 
     public function store(Request $request)
@@ -69,7 +69,7 @@ class ManageMaterial extends Controller
     public function edit(Material $material)
     {
         $material->load('contents');
-        return view('pages.admin.materials.edit', compact('material'));
+        return view('components.admin.materials.edit-modal', compact('material'));
     }
 
     public function update(Request $request, Material $material)

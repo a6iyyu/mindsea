@@ -1,4 +1,4 @@
-@component('pages.admin.materials.components.modal', ['id' => 'add_material_modal', 'title' => 'Tambah Materi'])
+@component('components.admin.materials.modal', ['id' => 'add_material_modal', 'title' => 'Tambah Materi'])
     <form action="{{ route('admin.materials.store') }}" method="POST" class="space-y-6">
         @csrf
         
@@ -11,7 +11,7 @@
         <div>
             <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
             <textarea name="description" id="description" rows="3" required
-                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"></textarea>
+                class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"></textarea>
         </div>
 
         <div>
@@ -39,7 +39,7 @@
                     <div>
                         <label class="block text-sm text-gray-600">Konten</label>
                         <textarea name="contents[0][content]" rows="2" required
-                            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
+                            class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600">Teks Audio</label>
@@ -61,7 +61,7 @@
                     <div>
                         <label class="block text-sm text-gray-600">Konten</label>
                         <textarea name="contents[1][content]" rows="2" required
-                            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
+                            class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600">Teks Audio</label>
@@ -83,7 +83,7 @@
                     <div>
                         <label class="block text-sm text-gray-600">Konten</label>
                         <textarea name="contents[2][content]" rows="2" required
-                            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
+                            class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600">Teks Audio</label>

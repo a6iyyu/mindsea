@@ -1,8 +1,8 @@
 @component("layouts.admin-layout", [
     "judul" => "Kelola Materi",
-    "deskripsi" => "Halaman kelola materi",
+    "deskripsi" => "",
 ])
-    @include("pages.admin.materials.components.main")
+    @include("components.admin.materials.main")
 @endcomponent
 
 <script>

@@ -1,22 +1,22 @@
 <?php
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\OAuthController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\StatisticsController;
-use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\ExerciseController;
-use App\Http\Controllers\ProgressController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\SupportController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ManageMaterial;
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ManageExerciseController;
+use App\Http\Controllers\Admin\ManageMaterial;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\ChatController;
+use App\Http\Controllers\User\ExerciseController;
+use App\Http\Controllers\User\MaterialController;
+use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\ProgressController;
+use App\Http\Controllers\User\StatisticsController;
+use App\Http\Controllers\User\SupportController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -115,5 +115,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/admin/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggle'])->name('admin.exercises.toggle-status');
 
     // Reports
-    Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
+    Route::get('reports', [ReportsController::class, 'index'])->name('reports');
 });

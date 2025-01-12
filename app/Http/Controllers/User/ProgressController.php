@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Models\MaterialProgress;
 use App\Models\Material;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ProgressController extends Controller

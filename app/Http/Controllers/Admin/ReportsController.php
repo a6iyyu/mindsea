@@ -17,7 +17,7 @@ class ReportsController extends Controller
         $performanceStats = $this->getPerformanceStats();
         $activitySummary = $this->getActivitySummary();
 
-        return view('pages.admin.reports.index', compact(
+        return view('pages.admin.reports', compact(
             'monthlyStats',
             'performanceStats',
             'activitySummary'

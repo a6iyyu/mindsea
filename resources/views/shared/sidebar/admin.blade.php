@@ -30,7 +30,7 @@
                     "ikon" => "fas fa-chart-bar",
                     "warna" => "text-amber-500",
                     "label" => "Laporan",
-                    "route" => route('admin.reports.index'),
+                    "route" => route('admin.reports'),
                 ]
             ];
         @endphp

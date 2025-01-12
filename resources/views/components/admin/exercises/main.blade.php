@@ -9,11 +9,11 @@
     </button>
 </section>
 @if(session('success'))
-    <h4 class="mb-4 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
+    <h4 class="mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
         {{ session('success') }}
     </h4>
 @endif
-<div class="text-center rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
+<section class="text-center rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
@@ -36,7 +36,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
+                        <span class="flex items-center justify-center gap-6">
                             <button onclick="edit_exercise('{{ $exercise->id }}')" class="fas fa-edit text-blue-500 hover:text-blue-600"></button>
                             <form
                                 action="{{ route('admin.exercises.destroy', $exercise) }}" method="POST"
@@ -45,17 +45,16 @@
                                 @method('DELETE')
                                 <button type="submit" class="fas fa-trash text-red-500 hover:text-red-600"></button>
                             </form>
-                        </div>
+                        </span>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-</div>
-
-<div class="mt-6">
+</section>
+<section class="mt-6">
     {{ $exercises->links() }}
-</div>
+</section>
 
 @include('components.admin.exercises.add-modal')
 @include('components.admin.exercises.edit-modal')
