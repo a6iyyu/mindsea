@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('content');
             $table->text('audio_text')->nullable();
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

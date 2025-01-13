@@ -21,19 +21,21 @@ class ManageMaterial extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'difficulty_level' => 'required|in:mudah,sedang,sulit',
-            'contents' => 'required|array|min:3',
-            'contents.*.section_type' => 'required|in:pengenalan,materi_utama,latihan',
-            'contents.*.title' => 'required|string|max:255',
-            'contents.*.content' => 'required|string',
-            'contents.*.audio_text' => 'nullable|string',
-        ]);
+        DB::beginTransaction();
 
         try {
-            DB::beginTransaction();
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'difficulty_level' => 'required|in:mudah,sedang,sulit',
+                'contents' => 'required|array|min:3',
+                'contents.*.id' => 'nullable|exists:material_contents,id',
+                'contents.*.section_type' => 'required|in:pengenalan,materi_utama,latihan',
+                'contents.*.title' => 'required|string|max:255',
+                'contents.*.content' => 'required|string',
+                'contents.*.audio_text' => 'nullable|string',
+                'contents.*.image' => 'nullable|image|max:2048',
+            ]);
 
             $material = Material::create([
                 'title' => $validated['title'],
@@ -41,7 +43,20 @@ class ManageMaterial extends Controller
                 'difficulty_level' => $validated['difficulty_level']
             ]);
 
-            foreach ($validated['contents'] as $content) $material->contents()->create($content);
+            foreach ($validated['contents'] as $content) {
+                $imagePath = null;
+                if (isset($content['image']) && $content['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    $imagePath = $content['image']->store('images/materi', 'public');
+                }
+
+                $material->contents()->create([
+                    'section_type' => $content['section_type'],
+                    'title' => $content['title'],
+                    'content' => $content['content'],
+                    'audio_text' => $content['audio_text'],
+                    'image_path' => $imagePath
+                ]);
+            }
 
             DB::commit();
 
@@ -62,7 +77,7 @@ class ManageMaterial extends Controller
             return redirect()->route('admin.materials.index')->with('success', 'Materi berhasil dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat materi: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat materi: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -84,6 +99,7 @@ class ManageMaterial extends Controller
             'contents.*.title' => 'required|string|max:255',
             'contents.*.content' => 'required|string',
             'contents.*.audio_text' => 'nullable|string',
+            'contents.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
@@ -100,10 +116,34 @@ class ManageMaterial extends Controller
                 'difficulty_level' => $validated['difficulty_level'],
             ]);
 
+            $oldContents = $material->contents->keyBy('id')->toArray();
+
             foreach ($validated['contents'] as $content) {
-                $content['id']
-                    ? $material->contents()->where('id', $content['id'])->update($content)
-                    : $material->contents()->create($content);
+                $imagePath = null;
+                $existingContent = isset($content['id']) ? $material->contents->find($content['id']) : null;
+
+                if (isset($content['image'])) {
+                    if ($existingContent && $existingContent->image_path) {
+                        \Storage::disk('public')->delete($existingContent->image_path);
+                    }
+                    $imagePath = $content['image']->store('images/materi', 'public');
+                } else if ($existingContent) {
+                    $imagePath = $existingContent->image_path;
+                }
+
+                $contentData = [
+                    'section_type' => $content['section_type'],
+                    'title' => $content['title'],
+                    'content' => $content['content'],
+                    'audio_text' => $content['audio_text'],
+                    'image_path' => $imagePath,
+                ];
+
+                if (isset($content['id'])) {
+                    $material->contents()->where('id', $content['id'])->update($contentData);
+                } else {
+                    $material->contents()->create($contentData);
+                }
             }
 
             DB::commit();
@@ -153,8 +193,15 @@ class ManageMaterial extends Controller
     {
         try {
             DB::beginTransaction();
+            foreach ($material->contents as $content) {
+                if ($content->image_path) {
+                    \Storage::disk('public')->delete($content->image_path);
+                }
+            }
+            
             $material->contents()->delete();
             $material->delete();
+            
             DB::commit();
 
             Auth::user()->logActivity(

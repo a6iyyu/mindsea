@@ -101,7 +101,6 @@
         if (modal) {
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
-            currentModal = null;
         }
     }
 

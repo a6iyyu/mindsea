@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    class="max-[8192px]:opacity-0 max-[3120px]:opacity-100 max-[3120px]:m-0 max-[3120px]:p-0 max-[3120px]:box-border max-[3120px]:[font-family:'Plus_Jakarta_Sans',Times,sans-serif,serif] max-[324px]:hidden"
->
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    class="max-[8192px]:opacity-0 max-[3120px]:opacity-100 max-[3120px]:m-0 max-[3120px]:p-0 max-[3120px]:box-border max-[3120px]:[font-family:'Plus_Jakarta_Sans',Times,sans-serif,serif] max-[324px]:hidden">
 
 <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -21,8 +19,11 @@
     <link rel="icon" href="{{ asset("favicon.ico") }}" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     @viteReactRefresh
@@ -33,6 +34,7 @@
             ::-webkit-scrollbar {
                 display: none !important;
             }
+
             input:-webkit-autofill,
             input:-webkit-autofill:hover,
             input:-webkit-autofill:focus,
@@ -43,10 +45,12 @@
                 caret-color: #374151;
                 box-shadow: 0 0 0 30px #fceede inset !important;
             }
+
             input:autofill {
                 -webkit-text-fill-color: #374151 !important;
                 box-shadow: 0 0 0 30px #fceede inset !important;
             }
+
             input[type="search"]::-webkit-search-cancel-button {
                 -webkit-appearance: none;
                 appearance: none;
@@ -59,12 +63,9 @@
     <header class="fixed left-0 top-0 z-50 h-[4.5rem] w-screen border-b-2 border-gray-200 bg-[#fceede] shadow-md">
         <div class="mx-auto flex h-full max-w-[90vw] items-center justify-between lg:max-w-[96vw]">
             <span class="flex items-center gap-3 lg:gap-6">
-                <button
-                    type="button"
-                    onclick="toggleSidebar()"
+                <button type="button" onclick="toggleSidebar()"
                     class="rounded-xl p-3 text-gray-600 transition-colors hover:bg-[#f58a66]/10 lg:hidden"
-                    aria-label="Toggle Sidebar"
-                >
+                    aria-label="Toggle Sidebar">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
                 <a href="/admin" class="flex items-center gap-2">
@@ -74,13 +75,15 @@
             </span>
 
             <nav class="flex items-center gap-4">
-                <a href="/" class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
+                <a href="/"
+                    class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
                     <i class="fas fa-home"></i>
                     <span class="hidden lg:inline">User View</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
-                    <button type="submit" class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
+                    <button type="submit"
+                        class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="hidden lg:inline">Keluar</span>
                     </button>
@@ -194,7 +197,7 @@
         function close_modal(id_modal) {
             const modal = document.getElementById(id_modal);
             if (modal) {
-                modal.remove();
+                modal.classList.add('hidden');
             }
         }
     </script>

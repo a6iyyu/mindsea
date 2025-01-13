@@ -17,7 +17,7 @@
         {{ $materi->description }}
       </h5>
     </header>
-    <img src="{{ asset('images/doge.png') }}" alt="Maskot Menggemaskan"
+    <img src="{{ Storage::url('images/doge.png') }}" alt="Maskot Menggemaskan"
       class="w-full object-cover rounded-xl border-4 border-purple-200 shadow-md -order-1 lg:order-1">
   </section>
 </figure>

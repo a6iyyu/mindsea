@@ -12,6 +12,9 @@
         aria-label="Putar audio teks" title="Klik untuk mendengarkan teks"
       ></button>
     </header>
+    @if($introduction->image_path)
+        <img src="{{ Storage::url($introduction->image_path) }}" alt="Gambar Pengenalan" class="mb-4 w-full object-cover rounded-xl" style="max-width: 500px; max-height: 450px; object-fit: cover;">
+    @endif
     <h4 class="prose max-w-none bg-transparent rounded-xl text-base leading-relaxed text-purple-600 lg:p-6 lg:text-xl lg:bg-white lg:text-gray-700">
       {!! $introduction->content !!}
     </h4>

@@ -1,5 +1,5 @@
 @component('components.admin.materials.modal', ['id' => 'edit_material_modal', 'title' => 'Edit Materi'])
-<form id="edit_material_form" method="POST" class="space-y-6">
+<form id="edit_material_form" method="POST" class="space-y-6" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <fieldset>
@@ -82,6 +82,12 @@
                         class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
                     />
                 </fieldset>
+                <fieldset>
+                    <label class="block text-sm text-gray-600">Gambar</label>
+                    <input type="file" name="contents[0][image]" id="edit_introduction_image" accept="image/*"
+                        class="mt-1 block w-full">
+                    <img id="edit_introduction_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
+                </fieldset>
             </div>
         </div>
 
@@ -119,6 +125,12 @@
                         id="edit_main_audio"
                         class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
                     />
+                </fieldset>
+                <fieldset>
+                    <label class="block text-sm text-gray-600">Gambar</label>
+                    <input type="file" name="contents[1][image]" id="edit_main_image" accept="image/*"
+                        class="mt-1 block w-full">
+                    <img id="edit_main_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
                 </fieldset>
             </div>
         </div>
@@ -158,6 +170,12 @@
                         class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
                     />
                 </fieldset>
+                <fieldset>
+                    <label class="block text-sm text-gray-600">Gambar</label>
+                    <input type="file" name="contents[2][image]" id="edit_exercise_image" accept="image/*"
+                        class="mt-1 block w-full">
+                    <img id="edit_exercise_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
+                </fieldset>
             </div>
         </div>
     </div>
@@ -179,12 +197,10 @@
         const form = document.getElementById('edit_material_form');
         form.action = `/admin/materials/${id}`;
 
-        // Set basic material info
         document.getElementById('edit_title').value = title;
         document.getElementById('edit_description').value = description;
         document.getElementById('edit_difficulty_level').value = difficulty_level;
 
-        // Set content values
         contents.forEach(content => {
             const sectionType = content.section_type;
             switch (sectionType) {
@@ -193,22 +209,58 @@
                     document.getElementById('edit_introduction_title').value = content.title;
                     document.getElementById('edit_introduction_content').value = content.content;
                     document.getElementById('edit_introduction_audio').value = content.audio_text || '';
+                    if (content.image_path) {
+                        document.getElementById('edit_introduction_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_introduction_image_preview').classList.remove('hidden');
+                    }
                     break;
+
                 case 'materi_utama':
                     document.getElementById('edit_main_id').value = content.id;
                     document.getElementById('edit_main_title').value = content.title;
                     document.getElementById('edit_main_content').value = content.content;
                     document.getElementById('edit_main_audio').value = content.audio_text || '';
+                    if (content.image_path) {
+                        document.getElementById('edit_main_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_main_image_preview').classList.remove('hidden');
+                    }
                     break;
+
                 case 'latihan':
                     document.getElementById('edit_exercise_id').value = content.id;
                     document.getElementById('edit_exercise_title').value = content.title;
                     document.getElementById('edit_exercise_content').value = content.content;
                     document.getElementById('edit_exercise_audio').value = content.audio_text || '';
+                    if (content.image_path) {
+                        document.getElementById('edit_exercise_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_exercise_image_preview').classList.remove('hidden');
+                    }
                     break;
             }
         });
-
-        open_modal('edit_material_modal');
     }
+
+    function showImagePreview(input, previewId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('edit_introduction_image').addEventListener('change', function () {
+        showImagePreview(this, 'edit_introduction_image_preview');
+    });
+
+    document.getElementById('edit_main_image').addEventListener('change', function () {
+        showImagePreview(this, 'edit_main_image_preview');
+    });
+
+    document.getElementById('edit_exercise_image').addEventListener('change', function () {
+        showImagePreview(this, 'edit_exercise_image_preview');
+    });
 </script>

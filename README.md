@@ -16,6 +16,7 @@ Saat ini, website masih mengalami kendala karena _database_ belum di-_hosting_. 
     ```bash
     php artisan migrate:refresh
     php artisan db:seed
+    php artisan storage:link
     ```
 4. Terakhir, jalankan perintah berikut untuk memulai proyek:
     ```bash

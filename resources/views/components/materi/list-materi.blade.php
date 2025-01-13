@@ -1,17 +1,19 @@
 <section class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
   @foreach($materi as $item)
-    <article class="flex flex-col justify-between rounded-xl border-4 {{ $item->progress && $item->progress->is_completed ? 'border-gray-200 bg-gray-50' : 'border-blue-200 bg-white' }} p-8 shadow-lg transition-all duration-300 ease-in-out lg:hover:shadow-xl focus-within:ring-4 focus-within:ring-blue-200">
+    <article
+    class="flex flex-col justify-between rounded-xl border-4 {{ $item->progress && $item->progress->is_completed ? 'border-gray-200 bg-gray-50' : 'border-blue-200 bg-white' }} p-8 shadow-lg transition-all duration-300 ease-in-out lg:hover:shadow-xl focus-within:ring-4 focus-within:ring-blue-200">
     @if($item->progress && $item->progress->is_completed)
-      <div class="flex items-center gap-2 text-gray-500">
-        <i class="fa-solid fa-check-circle"></i>
-        <span>Sudah Selesai</span>
-        <time datetime="{{ $item->progress->completed_at }}" class="text-sm">
-        ({{ $item->progress->completed_at->diffForHumans() }})
-        </time>
-      </div>
-    @endif
+    <div class="flex items-center gap-2 text-gray-500">
+      <i class="fa-solid fa-check-circle"></i>
+      <span>Sudah Selesai</span>
+      <time datetime="{{ $item->progress->completed_at }}" class="text-sm">
+      ({{ $item->progress->completed_at->diffForHumans() }})
+      </time>
+    </div>
+  @endif
     <header class="mb-6 flex flex-col items-start gap-6 lg:flex-row lg:items-center justify-between">
-      <i class="fa-solid fa-book text-3xl {{ $item->progress && $item->progress->is_completed ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-500' }} rounded-xl p-5"></i>
+      <i
+      class="fa-solid fa-book text-3xl {{ $item->progress && $item->progress->is_completed ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-500' }} rounded-xl p-5"></i>
       <div class="flex items-center gap-4 text-base">
       <span
         class="flex items-center gap-2 {{ $item->progress && $item->progress->is_completed ? 'text-gray-500' : 'text-gray-600' }}">
@@ -30,8 +32,9 @@
       {{ $item->description }}
       </h5>
 
-      <button onclick="window.SpeakText('{{ $item->title }}, {{ $item->description }}, tingkat kesulitan: {{ $item->difficulty_level }}, {{ $item->progress ? 'Sudah selesai ' . $item->progress->completed_at->diffForHumans(['locale' => 'id']) . ', Apakah anda ingin mengulangi materi ini lagi?' : '' }}')"
-      class="mb-2 flex items-center gap-2 px-4 py-2 transform rounded-lg {{$item->progress && $item->progress->is_completed ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors'}}">
+      <button
+      onclick="window.SpeakText('{{ $item->title }}, {{ $item->description }}, tingkat kesulitan: {{ $item->difficulty_level }}, {{ $item->progress ? 'Sudah selesai ' . $item->progress->completed_at->diffForHumans(['locale' => 'id']) . ', Apakah anda ingin mengulangi materi ini lagi?' : '' }}')"
+      class="flex items-center gap-2 px-4 py-2 transform rounded-lg {{$item->progress && $item->progress->is_completed ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors'}}">
       <i class="fas fa-volume-up transition-all duration-300" aria-hidden="true"></i>
       <h4>Dengarkan</h4>
       </button>
@@ -53,6 +56,7 @@
       </a>
       </div>
     @else
+      <br>
       <a href="{{ route('materi.show', $item->id) }}"
       class="rounded bg-blue-500 px-6 py-3 text-base font-medium text-white transition-colors lg:text-lg lg:rounded-xl lg:hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-200">
       Mulai
