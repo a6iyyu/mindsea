@@ -14,33 +14,45 @@
             class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"></textarea>
     </div>
 
-    <div>
-        <label for="add_difficulty_level" class="block text-sm font-medium text-gray-700">Tingkat Kesulitan</label>
-        <select name="difficulty_level" id="add_difficulty_level" required
-            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200">
-            <option value="mudah">Mudah</option>
-            <option value="sedang">Sedang</option>
-            <option value="sulit">Sulit</option>
-        </select>
+    <div class="grid grid-cols-2 gap-4">
+        <fieldset>
+            <label for="add_difficulty_level" class="block text-sm font-medium text-gray-700">Tingkat Kesulitan</label>
+            <select name="difficulty_level" id="add_difficulty_level" required
+                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200">
+                <option value="mudah">Mudah</option>
+                <option value="sedang">Sedang</option>
+                <option value="sulit">Sulit</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <label for="edit_color" class="block text-sm font-medium text-gray-700">
+                Warna
+            </label>
+            <select name="color" id="edit_color" required
+                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200">
+                <option value="blue">Biru</option>
+                <option value="green">Hijau</option>
+                <option value="yellow">Kuning</option>
+                <option value="red">Merah</option>
+                <option value="purple">Ungu</option>
+                <option value="orange">Orange</option>
+                <option value="pink">Pink</option>
+                <option value="gray">Abu-abu</option>
+                <option value="violet">Violet</option>
+                <option value="indigo">Indigo</option>
+                <option value="amber">Amber</option>
+                <option value="emerald">Emerald</option>
+                <option value="teal">Teal</option>
+                <option value="cyan">Cyan</option>
+                <option value="sky">Sky</option>
+                <option value="lime">Lime</option>
+                <option value="fuchsia">Fuchsia</option>
+            </select>
+        </fieldset>
     </div>
 
     <div class="space-y-4">
         <h4 class="font-medium text-gray-700">Konten Materi</h4>
-
-        <!-- Color Selection -->
-        <div class="rounded-xl border-2 border-gray-200 p-4">
-            <h5 class="mb-4 font-medium text-gray-600">Warna</h5>
-            <select name="color" id="add_color" required
-                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200">
-                @php
-                    $colors = ['blue', 'green', 'yellow', 'red', 'purple', 'orange', 'pink', 'gray', 'violet', 'indigo', 'amber', 'emerald', 'teal', 'cyan', 'sky', 'lime', 'fuchsia'];
-                @endphp
-
-                @foreach ($colors as $color)
-                    <option value="{{ $color }}">{{ ucfirst($color) }}</option>
-                @endforeach
-            </select>
-        </div>
 
         <!-- Pengenalan Section -->
         <div class="rounded-xl border-2 border-gray-200 p-4">

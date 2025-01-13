@@ -28,6 +28,9 @@
         <h2 class="text-xl font-bold text-gray-800 mb-4">
             Soal {{ $index + 1 }}
         </h2>
+        @if($question->image_path)
+            <img src="{{ Storage::url($question->image_path) }}" alt="Question Image" class="my-4 max-h-64">
+        @endif
         <h5 class="text-lg text-gray-600">
             {{ $question->question }}
         </h5>

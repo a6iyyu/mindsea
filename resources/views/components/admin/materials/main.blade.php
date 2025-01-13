@@ -32,6 +32,7 @@
                 <th class="px-6 py-4">ID</th>
                 <th class="px-6 py-4">Judul</th>
                 <th class="px-6 py-4">Tingkat Kesulitan</th>
+                <th class="px-6 py-4">Warna</th>
                 <th class="px-6 py-4">Status</th>
                 <th class="px-6 py-4">Aksi</th>
             </tr>
@@ -54,6 +55,65 @@
                             @endif
                         ">
                             {{ ucfirst($material->difficulty_level) }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="rounded-full px-3 py-1 text-sm
+                           @switch($material->color)
+                               @case('blue')
+                                   bg-blue-100 text-blue-700
+                                   @break
+                               @case('green')
+                                   bg-green-100 text-green-700
+                                   @break
+                               @case('yellow')
+                                   bg-yellow-100 text-yellow-700
+                                   @break
+                               @case('red')
+                                   bg-red-100 text-red-700
+                                   @break
+                               @case('purple')
+                                   bg-purple-100 text-purple-700
+                                   @break
+                               @case('orange')
+                                   bg-orange-100 text-orange-700
+                                   @break
+                               @case('pink')
+                                   bg-pink-100 text-pink-700
+                                   @break
+                               @case('gray')
+                                   bg-gray-100 text-gray-700
+                                   @break
+                               @case('violet')
+                                   bg-violet-100 text-violet-700
+                                   @break
+                               @case('indigo')
+                                   bg-indigo-100 text-indigo-700
+                                   @break
+                               @case('amber')
+                                   bg-amber-100 text-amber-700
+                                   @break
+                               @case('emerald')
+                                   bg-emerald-100 text-emerald-700
+                                   @break
+                               @case('teal')
+                                   bg-teal-100 text-teal-700
+                                   @break
+                               @case('cyan')
+                                   bg-cyan-100 text-cyan-700
+                                   @break
+                               @case('sky')
+                                   bg-sky-100 text-sky-700
+                                   @break
+                               @case('lime')
+                                   bg-lime-100 text-lime-700
+                                   @break
+                               @case('fuchsia')
+                                   bg-fuchsia-100 text-fuchsia-700
+                                   @break
+                           @endswitch
+                        ">
+                            {{ ucfirst($material->color) }}
                         </span>
                     </td>
                     <td class="px-6 py-4">
@@ -94,14 +154,14 @@
 @include('components.admin.materials.add-modal')
 
 <script>
-    function edit_material(id, title, description, difficulty_level, contents) {
+    function edit_material(id, title, description, difficulty_level, contents, color) {
         const form = document.getElementById('edit_material_form');
         form.action = `/admin/materials/${id}`;
 
         document.getElementById('edit_title').value = title;
         document.getElementById('edit_description').value = description;
         document.getElementById('edit_difficulty_level').value = difficulty_level;
-
+        document.getElementById('edit_color').value = color;
         contents.forEach(content => {
             const sectionType = content.section_type;
             switch (sectionType) {

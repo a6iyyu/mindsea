@@ -35,13 +35,14 @@ class ManageExerciseController extends Controller
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
-                'icon' => 'required|string|max:255',
-                'color' => 'required|in:blue,green,yellow,red,purple,orange,pink,gray,indigo,teal',
-                'questions' => 'required|array',
+                'icon' => 'required|string',
+                'color' => 'required|string',
+                'questions' => 'required|array|min:1',
                 'questions.*.question' => 'required|string',
                 'questions.*.options' => 'required|array',
                 'questions.*.options.*' => 'required|string',
-                'questions.*.correct_answer' => 'required|in:A,B,C,D',
+                'questions.*.correct_answer' => 'required|string|in:A,B,C,D',
+                'questions.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
             $exercise = Exercise::create([
@@ -49,8 +50,8 @@ class ManageExerciseController extends Controller
                 'description' => $validated['description'],
                 'icon' => $validated['icon'],
                 'color' => $validated['color'],
-                'is_active' => true,
-                'total_question' => count($validated['questions'])
+                'total_question' => count($validated['questions']),
+                'is_active' => true
             ]);
 
             ExerciseList::create([
@@ -62,13 +63,18 @@ class ManageExerciseController extends Controller
                 'order' => ExerciseList::max('order') + 1 
             ]);
 
-            // Create questions
             foreach ($validated['questions'] as $questionData) {
+                $imagePath = null;
+                if (isset($questionData['image']) && $questionData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    $imagePath = $questionData['image']->store('images/latihan_soal', 'public');
+                }
+
                 Question::create([
                     'exercise_id' => $exercise->id,
                     'question' => $questionData['question'],
                     'options' => $questionData['options'],
                     'correct_answer' => $questionData['correct_answer'],
+                    'image_path' => $imagePath,
                 ]);
             }
 
@@ -85,40 +91,63 @@ class ManageExerciseController extends Controller
 
     public function update(Request $request, Exercise $exercise)
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'icon' => 'required|string|max:255',
+            'color' => 'required|string|max:255',
+            'questions' => 'required|array',
+            'questions.*.question' => 'required|string',
+            'questions.*.options' => 'required|array',
+            'questions.*.options.*' => 'required|string',
+            'questions.*.correct_answer' => 'required|string|in:A,B,C,D',
+            'questions.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $originalTitle = $exercise->title;
+
         try {
             DB::beginTransaction();
 
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
-                'icon' => 'required|string',
-                'color' => 'required|string',
-                'questions' => 'required|array|min:1',
-                'questions.*.question' => 'required|string',
-                'questions.*.options' => 'required|array',
-                'questions.*.correct_answer' => 'required|string'
-            ]);
-
-            $originalTitle = $exercise->title;
-
-            // Update exercise
             $exercise->update([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'icon' => $validated['icon'],
                 'color' => $validated['color'],
-                'total_question' => count($validated['questions'])
+                'total_question' => count($validated['questions']),
             ]);
 
-            $exercise->questions()->delete();
-
+            $existingQuestionIds = [];
             foreach ($validated['questions'] as $questionData) {
-                $exercise->questions()->create([
-                    'question' => $questionData['question'],
-                    'options' => $questionData['options'],
-                    'correct_answer' => $questionData['correct_answer'],
-                ]);
+                $imagePath = $questionData['image_path'] ?? null;
+                if (isset($questionData['image']) && $questionData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    if ($imagePath) {
+                        \Storage::disk('public')->delete($imagePath);
+                    }
+                    $imagePath = $questionData['image']->store('images/latihan_soal', 'public');
+                }
+
+                if (isset($questionData['id'])) {
+                    $question = Question::findOrFail($questionData['id']);
+                    $question->update([
+                        'question' => $questionData['question'],
+                        'options' => $questionData['options'],
+                        'correct_answer' => $questionData['correct_answer'],
+                        'image_path' => $imagePath,
+                    ]);
+                    $existingQuestionIds[] = $questionData['id'];
+                } else {
+                    $question = $exercise->questions()->create([
+                        'question' => $questionData['question'],
+                        'options' => $questionData['options'],
+                        'correct_answer' => $questionData['correct_answer'],
+                        'image_path' => $imagePath,
+                    ]);
+                    $existingQuestionIds[] = $question->id;
+                }
             }
+
+            $exercise->questions()->whereNotIn('id', $existingQuestionIds)->delete();
 
             $exerciseList = ExerciseList::where('title', $originalTitle)->first();
             if ($exerciseList) {

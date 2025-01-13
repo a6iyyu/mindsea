@@ -1,5 +1,5 @@
 @component('components.admin.materials.modal', ['id' => 'edit_exercise_modal', 'title' => 'Edit Latihan'])
-    <form id="edit_exercise_form" method="POST" class="space-y-6">
+    <form id="edit_exercise_form" method="POST" class="space-y-6" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -167,8 +167,56 @@ function addEditQuestion(questionData = null) {
                 <option value="D" ${questionData?.correct_answer === 'D' ? 'selected' : ''}>D</option>
             </select>
         </div>
+        <div class="mt-4 space-y-2">
+            <label class="block text-sm text-gray-600">Gambar (Opsional)</label>
+            <div class="image-preview-container">
+                <input type="file" name="questions[${editQuestionCount-1}][image]" accept="image/*"
+                    onchange="handleImagePreview(this, this.parentElement)"
+                    class="mt-1 block w-full">
+                <input type="hidden" name="questions[${editQuestionCount-1}][delete_image]" value="0">
+                <div class="relative mt-2">
+                    <img src="${questionData?.image_path ? '/storage/' + questionData.image_path : '#'}" 
+                        alt="Question Image" 
+                        class="${questionData?.image_path ? '' : 'hidden'} max-h-40 rounded-lg">
+                    <button type="button" 
+                        onclick="deleteImage(${editQuestionCount-1}, this.closest('.image-preview-container'))"
+                        class="delete-image absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 ${questionData?.image_path ? '' : 'hidden'}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     `;
     container.appendChild(questionDiv);
+}
+
+function handleImagePreview(input, previewContainer, existingImagePath) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = previewContainer.querySelector('img');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            
+            const deleteBtn = previewContainer.querySelector('.delete-image');
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function deleteImage(questionIndex, previewContainer) {
+    const fileInput = document.querySelector(`input[name="questions[${questionIndex}][image]"]`);
+    if (fileInput) fileInput.value = '';
+    
+    const preview = previewContainer.querySelector('img');
+    if (preview) preview.classList.add('hidden');
+    
+    const deleteFlag = document.querySelector(`input[name="questions[${questionIndex}][delete_image]"]`);
+    if (deleteFlag) deleteFlag.value = '1';
+    
+    const deleteBtn = previewContainer.querySelector('.delete-image');
+    if (deleteBtn) deleteBtn.classList.add('hidden');
 }
 </script>
 @endcomponent 

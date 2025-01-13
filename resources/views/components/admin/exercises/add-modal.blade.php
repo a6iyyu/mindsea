@@ -1,5 +1,5 @@
 @component('components.admin.materials.modal', ['id' => 'add_exercise_modal', 'title' => 'Tambah Latihan'])
-<form action="{{ route('admin.exercises.store') }}" method="POST" id="addExerciseForm">
+<form action="{{ route('admin.exercises.store') }}" method="POST" id="addExerciseForm" enctype="multipart/form-data">
     @csrf
     <div class="space-y-10">
         <fieldset>
@@ -8,31 +8,18 @@
         </fieldset>
         <fieldset>
             <label class="block text-sm text-gray-600">Deskripsi</label>
-            <textarea
-                name="description"
-                rows="2"
-                required
-                class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"
-            ></textarea>
+            <textarea name="description" rows="2" required
+                class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
         </fieldset>
         <div class="grid grid-cols-2 gap-4">
             <fieldset>
                 <label class="block text-sm text-gray-600">Ikon</label>
-                <input
-                    type="text"
-                    name="icon"
-                    required
-                    placeholder="fa-calculator"
-                    class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                />
+                <input type="text" name="icon" required placeholder="fa-calculator"
+                    class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
             </fieldset>
             <fieldset>
                 <label class="block text-sm text-gray-600">Warna</label>
-                <select
-                    name="color"
-                    required
-                    class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                >
+                <select name="color" required class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3">
                     <option value="blue">Biru</option>
                     <option value="green">Hijau</option>
                     <option value="yellow">Kuning</option>
@@ -123,6 +110,11 @@
                 <option value="C">C</option>
                 <option value="D">D</option>
             </select>
+        </div>
+        <div class="mt-4">
+            <label class="block text-sm text-gray-600">Gambar (Opsional)</label>
+            <input type="file" name="questions[${questionCount - 1}][image]" accept="image/*"
+                class="mt-1 block w-full">
         </div>
     `;
         container.appendChild(questionDiv);
