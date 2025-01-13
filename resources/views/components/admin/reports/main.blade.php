@@ -52,7 +52,25 @@
     </section>
 
     <section class="bg-white p-6 rounded-xl border-4 border-gray-200 shadow-md mb-8">
-        <h2 class="text-xl font-bold text-gray-800 mb-6">Statistik Bulanan</h2>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-800">Statistik Bulanan</h2>
+            <div>
+                <select id="monthFilter" class="rounded-xl border-2 border-gray-200 p-2">
+                    @foreach(range(1, 12) as $month)
+                        <option value="{{ $month }}" {{ date('n') == $month ? 'selected' : '' }}>
+                            {{ date('F', mktime(0, 0, 0, $month, 1)) }}
+                        </option>
+                    @endforeach
+                </select>
+                <select id="yearFilter" class="rounded-xl border-2 border-gray-200 p-2">
+                    @foreach(range(date('Y'), date('Y')-2) as $year)
+                        <option value="{{ $year }}" {{ date('Y') == $year ? 'selected' : '' }}>
+                            {{ $year }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
         <canvas id="monthlyStats" height="100"></canvas>
     </section>
 
@@ -70,27 +88,62 @@
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('monthlyStats').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: @json($monthlyStats),
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
+    let chartInstance = null;
+
+    function updateChart(month, year) {
+        const canvas = document.getElementById('monthlyStats');
+        canvas.style.opacity = '0.5';
+
+        fetch(`/admin/reports/monthly-stats/${year}/${month}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            }
-        });
+                });
+                canvas.style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error fetching stats:', error);
+                canvas.style.opacity = '1';
+            });
+    }
+
+    document.getElementById('monthFilter').addEventListener('change', function() {
+        const year = document.getElementById('yearFilter').value;
+        updateChart(this.value, year);
+    });
+
+    document.getElementById('yearFilter').addEventListener('change', function() {
+        const month = document.getElementById('monthFilter').value;
+        updateChart(month, this.value);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const month = document.getElementById('monthFilter').value;
+        const year = document.getElementById('yearFilter').value;
+        updateChart(month, year);
     });
 </script>

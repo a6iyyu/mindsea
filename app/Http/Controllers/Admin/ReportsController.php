@@ -57,20 +57,20 @@ class ReportsController extends Controller
                 [
                     'label' => 'Pengguna Baru',
                     'data' => array_map(fn($month) => $userSignups[$month] ?? 0, $months),
-                    'borderColor' => '#3b82f6',
-                    'backgroundColor' => '#3b82f680',
+                    'borderColor' => '#f59e0b',
+                    'backgroundColor' => '#f59e0b40',
                 ],
                 [
                     'label' => 'Materi Selesai',
                     'data' => array_map(fn($month) => $materialCompletions[$month] ?? 0, $months),
                     'borderColor' => '#22c55e',
-                    'backgroundColor' => '#22c55e80',
+                    'backgroundColor' => '#22c55e40',
                 ],
                 [
                     'label' => 'Latihan Selesai',
                     'data' => array_map(fn($month) => $exerciseCompletions[$month] ?? 0, $months),
-                    'borderColor' => '#f59e0b',
-                    'backgroundColor' => '#f59e0b80',
+                    'borderColor' => '#3b82f6',
+                    'backgroundColor' => '#3b82f640',
                 ],
             ]
         ];
@@ -95,5 +95,64 @@ class ReportsController extends Controller
             ->orderByDesc('count')
             ->limit(5)
             ->get();
+    }
+
+    public function getMonthlyStatsForDate($year, $month)
+    {
+        try {
+            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+            $endDate = Carbon::create($year, $month, 1)->endOfMonth();
+
+            $stats = Activity::whereBetween('created_at', [$startDate, $endDate])
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count, type')
+                ->groupBy('date', 'type')
+                ->get();
+
+            $colors = [
+                'login' => '#f59e0b',
+                'material_view' => '#22c55e',
+                'exercise_complete' => '#3b82f6',
+                'material_complete' => '#8b5cf6',
+                'default' => '#64748b'
+            ];
+
+            $datasets = [];
+            $types = $stats->pluck('type')->unique();
+
+            foreach ($types as $type) {
+                $data = [];
+                $dates = $stats->where('type', $type)
+                              ->pluck('count', 'date')
+                              ->toArray();
+
+                $currentDate = $startDate->copy();
+                while ($currentDate <= $endDate) {
+                    $dateStr = $currentDate->format('Y-m-d');
+                    $data[] = [
+                        'x' => $dateStr,
+                        'y' => $dates[$dateStr] ?? 0
+                    ];
+                    $currentDate->addDay();
+                }
+
+                $color = $colors[$type] ?? $colors['default'];
+                
+                $datasets[] = [
+                    'label' => ucfirst(str_replace('_', ' ', $type)),
+                    'data' => $data,
+                    'borderColor' => $color,
+                    'backgroundColor' => $color . '20',
+                    'fill' => false,
+                    'tension' => 0.1
+                ];
+            }
+
+            return response()->json([
+                'datasets' => $datasets
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in monthly stats: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch statistics'], 500);
+        }
     }
 }

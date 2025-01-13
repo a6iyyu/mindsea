@@ -1,4 +1,21 @@
 <section class="space-y-4">
+  <!-- Notification Modal -->
+  <div id="notification-modal" class="fixed inset-0 z-50 hidden">
+    <div class="fixed inset-0 bg-black/50"></div>
+    <div class="fixed left-1/2 top-1/2 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 space-y-4 rounded-xl bg-white p-6 shadow-xl">
+      <header class="flex items-center justify-between">
+        <h3 class="text-xl font-semibold text-gray-800" id="modal-title"></h3>
+        <button onclick="closeNotificationModal()" class="text-gray-500 hover:text-gray-700">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </header>
+      <div class="space-y-4">
+        <p class="text-gray-600" id="modal-message"></p>
+        <time class="text-sm text-gray-500" id="modal-time"></time>
+      </div>
+    </div>
+  </div>
+
   @if(isset($notifications) && count($notifications) > 0)
     <div class="flex justify-end mb-4 gap-4">
       <button onclick="markAllAsRead()" class="text-blue-500 hover:text-blue-700 flex items-center gap-2">
@@ -15,9 +32,11 @@
     <ul class="notification-list flex flex-col gap-4">
     @foreach($notifications as $notification)
     <li class="notification-item" id="notification-{{ $notification->id }}">
-      <article class="flex flex-col items-start gap-4 rounded-xl border-2 p-6 shadow-sm hover:shadow-md 
-       border-{{ $notification->color }}-100 bg-{{ $notification->color }}-50 
-       {{ $notification->is_read ? 'opacity-75' : '' }} lg:flex-row">
+      <article 
+        onclick="showNotificationModal('{{ $notification->id }}', '{{ $notification->title }}', '{{ $notification->message }}', '{{ $notification->time_ago }}')"
+        class="cursor-pointer flex flex-col items-start gap-4 rounded-xl border-2 p-6 shadow-sm hover:shadow-md 
+        border-{{ $notification->color }}-100 bg-{{ $notification->color }}-50 
+        {{ $notification->is_read ? 'opacity-75' : '' }} lg:flex-row">
       <figure class="rounded-full bg-{{ $notification->color }}-100 p-3">
         <i class="{{ $notification->icon }} text-{{ $notification->color }}-500 text-2xl"></i>
       </figure>
@@ -53,47 +72,70 @@
   @endif
 
   <script>
+    function showNotificationModal(id, title, message, time) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-message').textContent = message;
+      document.getElementById('modal-time').textContent = time;
+      
+      document.getElementById('notification-modal').classList.remove('hidden');
+      
+      markAsRead(id);
+    }
+
+    function closeNotificationModal() {
+      document.getElementById('notification-modal').classList.add('hidden');
+    }
+
+    document.getElementById('notification-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeNotificationModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeNotificationModal();
+      }
+    });
+
     function markAsRead(id) {
       if (!id) return;
       
-      fetch(`/notifikasi/${id}/mark-as-read`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-      })
-      .then(response => {
-        if (response.status === 404) {
-          throw new Error('Notification not found');
-        }
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          const notification = document.querySelector(`#notification-${id}`);
-          if (notification) {
-            const article = notification.querySelector('article');
+      const notification = document.querySelector(`#notification-${id}`);
+      const article = notification?.querySelector('article');
+      
+      if (article && !article.classList.contains('opacity-75')) {
+        fetch(`/notifikasi/${id}/mark-as-read`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          }
+        })
+        .then(response => {
+          if (response.status === 404) {
+            throw new Error('Notification not found');
+          }
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            article.classList.add('opacity-75');
             const button = notification.querySelector('button');
-            
-            if (article) article.classList.add('opacity-75');
             if (button) button.remove();
-            
             updateNotificationCount();
           }
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        if (error.message === 'Notification not found') {
-          alert('Notifikasi tidak ditemukan');
-        } else {
-          alert('Gagal menandai notifikasi sebagai telah dibaca. Silakan coba lagi.');
-        }
-      });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          if (error.message === 'Notification not found') {
+            alert('Notifikasi tidak ditemukan');
+          }
+        });
+      }
     }
 
     function markAllAsRead() {

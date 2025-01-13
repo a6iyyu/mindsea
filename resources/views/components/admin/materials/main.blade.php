@@ -1,11 +1,11 @@
 <section class="mb-8 flex flex-col items-start justify-between gap-y-4 lg:flex-row lg:items-center">
     <h2 class="font-bold text-3xl text-gray-800">Kelola Materi</h2>
     <button
-        onclick="open_modal('add_exercise_modal')"
+        onclick="open_modal('add_material_modal')"
         class="flex items-center gap-3 px-6 py-3 transition-colors rounded-xl bg-blue-500 text-white hover:bg-blue-600"
     >
         <i class="fas fa-plus"></i>
-        <h5>Tambah Latihan</h5>
+        <h5>Tambah Materi</h5>
     </button>
 </section>
 @if(session('success'))
@@ -114,12 +114,33 @@
     }
 
     function open_modal(id_modal) {
-        document.getElementById(id_modal).classList.remove('hidden');
+        const modal = document.getElementById(id_modal);
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } else {
+            console.error(`Modal with id ${id_modal} not found`);
+        }
     }
 
     function close_modal(id_modal) {
-        document.getElementById(id_modal).classList.add('hidden');
+        const modal = document.getElementById(id_modal);
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
     }
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('fixed')) {
+            const modals = document.querySelectorAll('.fixed.inset-0.z-50');
+            modals.forEach(modal => {
+                if (!modal.classList.contains('hidden')) {
+                    close_modal(modal.id);
+                }
+            });
+        }
+    });
 
     function toggleAktif(id) {
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

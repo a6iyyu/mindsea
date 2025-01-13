@@ -1,12 +1,12 @@
 <section class="mb-8 flex flex-col items-start justify-between gap-y-4 lg:flex-row lg:items-center">
     <h2 class="font-bold text-3xl text-gray-800">Kelola Pengguna</h2>
-    <a
-        href="{{ route('admin.users.create') }}"
+    <button
+        onclick="open_modal('add_user_modal')"
         class="flex items-center gap-3 px-6 py-3 transition-colors rounded-xl bg-blue-500 text-white hover:bg-blue-600"
     >
         <i class="fas fa-plus"></i>
         <h5>Tambah Pengguna</h5>
-    </a>
+    </button>
 </section>
 @if(session('success'))
     <h4 class="mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
@@ -43,7 +43,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <span class="flex items-center justify-end gap-2">
-                            <a href="{{ route('admin.users.edit', $user) }}" class="fas fa-edit text-blue-600 hover:text-blue-900"></a>
+                            <button
+                                onclick='edit_user(@json($user->id), @json($user->name), @json($user->email), @json($user->is_admin))'
+                                class="fas fa-edit text-blue-500 hover:text-blue-600">
+                            </button>
                             <form
                                 action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline"
                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')"
@@ -62,3 +65,67 @@
 <section class="mt-4">
     {{ $users->links() }}
 </section>
+
+@include('components.admin.users.user-modal', [
+    'id' => 'add_user_modal',
+    'title' => 'Tambah Pengguna',
+    'submitText' => 'Tambah Pengguna'
+])
+
+@include('components.admin.users.user-modal', [
+    'id' => 'edit_user_modal',
+    'title' => 'Edit Pengguna',
+    'submitText' => 'Simpan Perubahan'
+])
+
+<script>
+    let currentModal = null;
+
+    function open_modal(id_modal) {
+        const modal = document.getElementById(id_modal);
+        if (modal) {
+            if (currentModal) {
+                currentModal.classList.add('hidden');
+            }
+            
+            currentModal = modal;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } else {
+            console.error(`Modal with id ${id_modal} not found`);
+        }
+    }
+
+    function close_modal(id_modal) {
+        const modal = document.getElementById(id_modal);
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentModal = null;
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('fixed') && currentModal) {
+            close_modal(currentModal.id);
+        }
+    });
+
+    function edit_user(id, name, email, is_admin) {
+        const modal = document.getElementById('edit_user_modal');
+        const form = modal?.querySelector('form');
+        if (!form) return;
+        
+        form.action = `/admin/users/${id}`;
+        
+        const nameInput = form.querySelector('input[name="name"]');
+        const emailInput = form.querySelector('input[name="email"]');
+        const roleSelect = form.querySelector('select[name="is_admin"]');
+        
+        if (nameInput) nameInput.value = name;
+        if (emailInput) emailInput.value = email;
+        if (roleSelect) roleSelect.value = is_admin ? "1" : "0";
+        
+        open_modal('edit_user_modal');
+    }
+</script>
