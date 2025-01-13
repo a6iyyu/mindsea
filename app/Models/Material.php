@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Material extends Model
 {
     protected $table = 'materials';
-    protected $fillable = [ 'title', 'description', 'difficulty_level', 'is_active'];
+    protected $fillable = [ 'title', 'description', 'difficulty_level', 'is_active', 'color'];
 
     public function contents()
     {

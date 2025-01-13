@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->enum('difficulty_level', ['mudah', 'sedang', 'sulit'])->default('mudah');
+            $table->string('color')->default('blue');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

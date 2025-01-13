@@ -15,34 +15,33 @@ class ManageExerciseController extends Controller
 {
     use NotificationHelper;
 
-    public function index()
+    public function index(Request $request)
     {
-        $exercises = ExerciseList::with('exercise.questions')->latest()->paginate(10);
+        $search = $request->input('search');
+
+        $exercises = Exercise::when($search, function ($query, $search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        })->paginate(10);
+
         return view('pages.admin.exercises', compact('exercises'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'icon' => 'required|string',
-            'color' => 'required|string',
-            'questions' => 'required|array|min:1',
-            'questions.*.question' => 'required|string',
-            'questions.*.options' => 'required|array|size:4',
-            'questions.*.correct_answer' => 'required|string|size:1'
-        ]);
-
         try {
             DB::beginTransaction();
 
-            $exerciseList = ExerciseList::create([
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'icon' => $validated['icon'],
-                'color' => $validated['color'],
-                'total_question' => count($validated['questions']),
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'icon' => 'required|string|max:255',
+                'color' => 'required|in:blue,green,yellow,red,purple,orange,pink,gray,indigo,teal',
+                'questions' => 'required|array',
+                'questions.*.question' => 'required|string',
+                'questions.*.options' => 'required|array',
+                'questions.*.options.*' => 'required|string',
+                'questions.*.correct_answer' => 'required|in:A,B,C,D',
             ]);
 
             $exercise = Exercise::create([
@@ -50,9 +49,20 @@ class ManageExerciseController extends Controller
                 'description' => $validated['description'],
                 'icon' => $validated['icon'],
                 'color' => $validated['color'],
+                'is_active' => true,
                 'total_question' => count($validated['questions'])
             ]);
 
+            ExerciseList::create([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'icon' => $validated['icon'],
+                'color' => $validated['color'],
+                'is_active' => true,
+                'order' => ExerciseList::max('order') + 1 
+            ]);
+
+            // Create questions
             foreach ($validated['questions'] as $questionData) {
                 Question::create([
                     'exercise_id' => $exercise->id,
@@ -64,68 +74,60 @@ class ManageExerciseController extends Controller
 
             DB::commit();
 
-            Auth::user()->logActivity(
-                'Latihan Baru Ditambahkan',
-                "Admin telah membuat latihan baru: {$exerciseList->title}",
-                'exercise_created'
-            );
+            return redirect()->route('admin.exercises.index')
+                ->with('success', 'Latihan berhasil ditambahkan!');
 
-            $this->sendNotification(
-                'Latihan Baru Tersedia',
-                "Latihan baru telah ditambahkan: {$exerciseList->title}",
-                'exercise_added',
-                'fa-pencil',
-                'purple'
-            );
-
-            return redirect()->route('pages.admin.exercises')->with('success', 'Latihan baru berhasil dibuat');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal membuat latihan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function update(Request $request, ExerciseList $exercise)
+    public function update(Request $request, Exercise $exercise)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'icon' => 'required|string',
-            'color' => 'required|string',
-            'questions' => 'required|array|min:1',
-            'questions.*.question' => 'required|string',
-            'questions.*.options' => 'required|array|size:4',
-            'questions.*.correct_answer' => 'required|string|size:1'
-        ]);
-
         try {
             DB::beginTransaction();
 
-            $exerciseModel = Exercise::where('title', $exercise->title)->first();
-            if (!$exerciseModel) throw new \Exception('Exercise not found');
-
-            $exerciseModel->update([
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'icon' => $validated['icon'],
-                'color' => $validated['color'],
-                'total_question' => count($validated['questions']),
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'icon' => 'required|string',
+                'color' => 'required|string',
+                'questions' => 'required|array|min:1',
+                'questions.*.question' => 'required|string',
+                'questions.*.options' => 'required|array',
+                'questions.*.correct_answer' => 'required|string'
             ]);
 
+            $originalTitle = $exercise->title;
+
+            // Update exercise
             $exercise->update([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'icon' => $validated['icon'],
                 'color' => $validated['color'],
+                'total_question' => count($validated['questions'])
             ]);
 
-            $exerciseModel->questions()->delete();
+            $exercise->questions()->delete();
+
             foreach ($validated['questions'] as $questionData) {
-                Question::create([
-                    'exercise_id' => $exerciseModel->id,
+                $exercise->questions()->create([
                     'question' => $questionData['question'],
                     'options' => $questionData['options'],
                     'correct_answer' => $questionData['correct_answer'],
+                ]);
+            }
+
+            $exerciseList = ExerciseList::where('title', $originalTitle)->first();
+            if ($exerciseList) {
+                $exerciseList->update([
+                    'title' => $validated['title'],
+                    'description' => $validated['description'],
+                    'icon' => $validated['icon'],
+                    'color' => $validated['color'],
+                    'is_active' => $exercise->is_active
                 ]);
             }
 
@@ -137,33 +139,28 @@ class ManageExerciseController extends Controller
                 'exercise_updated'
             );
 
-            $this->sendNotification(
-                'Latihan Diperbarui',
-                "Latihan telah diperbarui: {$validated['title']}",
-                'exercise_updated',
-                'fa-edit',
-                'blue'
-            );
+            return redirect()->route('admin.exercises.index')
+                ->with('success', 'Latihan berhasil diubah!');
 
-            return redirect()->route('admin.exercises.index')->with('success', 'Latihan berhasil diubah');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal mengubah latihan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function destroy(ExerciseList $exercise)
+    public function destroy(Exercise $exercise)
     {
         try {
             DB::beginTransaction();
 
-            $exerciseModel = Exercise::where('title', $exercise->title)->first();
-            if ($exerciseModel) {
-                $exerciseModel->questions()->delete();
-                $exerciseModel->delete();
+            $exerciseList = ExerciseList::where('title', $exercise->title)->first();
+            if ($exerciseList) {
+                $exerciseList->delete();
             }
 
+            $exercise->questions()->delete();
             $exercise->delete();
+
             DB::commit();
 
             Auth::user()->logActivity(
@@ -185,5 +182,45 @@ class ManageExerciseController extends Controller
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus latihan: ' . $e->getMessage());
         }
+    }
+
+    public function toggleStatus(Exercise $exercise)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $newStatus = !$exercise->is_active;
+            
+            $exercise->update(['is_active' => $newStatus]);
+            
+            ExerciseList::where('title', $exercise->title)->update([
+                'is_active' => $newStatus
+            ]);
+
+            DB::commit();
+
+            Auth::user()->logActivity(
+                'Status Latihan Diubah',
+                "Admin telah mengubah status latihan: {$exercise->title}",
+                'exercise_status_updated'
+            );
+
+            return response()->json([
+                'success' => true,
+                'status' => $newStatus,
+                'message' => $newStatus ? 'Latihan diaktifkan.' : 'Latihan dinonaktifkan.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getData(Exercise $exercise)
+    {
+        return response()->json($exercise->load('questions'));
     }
 }

@@ -25,8 +25,8 @@
             </h5>
 
             <button
-                onclick="window.SpeakText('Latihan {{ $exercise_list->title }}, {{ $exercise_list->description }} {{ $userExercise ? ', Latihan, sudah, selesai, pada, ' . $userExercise->completed_at->diffForHumans(['locale' => 'id']) . ', nilai: ' . $userExercise->score . ', apakah, anda, ingin, mengulangi, latihan, ini, lagi?' : ': Latihan, ini, belum, selesai. apakah, anda, ingin, mencoba, latihan, ini?' }}')"
-                class="mb-6 flex items-center gap-2 px-4 py-2 transform rounded-lg {{ $userExercise ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700' }} hover:bg-amber-200 transition-colors"
+                onclick="window.SpeakText('Latihan {{ $exercise_list->title }} {{ $exercise_list->description }} {{ $userExercise ? ', Latihan sudah selesai pada ' . $userExercise->completed_at->diffForHumans(['locale' => 'id']) . ', nilai: ' . $userExercise->score . ', apakah anda ingin mengulangi latihan ini lagi?' : ': Latihan, ini, belum, selesai. apakah, anda, ingin, mencoba, latihan, ini?' }}')"
+                class="mb-6 flex items-center gap-2 px-4 py-2 transform rounded-lg {{ $userExercise ? 'bg-gray-100 text-gray-500' : 'bg-' . $exercise_list->color . '-100 text-' . $exercise_list->color . '-700' }} hover:bg-amber-200 transition-colors"
             >
                 <i class="fas fa-volume-up" aria-hidden="true"></i>
                 <h4>Dengarkan</h4>

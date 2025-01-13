@@ -12,9 +12,10 @@ class MaterialController extends Controller
 {
     public function index()
     {
-        $materi = Material::with(['progress' => function ($query) {
-            $query->where('user_id', Auth::id());
-        }])->get();
+        $materi = Material::where('is_active', true)
+            ->with(['progress' => function ($query) {
+                $query->where('user_id', Auth::id());
+            }])->get();
 
         $totalMateri = $materi->count();
         $completedMateri = $materi->filter(function ($item) {
@@ -39,8 +40,11 @@ class MaterialController extends Controller
 
         if (!$keyword) return response()->json([]);
 
-        $results = Material::where('title', 'like', "%{$keyword}%")
-            ->orWhere('description', 'like', "%{$keyword}%")
+        $results = Material::where('is_active', true)
+            ->where(function($query) use ($keyword) {
+                $query->where('title', 'like', "%{$keyword}%")
+                      ->orWhere('description', 'like', "%{$keyword}%");
+            })
             ->select('id', 'title', 'description')
             ->limit(5)
             ->get();

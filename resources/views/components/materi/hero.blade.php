@@ -7,8 +7,10 @@
   </div>
 </section>
 <button
-  onclick="window.SpeakText('Materi Pembelajaran, Pilih materi yang ingin kamu pelajari, total materi: {{ $totalMateri }}, materi selesai: {{ $completedMateri }} dari {{ $totalMateri }} materi, progress belajar: {{ round(($completedMateri / $totalMateri) * 100) }}% dari total materi')"
-  class="mt-4 mb-4 flex items-center gap-2 px-4 py-2 transform rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">
+  onclick="handleSpeakText('Materi Pembelajaran, Pilih materi yang ingin kamu pelajari, total materi: {{ $totalMateri }}, materi selesai: {{ $completedMateri }} dari {{ $totalMateri }} materi, progress belajar: {{ $totalMateri > 0 ? round(($completedMateri / $totalMateri) * 100) : 0 }}% dari total materi')"
+  class="mt-4 mb-4 flex items-center gap-2 px-4 py-2 transform rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors"
+  aria-label="Dengarkan deskripsi"
+>
   <i class="fas fa-volume-up" aria-hidden="true"></i>
   <h4>Dengarkan</h4>
 </button>
@@ -40,8 +42,30 @@
       <i class="fa-solid fa-trophy bg-blue-50 p-3 rounded-lg text-blue-500 text-xl"></i>
       <div>
         <p class="text-gray-600">Progress Belajar</p>
-        <h4 class="text-2xl font-bold text-gray-800">{{ round(($completedMateri / $totalMateri) * 100) }}%</h4>
+        <h4 class="text-2xl font-bold text-gray-800">{{ $totalMateri > 0 ? round(($completedMateri / $totalMateri) * 100) : 0 }}%</h4>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+function handleSpeakText(text) {
+    try {
+        if ("speechSynthesis" in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "id-ID";
+            utterance.rate = 0.9;
+            
+            window.speechSynthesis.cancel();
+            
+            window.speechSynthesis.speak(utterance);
+        } else {
+            console.warn("Browser tidak mendukung fitur Text-to-Speech");
+            alert("Maaf, browser Anda tidak mendukung fitur Text-to-Speech");
+        }
+    } catch (error) {
+        console.error("Error in Text-to-Speech:", error);
+        alert("Maaf, terjadi kesalahan saat memproses Text-to-Speech");
+    }
+}
+</script>

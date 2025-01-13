@@ -30,6 +30,11 @@
                             <option value="yellow">Kuning</option>
                             <option value="red">Merah</option>
                             <option value="purple">Ungu</option>
+                            <option value="orange">Orange</option>
+                            <option value="pink">Pink</option>
+                            <option value="gray">Abu-abu</option>
+                            <option value="indigo">Indigo</option>
+                            <option value="teal">Teal</option>
                         </select>
                     </div>
                 </div>
@@ -66,26 +71,43 @@
 let editQuestionCount = 0;
 
 function edit_exercise(id) {
-    const exercise = @json($exercises->keyBy('id'));
-    const currentExercise = exercise[id];
-    
-    const form = document.getElementById('edit_exercise_form');
-    form.action = `/admin/exercises/${id}`;
-    
-    document.getElementById('edit_title').value = currentExercise.title;
-    document.getElementById('edit_description').value = currentExercise.description;
-    document.getElementById('edit_icon').value = currentExercise.icon;
-    document.getElementById('edit_color').value = currentExercise.color;
-    
-    const container = document.getElementById('edit-questions-container');
-    container.innerHTML = '';
-    editQuestionCount = 0;
-    
-    currentExercise.exercise.questions.forEach(question => {
-        addEditQuestion(question);
-    });
-    
-    open_modal('edit_exercise_modal');
+    fetch(`/admin/exercises/${id}/data`)
+        .then(response => response.json())
+        .then(exercise => {
+            currentExercise = exercise;
+
+            const form = document.getElementById('edit_exercise_form');
+            form.action = `/admin/exercises/${currentExercise.id}`;
+            
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'PUT';
+            form.appendChild(methodInput);
+            
+            document.getElementById('edit_title').value = currentExercise.title;
+            document.getElementById('edit_description').value = currentExercise.description;
+            document.getElementById('edit_icon').value = currentExercise.icon;
+            
+            const colorSelect = document.getElementById('edit_color');
+            colorSelect.value = currentExercise.color;
+            
+            const container = document.getElementById('edit-questions-container');
+            container.innerHTML = '';
+            editQuestionCount = 0;
+            
+            if (currentExercise.questions && currentExercise.questions.length > 0) {
+                currentExercise.questions.forEach(question => {
+                    addEditQuestion(question);
+                });
+            }
+            
+            open_modal('edit_exercise_modal');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengambil data latihan');
+        });
 }
 
 function addEditQuestion(questionData = null) {

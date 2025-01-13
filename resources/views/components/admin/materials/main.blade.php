@@ -8,15 +8,28 @@
         <h5>Tambah Materi</h5>
     </button>
 </section>
+
+<div id="status-message" class="hidden mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700"></div>
+
 @if(session('success'))
     <h4 class="mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
         {{ session('success') }}
     </h4>
 @endif
+<section class="mb-6">
+    <form action="{{ route('admin.materials.index') }}" method="GET" class="flex items-center gap-4">
+        <input type="text" name="search" placeholder="Cari materi..." value="{{ request('search') }}"
+            class="px-4 py-2 border rounded-md">
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Cari
+        </button>
+    </form>
+</section>
 <section class="text-center rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
+                <th class="px-6 py-4">ID</th>
                 <th class="px-6 py-4">Judul</th>
                 <th class="px-6 py-4">Tingkat Kesulitan</th>
                 <th class="px-6 py-4">Status</th>
@@ -26,6 +39,9 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach($materials as $material)
                 <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ $material->id }}
+                    </td>
                     <td class="px-6 py-4">{{ $material->title }}</td>
                     <td class="px-6 py-4">
                         <span class="rounded-full px-3 py-1 text-sm
@@ -42,15 +58,15 @@
                     </td>
                     <td class="px-6 py-4">
                         <a
-                            onclick="toggleAktif('{{ $material->id }}')"
-                            class="rounded-full px-3 py-1 text-sm cursor-pointer {{ $material->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                            onclick="toggleStatus('{{ $material->id }}')"
+                            class="cursor-pointer rounded-full px-3 py-1 text-sm {{ $material->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
                             {{ $material->is_active ? 'Aktif' : 'Nonaktif' }}
                         </a>
                     </td>
                     <td>
                         <span class="flex items-center justify-center gap-6">
                             <button
-                                onclick='edit_material(@json($material->id), @json($material->title), @json($material->description), @json($material->difficulty_level), @json($material->contents))'
+                                onclick="edit_material('{{ $material->id }}', '{{ $material->title }}', '{{ $material->description }}', '{{ $material->difficulty_level }}', {{ json_encode($material->contents) }}, '{{ $material->color }}')"
                                 class="fas fa-edit text-blue-500 hover:text-blue-600"
                             ></button>
                             <form
@@ -142,10 +158,10 @@
         }
     });
 
-    function toggleAktif(id) {
+    function toggleStatus(id) {
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        fetch(`/admin/materials/${id}/toggle-aktif`, {
+        fetch(`/admin/materials/${id}/toggle-status`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': token,
@@ -153,18 +169,52 @@
                 'Accept': 'application/json',
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status !== undefined) {
-                    const statusElement = document.querySelector(`a[onclick="toggleAktif(${id})"]`);
-                    if (statusElement) {
-                        statusElement.textContent = data.status ? 'Aktif' : 'Nonaktif';
-                        statusElement.classList.remove(data.status ? 'bg-gray-100' : 'bg-green-100');
-                        statusElement.classList.remove(data.status ? 'text-gray-700' : 'text-green-700');
-                        statusElement.classList.add(data.status ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700');
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const statusMessage = document.getElementById('status-message');
+                statusMessage.textContent = data.message;
+                statusMessage.classList.remove('hidden');
+
+                setTimeout(() => {
+                    statusMessage.classList.add('hidden');
+                }, 2000);
+
+                const statusElement = document.querySelector(`a[onclick="toggleStatus('${id}')"]`);
+                if (statusElement) {
+                    statusElement.textContent = data.status ? 'Aktif' : 'Nonaktif';
+                    statusElement.classList.remove('bg-gray-100', 'text-gray-700', 'bg-green-100', 'text-green-700');
+                    if (data.status) {
+                        statusElement.classList.add('bg-green-100');
+                        statusElement.classList.add('text-green-700');
+                    } else {
+                        statusElement.classList.add('bg-gray-100');
+                        statusElement.classList.add('text-gray-700');
                     }
                 }
-            })
-            .catch(error => console.error('Error:', error));
+            } else {
+                const statusMessage = document.getElementById('status-message');
+                statusMessage.textContent = data.message;
+                statusMessage.classList.remove('hidden', 'bg-green-100', 'border-green-400', 'text-green-700');
+                statusMessage.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                statusMessage.classList.remove('hidden');
+
+                setTimeout(() => {
+                    statusMessage.classList.add('hidden');
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.textContent = 'Terjadi kesalahan saat mengubah status materi';
+            statusMessage.classList.remove('hidden', 'bg-green-100', 'border-green-400', 'text-green-700');
+            statusMessage.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+            statusMessage.classList.remove('hidden');
+
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 2000);
+        });
     }
 </script>

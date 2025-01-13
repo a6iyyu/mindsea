@@ -104,8 +104,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Materials Management
     Route::resource('materials', ManageMaterial::class);
-    Route::post('/admin/materials/{material}/toggle-status', [ManageMaterial::class, 'toggle'])->name('admin.materials.toggle');
-    Route::post('/admin/materials/{material}/toggle-aktif', [ManageMaterial::class, 'toggleAktif'])->name('admin.materials.toggle-aktif')->middleware('auth', 'admin');
+    Route::post('/materials/{material}/toggle-status', [ManageMaterial::class, 'toggleStatus'])
+        ->name('materials.toggle-status');
 
     // Activity Log
     Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
@@ -113,7 +113,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Exercise Management
     Route::resource('exercises', ManageExerciseController::class);
-    Route::post('/admin/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggle'])->name('admin.exercises.toggle-status');
+    Route::patch('/exercises/{exercise}/toggle-status', [ManageExerciseController::class, 'toggleStatus'])
+        ->name('exercises.toggle-status');
+    Route::get('/exercises/{exercise}/data', [ManageExerciseController::class, 'getData'])
+        ->name('exercises.data');
 
     // Reports
     Route::get('reports', [ReportsController::class, 'index'])->name('reports');

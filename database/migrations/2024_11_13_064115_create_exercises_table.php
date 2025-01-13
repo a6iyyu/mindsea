@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('color')->nullable();
             $table->integer('total_question')->default('0');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

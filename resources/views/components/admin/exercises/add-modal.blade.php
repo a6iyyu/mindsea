@@ -38,6 +38,11 @@
                     <option value="yellow">Kuning</option>
                     <option value="red">Merah</option>
                     <option value="purple">Ungu</option>
+                    <option value="orange">Orange</option>
+                    <option value="pink">Pink</option>
+                    <option value="gray">Abu-abu</option>
+                    <option value="indigo">Indigo</option>
+                    <option value="teal">Teal</option>
                 </select>
             </fieldset>
         </div>

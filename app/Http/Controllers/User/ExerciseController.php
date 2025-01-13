@@ -13,16 +13,28 @@ class ExerciseController extends Controller
 {
     public function index()
     {
-        $exercise_lists = ExerciseList::where('is_active', true)->orderBy('order')->get();
-        $completedExercises = UserExercise::where('user_id', Auth::id())->count();
-        $bestScore = UserExercise::where('user_id', Auth::id())->max('score') ?? 0;
+        $exercise_lists = ExerciseList::where('is_active', true)
+            ->whereHas('exercise', function($query) {
+                $query->where('is_active', true);
+            })
+            ->get();
+
+        $completedExercises = UserExercise::where('user_id', auth()->id())->count();
+        $bestScore = UserExercise::where('user_id', auth()->id())->max('score') ?? 0;
 
         return view('pages.latihan', compact('exercise_lists', 'completedExercises', 'bestScore'));
     }
 
     public function showSection(ExerciseList $section)
     {
-        $exercise = Exercise::where('title', $section->title)->first();
+        if (!$section->is_active) {
+            abort(404);
+        }
+
+        $exercise = Exercise::where('title', $section->title)
+            ->where('is_active', true)
+            ->first();
+        
         if (!$exercise) abort(404);
 
         $questions = $exercise->questions()->paginate(5);

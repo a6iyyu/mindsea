@@ -6,7 +6,7 @@
     <h5 class="ml-1 hidden lg:inline">Kembali ke daftar materi</h5>
   </a>
   <section class="mt-6 grid grid-cols-1 gap-6 lg:grid lg:grid-cols-4">
-    <header class="flex flex-col items-start justify-center gap-4 mb-6 col-span-3 lg:items-center">
+    <header class="flex flex-col items-start gap-4 mb-6 col-span-3 lg:items-center">
       <div class="w-full flex items-center gap-4">
         <i class="fa-solid fa-book-open hidden bg-purple-100 p-4 rounded-xl text-purple-500 text-2xl lg:inline"></i>
         <h1 class="text-xl font-bold text-purple-700 lg:text-3xl">

@@ -13,9 +13,18 @@ class ManageMaterial extends Controller
 {
     use NotificationHelper;
 
-    public function index()
+    // Define available colors
+    private $colors = ['blue', 'green', 'yellow', 'red', 'purple', 'orange', 'pink', 'gray', 'violet', 'indigo', 'amber', 'emerald', 'teal', 'cyan', 'sky', 'lime', 'fuchsia'];
+
+    public function index(Request $request)
     {
-        $materials = Material::with(['contents'])->latest()->paginate(10);
+        $search = $request->input('search');
+
+        $materials = Material::when($search, function ($query, $search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        })->paginate(10);
+
         return view('pages.admin.materials', compact('materials'));
     }
 
@@ -35,12 +44,16 @@ class ManageMaterial extends Controller
                 'contents.*.content' => 'required|string',
                 'contents.*.audio_text' => 'nullable|string',
                 'contents.*.image' => 'nullable|image|max:2048',
+                'color' => 'required|in:' . implode(',', $this->colors),
             ]);
+
+            $color = $validated['color'];
 
             $material = Material::create([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
-                'difficulty_level' => $validated['difficulty_level']
+                'difficulty_level' => $validated['difficulty_level'],
+                'color' => $color,
             ]);
 
             foreach ($validated['contents'] as $content) {
@@ -93,6 +106,7 @@ class ManageMaterial extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'difficulty_level' => 'required|in:mudah,sedang,sulit',
+            'color' => 'required|in:' . implode(',', $this->colors),
             'contents' => 'required|array|min:3',
             'contents.*.id' => 'nullable|exists:material_contents,id',
             'contents.*.section_type' => 'required|in:pengenalan,materi_utama,latihan',
@@ -109,11 +123,11 @@ class ManageMaterial extends Controller
             $oldDescription = $material->description;
             $oldContents = $material->contents()->get()->toArray();
 
-            // Update material
             $material->update([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'difficulty_level' => $validated['difficulty_level'],
+                'color' => $validated['color'],
             ]);
 
             $oldContents = $material->contents->keyBy('id')->toArray();
@@ -150,15 +164,18 @@ class ManageMaterial extends Controller
 
             $changes = [];
 
-            if ($oldTitle !== $validated['title']) $changes[] = "Judul dari '{$oldTitle}' menjadi '{$validated['title']}'";
-            if ($oldDescription !== $validated['description']) $changes[] = "Deskripsi materi '{$material->title}'";
+            if ($oldTitle !== $validated['title'])
+                $changes[] = "Judul dari '{$oldTitle}' menjadi '{$validated['title']}'";
+            if ($oldDescription !== $validated['description'])
+                $changes[] = "Deskripsi materi '{$material->title}'";
+            if ($material->getOriginal('color') !== $validated['color'])
+                $changes[] = "Warna materi '{$material->title}'";
 
             $contentChanged = false;
             foreach ($validated['contents'] as $newContent) {
                 if (isset($newContent['id'])) {
                     $oldContent = collect($oldContents)->firstWhere('id', $newContent['id']);
-                    if ($oldContent && ($oldContent['content'] !== $newContent['content'] || $oldContent['title'] !== $newContent['title']))
-                    {
+                    if ($oldContent && ($oldContent['content'] !== $newContent['content'] || $oldContent['title'] !== $newContent['title'])) {
                         $contentChanged = true;
                         break;
                     }
@@ -198,10 +215,10 @@ class ManageMaterial extends Controller
                     \Storage::disk('public')->delete($content->image_path);
                 }
             }
-            
+
             $material->contents()->delete();
             $material->delete();
-            
+
             DB::commit();
 
             Auth::user()->logActivity(
@@ -218,17 +235,26 @@ class ManageMaterial extends Controller
                 'red'
             );
 
-            return redirect()->route('admin.materials.index') ->with('success', 'Materi berhasil dihapus.');
+            return redirect()->route('admin.materials.index')->with('success', 'Materi berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan saat menghapus materi!');
         }
     }
 
-    public function toggleAktif(Material $material)
+    public function toggleStatus(Material $material)
     {
         try {
-            $material->update(['is_active' => !$material->is_active]);
+            $material->update([
+                'is_active' => !$material->is_active
+            ]);
+
+            Auth::user()->logActivity(
+                'Status Materi Diubah',
+                "Admin telah mengubah status materi: {$material->title}",
+                'material_status_updated'
+            );
+
             return response()->json([
                 'success' => true,
                 'status' => $material->is_active,

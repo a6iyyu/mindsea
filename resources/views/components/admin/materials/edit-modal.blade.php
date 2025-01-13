@@ -6,38 +6,24 @@
         <label for="edit_title" class="block text-sm font-medium text-gray-700">
             Judul
         </label>
-        <input
-            type="text"
-            name="title"
-            id="edit_title"
-            required
-            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"
-        />
+        <input type="text" name="title" id="edit_title" required
+            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200" />
     </fieldset>
 
     <fieldset>
         <label for="edit_description" class="block text-sm font-medium text-gray-700">
             Deskripsi
         </label>
-        <textarea
-            name="description"
-            id="edit_description"
-            rows="3"
-            required
-            class="mt-1 block w-full rounded-xl resize-none border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"
-        ></textarea>
+        <textarea name="description" id="edit_description" rows="3" required
+            class="mt-1 block w-full rounded-xl resize-none border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"></textarea>
     </fieldset>
 
     <fieldset>
         <label for="edit_difficulty_level" class="block text-sm font-medium text-gray-700">
             Tingkat Kesulitan
         </label>
-        <select
-            name="difficulty_level"
-            id="edit_difficulty_level"
-            required
-            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"
-        >
+        <select name="difficulty_level" id="edit_difficulty_level" required
+            class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200">
             <option value="mudah">Mudah</option>
             <option value="sedang">Sedang</option>
             <option value="sulit">Sulit</option>
@@ -47,6 +33,32 @@
     <div class="space-y-4">
         <h4 class="font-medium text-gray-700">Konten Materi</h4>
 
+        <!-- Color Selection -->
+        <div class="rounded-xl border-2 border-gray-200 p-4">
+            <h5 class="mb-4 font-medium text-gray-600">Warna</h5>
+            <select name="color" id="edit_color"
+                class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-200"
+                required>
+                <option value="blue">Biru</option>
+                <option value="green">Hijau</option>
+                <option value="yellow">Kuning</option>
+                <option value="red">Merah</option>
+                <option value="purple">Ungu</option>
+                <option value="orange">Orange</option>
+                <option value="pink">Pink</option>
+                <option value="gray">Abu-abu</option>
+                <option value="violet">Violet</option>
+                <option value="indigo">Indigo</option>
+                <option value="amber">Amber</option>
+                <option value="emerald">Emerald</option>
+                <option value="teal">Teal</option>
+                <option value="cyan">Cyan</option>
+                <option value="sky">Sky</option>
+                <option value="lime">Lime</option>
+                <option value="fuchsia">Fuchsia</option>
+            </select>
+        </div>
+
         <!-- Pengenalan Section -->
         <div class="rounded-xl border-2 border-gray-200 p-4">
             <h5 class="mb-4 font-medium text-gray-600">Pengenalan</h5>
@@ -55,32 +67,18 @@
             <div class="space-y-4">
                 <fieldset>
                     <label class="block text-sm text-gray-600">Judul</label>
-                    <input
-                        type="text"
-                        name="contents[0][title]"
-                        id="edit_introduction_title"
-                        required
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[0][title]" id="edit_introduction_title" required
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Konten</label>
-                    <textarea
-                        name="contents[0][content]"
-                        id="edit_introduction_content"
-                        rows="2"
-                        required
-                        class="mt-1 resize-none block w-full rounded-xl border-2 border-gray-200 p-3"
-                    ></textarea>
+                    <textarea name="contents[0][content]" id="edit_introduction_content" rows="2" required
+                        class="mt-1 resize-none block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Teks Audio</label>
-                    <input
-                        type="text"
-                        name="contents[0][audio_text]"
-                        id="edit_introduction_audio"
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[0][audio_text]" id="edit_introduction_audio"
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
@@ -99,32 +97,18 @@
             <div class="space-y-4">
                 <fieldset>
                     <label class="block text-sm text-gray-600">Judul</label>
-                    <input
-                        type="text"
-                        name="contents[1][title]"
-                        id="edit_main_title"
-                        required
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[1][title]" id="edit_main_title" required
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Konten</label>
-                    <textarea
-                        name="contents[1][content]"
-                        id="edit_main_content"
-                        rows="2"
-                        required
-                        class="mt-1 resize-none block w-full rounded-xl border-2 border-gray-200 p-3"
-                    ></textarea>
+                    <textarea name="contents[1][content]" id="edit_main_content" rows="2" required
+                        class="mt-1 resize-none block w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Teks Audio</label>
-                    <input
-                        type="text"
-                        name="contents[1][audio_text]"
-                        id="edit_main_audio"
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[1][audio_text]" id="edit_main_audio"
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
@@ -143,32 +127,18 @@
             <div class="space-y-4">
                 <fieldset>
                     <label class="block text-sm text-gray-600">Judul</label>
-                    <input
-                        type="text"
-                        name="contents[2][title]"
-                        id="edit_exercise_title"
-                        required
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[2][title]" id="edit_exercise_title" required
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Konten</label>
-                    <textarea
-                        name="contents[2][content]"
-                        id="edit_exercise_content"
-                        rows="2"
-                        required
-                        class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"
-                    ></textarea>
+                    <textarea name="contents[2][content]" id="edit_exercise_content" rows="2" required
+                        class="mt-1 block resize-none w-full rounded-xl border-2 border-gray-200 p-3"></textarea>
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Teks Audio</label>
-                    <input
-                        type="text"
-                        name="contents[2][audio_text]"
-                        id="edit_exercise_audio"
-                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3"
-                    />
+                    <input type="text" name="contents[2][audio_text]" id="edit_exercise_audio"
+                        class="mt-1 block w-full rounded-xl border-2 border-gray-200 p-3" />
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
@@ -193,13 +163,14 @@
 @endcomponent
 
 <script>
-    function edit_material(id, title, description, difficulty_level, contents) {
+    function edit_material(id, title, description, difficulty_level, contents, color) {        
         const form = document.getElementById('edit_material_form');
         form.action = `/admin/materials/${id}`;
 
         document.getElementById('edit_title').value = title;
         document.getElementById('edit_description').value = description;
         document.getElementById('edit_difficulty_level').value = difficulty_level;
+        document.getElementById('edit_color').value = color;
 
         contents.forEach(content => {
             const sectionType = content.section_type;
@@ -210,34 +181,34 @@
                     document.getElementById('edit_introduction_content').value = content.content;
                     document.getElementById('edit_introduction_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_introduction_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_introduction_image_preview').src = `/storage/${content.image_path}`;
                         document.getElementById('edit_introduction_image_preview').classList.remove('hidden');
                     }
                     break;
-
                 case 'materi_utama':
                     document.getElementById('edit_main_id').value = content.id;
                     document.getElementById('edit_main_title').value = content.title;
                     document.getElementById('edit_main_content').value = content.content;
                     document.getElementById('edit_main_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_main_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_main_image_preview').src = `/storage/${content.image_path}`;
                         document.getElementById('edit_main_image_preview').classList.remove('hidden');
                     }
                     break;
-
                 case 'latihan':
                     document.getElementById('edit_exercise_id').value = content.id;
                     document.getElementById('edit_exercise_title').value = content.title;
                     document.getElementById('edit_exercise_content').value = content.content;
                     document.getElementById('edit_exercise_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_exercise_image_preview').src = `{{ asset('storage/${content.image_path}') }}`;
+                        document.getElementById('edit_exercise_image_preview').src = `/storage/${content.image_path}`;
                         document.getElementById('edit_exercise_image_preview').classList.remove('hidden');
                     }
                     break;
             }
         });
+
+        open_modal('edit_material_modal');
     }
 
     function showImagePreview(input, previewId) {

@@ -13,10 +13,20 @@
         {{ session('success') }}
     </h4>
 @endif
+<section class="mb-6">
+    <form action="{{ route('admin.users.index') }}" method="GET" class="flex items-center gap-4">
+        <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}"
+            class="px-4 py-2 border rounded-md">
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Cari
+        </button>
+    </form>
+</section>
 <section class="rounded-xl border-4 border-gray-200 shadow-md overflow-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
@@ -27,6 +37,9 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach($users as $user)
                 <tr>
+                    <td class="font-medium text-sm px-6 py-4 whitespace-nowrap text-gray-900">
+                        {{ $user->id }}
+                    </td>
                     <td class="font-medium text-sm px-6 py-4 whitespace-nowrap text-gray-900">
                         {{ $user->name }}
                     </td>
