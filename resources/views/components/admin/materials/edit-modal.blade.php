@@ -84,9 +84,19 @@
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
-                    <input type="file" name="contents[0][image]" id="edit_introduction_image" accept="image/*"
-                        class="mt-1 block w-full">
-                    <img id="edit_introduction_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
+                    <div class="image-preview-container">
+                        <input type="file" name="contents[0][image]" id="edit_introduction_image" accept="image/*"
+                            class="mt-1 block w-full">
+                        <div class="relative mt-2">
+                            <img id="edit_introduction_image_preview" src="#" alt="Preview Gambar" 
+                                class="hidden max-h-40 rounded-lg">
+                            <button type="button" id="edit_introduction_delete_button"
+                                onclick="deleteImage('introduction')"
+                                class="delete-image absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 hidden">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -114,9 +124,19 @@
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
-                    <input type="file" name="contents[1][image]" id="edit_main_image" accept="image/*"
-                        class="mt-1 block w-full">
-                    <img id="edit_main_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
+                    <div class="image-preview-container">
+                        <input type="file" name="contents[1][image]" id="edit_main_image" accept="image/*"
+                            class="mt-1 block w-full">
+                        <div class="relative mt-2">
+                            <img id="edit_main_image_preview" src="#" alt="Preview Gambar" 
+                                class="hidden max-h-40 rounded-lg">
+                            <button type="button" 
+                                onclick="deleteImage('main')"
+                                class="delete-image absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 hidden">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -144,9 +164,19 @@
                 </fieldset>
                 <fieldset>
                     <label class="block text-sm text-gray-600">Gambar</label>
-                    <input type="file" name="contents[2][image]" id="edit_exercise_image" accept="image/*"
-                        class="mt-1 block w-full">
-                    <img id="edit_exercise_image_preview" src="#" alt="Preview Gambar" class="mt-2 max-h-40 hidden">
+                    <div class="image-preview-container">
+                        <input type="file" name="contents[2][image]" id="edit_exercise_image" accept="image/*"
+                            class="mt-1 block w-full">
+                        <div class="relative mt-2">
+                            <img id="edit_exercise_image_preview" src="#" alt="Preview Gambar" 
+                                class="hidden max-h-40 rounded-lg">
+                            <button type="button" 
+                                onclick="deleteImage('exercise')"
+                                class="delete-image absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 hidden">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -183,10 +213,11 @@
                     document.getElementById('edit_introduction_content').value = content.content;
                     document.getElementById('edit_introduction_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_introduction_image_preview').src = `/storage/${content.image_path}`;
-                        document.getElementById('edit_introduction_image_preview').classList.remove('hidden');
-                    } else {
-                        document.getElementById('edit_introduction_image_preview').classList.add('hidden');
+                        const preview = document.getElementById('edit_introduction_image_preview');
+                        const deleteBtn = document.getElementById('edit_introduction_delete_button');
+                        preview.src = `/storage/${content.image_path}`;
+                        preview.classList.remove('hidden');
+                        deleteBtn.classList.remove('hidden');
                     }
                     break;
                 case 'materi_utama':
@@ -195,10 +226,11 @@
                     document.getElementById('edit_main_content').value = content.content;
                     document.getElementById('edit_main_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_main_image_preview').src = `/storage/${content.image_path}`;
-                        document.getElementById('edit_main_image_preview').classList.remove('hidden');
-                    } else {
-                        document.getElementById('edit_main_image_preview').classList.add('hidden');
+                        const preview = document.getElementById('edit_main_image_preview');
+                        const deleteBtn = document.getElementById('edit_main_delete_button');
+                        preview.src = `/storage/${content.image_path}`;
+                        preview.classList.remove('hidden');
+                        deleteBtn.classList.remove('hidden');
                     }
                     break;
                 case 'latihan':
@@ -207,10 +239,11 @@
                     document.getElementById('edit_exercise_content').value = content.content;
                     document.getElementById('edit_exercise_audio').value = content.audio_text || '';
                     if (content.image_path) {
-                        document.getElementById('edit_exercise_image_preview').src = `/storage/${content.image_path}`;
-                        document.getElementById('edit_exercise_image_preview').classList.remove('hidden');
-                    } else {
-                        document.getElementById('edit_exercise_image_preview').classList.add('hidden');
+                        const preview = document.getElementById('edit_exercise_image_preview');
+                        const deleteBtn = document.getElementById('edit_exercise_delete_button');
+                        preview.src = `/storage/${content.image_path}`;
+                        preview.classList.remove('hidden');
+                        deleteBtn.classList.remove('hidden');
                     }
                     break;
             }
@@ -219,27 +252,48 @@
         open_modal('edit_material_modal');
     }
 
-    function showImagePreview(input, previewId) {
+    function handleImagePreview(inputId, previewId, deleteButtonId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        const deleteButton = document.getElementById(deleteButtonId);
+        
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function (e) {
-                const preview = document.getElementById(previewId);
+            reader.onload = function(e) {
                 preview.src = e.target.result;
                 preview.classList.remove('hidden');
+                deleteButton.classList.remove('hidden');
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    document.getElementById('edit_introduction_image').addEventListener('change', function () {
-        showImagePreview(this, 'edit_introduction_image_preview');
+    function deleteImage(section) {
+        const preview = document.getElementById(`edit_${section}_image_preview`);
+        const input = document.getElementById(`edit_${section}_image`);
+        const deleteButton = document.getElementById(`edit_${section}_delete_button`);
+        
+        preview.src = '#';
+        preview.classList.add('hidden');
+        input.value = '';
+        deleteButton.classList.add('hidden');
+        
+        const deleteFlag = document.createElement('input');
+        deleteFlag.type = 'hidden';
+        deleteFlag.name = `contents[${section}][delete_image]`;
+        deleteFlag.value = '1';
+        input.parentNode.appendChild(deleteFlag);
+    }
+
+    document.getElementById('edit_introduction_image').addEventListener('change', function() {
+        handleImagePreview('edit_introduction_image', 'edit_introduction_image_preview', 'edit_introduction_delete_button');
     });
 
-    document.getElementById('edit_main_image').addEventListener('change', function () {
-        showImagePreview(this, 'edit_main_image_preview');
+    document.getElementById('edit_main_image').addEventListener('change', function() {
+        handleImagePreview('edit_main_image', 'edit_main_image_preview', 'edit_main_delete_button');
     });
 
-    document.getElementById('edit_exercise_image').addEventListener('change', function () {
-        showImagePreview(this, 'edit_exercise_image_preview');
+    document.getElementById('edit_exercise_image').addEventListener('change', function() {
+        handleImagePreview('edit_exercise_image', 'edit_exercise_image_preview', 'edit_exercise_delete_button');
     });
 </script>

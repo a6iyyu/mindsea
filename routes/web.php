@@ -18,6 +18,7 @@ use App\Http\Controllers\User\ProgressController;
 use App\Http\Controllers\User\StatisticsController;
 use App\Http\Controllers\User\SupportController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\User\GameController;
 
 // Halaman publik
 Route::get('/', function () {
@@ -72,6 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/chatbot', fn() => view('pages.chatbot'))->name('chatbot');
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 
+    Route::get('/permainan', fn() => view('pages.permainan.index'))->name('permainan');
+    Route::get('/permainan/penjumlahan', [GameController::class, 'penjumlahan'])->name('permainan.penjumlahan');
+
     Route::middleware(['auth'])->group(function () {
         Route::post('/notifikasi/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
         Route::post('/notifikasi/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
@@ -124,4 +128,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('reports/monthly-stats/{year}/{month}', [ReportsController::class, 'getMonthlyStatsForDate'])
         ->name('admin.reports.monthly-stats');
 });
+
+
+
 

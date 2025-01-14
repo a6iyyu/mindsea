@@ -60,6 +60,7 @@ class MaterialController extends Controller
 
         $introduction = $materi->contents->first();
         if (!$introduction) return redirect()->back()->with('error', 'Konten pengenalan tidak ditemukan');
+        $this->markMaterialAsStarted($id);
 
         return view('components.materi.pengenalan', compact('materi', 'introduction'));
 
@@ -72,6 +73,7 @@ class MaterialController extends Controller
         }])->findOrFail($id);
 
         $mainContent = $materi->contents->first();
+        $this->markMaterialAsStarted($id);
         return view('components.materi.materi-utama', compact('materi', 'mainContent'));
     }
 
@@ -82,7 +84,22 @@ class MaterialController extends Controller
         }])->findOrFail($id);
 
         $exercise = $materi->contents->first();
+        $this->markMaterialAsStarted($id);
+
         return view('components.materi.latihan', compact('materi', 'exercise'));
+    }
+
+    private function markMaterialAsStarted($materialId)
+    {
+        $progress = MaterialProgress::firstOrCreate([
+            'user_id' => Auth::id(),
+            'material_id' => $materialId
+        ]);
+
+        if (!$progress->is_started) {
+            $progress->is_started = true;
+            $progress->save();
+        }
     }
 
     public function completeContent($id)
@@ -94,6 +111,7 @@ class MaterialController extends Controller
             ]);
 
             if (!$progress->is_completed) {
+                $progress->is_started = true;
                 $progress->is_completed = true;
                 $progress->completed_at = now();
                 $progress->save();
@@ -101,7 +119,7 @@ class MaterialController extends Controller
                 $material = Material::find($id);
                 Auth::user()->logActivity(
                     'Materi Selesai',
-                    "{Auth::user()->name} telah menyelesaikan materi {$material->title}",
+                    Auth::user()->name . " telah menyelesaikan materi {$material->title}",
                     'material_completed'
                 );
 

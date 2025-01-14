@@ -8,7 +8,7 @@ trait NotificationHelper
 {
     protected function sendNotification($title, $message, $type, $icon, $color = null)
     {
-        $users = \App\Models\User::where('is_admin', false)->get();
+        $users = \App\Models\User::all();
         
         foreach ($users as $user) {
             Notification::create([

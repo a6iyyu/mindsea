@@ -27,6 +27,12 @@
                     "route" => "/progres-belajar",
                 ],
                 [
+                    "ikon" => "fa-solid fa-gamepad",
+                    "warna" => "text-purple-500",
+                    "label" => "Permainan",
+                    "route" => "/permainan",
+                ],
+                [
                     "ikon" => "fa-solid fa-user",
                     "warna" => "text-amber-500",
                     "label" => "Tentang Kami",

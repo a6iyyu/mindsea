@@ -85,7 +85,7 @@ class ExerciseController extends Controller
 
             Auth::user()->logActivity(
                 'Latihan Selesai',
-                '{Auth::user()->name} telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}',
+                Auth::user()->name . " telah menyelesaikan latihan {$exercise->title} dengan nilai {$score}",
                 'exercise_completed'
             );
         }

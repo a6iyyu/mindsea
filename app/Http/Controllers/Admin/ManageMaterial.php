@@ -97,7 +97,23 @@ class ManageMaterial extends Controller
     public function edit(Material $material)
     {
         $material->load('contents');
-        return view('components.admin.materials.edit-modal', compact('material'));
+        return response()->json([
+            'id' => $material->id,
+            'title' => $material->title,
+            'description' => $material->description,
+            'difficulty_level' => $material->difficulty_level,
+            'color' => $material->color,
+            'contents' => $material->contents->map(function ($content) {
+                return [
+                    'id' => $content->id,
+                    'section_type' => $content->section_type,
+                    'title' => $content->title,
+                    'content' => $content->content,
+                    'audio_text' => $content->audio_text,
+                    'image_path' => $content->image_path
+                ];
+            })
+        ]);
     }
 
     public function update(Request $request, Material $material)

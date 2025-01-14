@@ -27,7 +27,7 @@ class StatisticsController extends Controller
         $totalMaterials = Material::count();
         $activeMaterials = Material::where('is_active', true)->count();
 
-        // Menghitung tingkat penyelesaian
+        // Menghitung tingkat penyelesaian materi
         $totalCompletions = DB::table('material_progress')->where('is_completed', true)->count();
         $totalPossibleCompletions = User::count() * Material::count();
         $completionRate = $totalPossibleCompletions > 0
