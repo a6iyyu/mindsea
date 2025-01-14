@@ -37,7 +37,7 @@
         <ol class="mt-6 space-y-4">
             @foreach ($question->options as $option => $text)
                 <button
-                    class="w-full text-left px-6 py-4 rounded-xl border-2 border-{{ $exercise->color }}-200 hover:bg-{{ $exercise->color }}-50 transition-colors"
+                    class="answer-button w-full text-left px-6 py-4 rounded-xl border-2 border-{{ $exercise->color }}-200 hover:bg-{{ $exercise->color }}-50 transition-colors"
                     onclick="checkAnswer('{{ $option }}', '{{ $question->correct_answer }}', this, '{{ $question->id }}')"
                 >
                     <span class="font-medium">{{ $option }}.</span> {{ $text }}
@@ -61,14 +61,29 @@
 <script>
     const totalQuestions = {{ count($questions) }};
     const totalSeconds = totalQuestions * 5 * 60;
-    let timeRemaining = totalSeconds;
+    
+    let endTime = localStorage.getItem('exerciseEndTime_{{ $exercise->id }}');
+    if (!endTime) {
+        endTime = Date.now() + (totalSeconds * 1000);
+        localStorage.setItem('exerciseEndTime_{{ $exercise->id }}', endTime);
+    }
+
     let timerInterval;
 
     function startTimer() {
         const timerDisplay = document.getElementById('timer');
         
-        timerInterval = setInterval(() => {
-            timeRemaining--;
+        function updateTimer() {
+            const now = Date.now();
+            const timeRemaining = Math.max(0, Math.floor((endTime - now) / 1000));
+            
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert('Waktu habis! Latihan akan diselesaikan otomatis.');
+                submitExercise();
+                disableAnswerButtons();
+                return;
+            }
             
             const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
@@ -79,25 +94,21 @@
                 alert('Sisa waktu 5 menit!');
             } else if (timeRemaining === 60) {
                 alert('Sisa waktu 1 menit!');
-            } else if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                alert('Waktu habis! Latihan akan diselesaikan otomatis.');
-                submitExercise();
             }
-        }, 1000);
+        }
+        
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
     }
 
-    function updateProgress() {
-        const answered = Object.keys(answers).length;
-        document.getElementById('progress').textContent = answered;
-    }
-
-    let answers = {};
+    let answers = JSON.parse(localStorage.getItem('exerciseAnswers_{{ $exercise->id }}') || '{}');
     const exerciseId = `{{ $exercise->id }}`;
 
     function checkAnswer(selected, correct, element, questionId) {
         answers[questionId] = selected;
+        localStorage.setItem('exerciseAnswers_{{ $exercise->id }}', JSON.stringify(answers));
         updateProgress();
+        
         const buttons = element.parentElement.querySelectorAll('button');
         buttons.forEach(btn => {
             btn.disabled = true;
@@ -122,18 +133,54 @@
             },
             body: JSON.stringify({ answers: answers })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(`Nilai Anda: ${data.score}\nJawaban benar: ${data.correct_answer} dari ${data.total_question} soal`);
-                    window.location.href = '/latihan-soal';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengirim jawaban');
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                localStorage.removeItem('exerciseEndTime_{{ $exercise->id }}');
+                localStorage.removeItem('exerciseAnswers_{{ $exercise->id }}');
+                alert(`Nilai Anda: ${data.score}\nJawaban benar: ${data.correct_answer} dari ${data.total_question} soal`);
+                window.location.href = '/latihan-soal';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengirim jawaban');
+        });
     }
 
-    document.addEventListener('DOMContentLoaded', startTimer);
+    function disableAnswerButtons() {
+        const allAnswerButtons = document.querySelectorAll('.answer-button');
+        allAnswerButtons.forEach(button => {
+            button.disabled = true;
+        });
+    }
+
+    function updateProgress() {
+        const progress = Object.keys(answers).length;
+        document.getElementById('progress').textContent = progress;
+    }
+
+    window.addEventListener('load', () => {
+        Object.entries(answers).forEach(([questionId, selected]) => {
+            const questionContainer = document.querySelector(`[onclick*="${questionId}"]`).parentElement;
+            const buttons = questionContainer.querySelectorAll('button');
+            const correctButton = Array.from(buttons).find(btn => 
+                btn.getAttribute('onclick').includes(selected)
+            );
+            if (correctButton) {
+                const correctAnswer = correctButton.getAttribute('onclick')
+                    .match(/checkAnswer\('(.)', '(.)'/)
+                    ?.[2];
+                checkAnswer(selected, correctAnswer, correctButton, questionId);
+            }
+        });
+        updateProgress();
+        startTimer();
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (Object.keys(answers).length > 0) {
+            return 'Anda yakin ingin meninggalkan halaman? Timer akan terus berjalan.';
+        }
+    });
 </script>

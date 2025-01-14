@@ -1,7 +1,7 @@
 <section class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
     @foreach($exercise_lists as $exercise_list)
         @php
-            $exercise = App\Models\Exercise::where('title', $exercise_list->title)->first();
+            $exercise = App\Models\Exercise::where('id', $exercise_list->id)->first();
             $userExercise = $exercise
                 ? App\Models\UserExercise::where('user_id', auth()->id())->where('exercise_id', $exercise->id)->first()
                 : null;

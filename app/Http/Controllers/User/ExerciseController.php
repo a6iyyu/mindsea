@@ -31,7 +31,7 @@ class ExerciseController extends Controller
             abort(404);
         }
 
-        $exercise = Exercise::where('title', $section->title)
+        $exercise = Exercise::where('id', $section->id)
             ->where('is_active', true)
             ->first();
         

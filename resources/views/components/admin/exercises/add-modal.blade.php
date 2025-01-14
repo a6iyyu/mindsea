@@ -126,5 +126,6 @@
             addQuestion();
         }
     });
+
 </script>
 @endcomponent
