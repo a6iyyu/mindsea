@@ -54,15 +54,15 @@
     <section class="bg-white p-6 rounded-xl border-4 border-gray-200 shadow-md mb-8">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-800">Statistik Bulanan</h2>
-            <div>
-                <select id="monthFilter" class="rounded-xl border-2 border-gray-200 p-2">
+            <div class="flex gap-2">
+                <select id="monthFilter" class="rounded-xl border-2 border-gray-200 p-2 text-sm">
                     @foreach(range(1, 12) as $month)
                         <option value="{{ $month }}" {{ date('n') == $month ? 'selected' : '' }}>
                             {{ date('F', mktime(0, 0, 0, $month, 1)) }}
                         </option>
                     @endforeach
                 </select>
-                <select id="yearFilter" class="rounded-xl border-2 border-gray-200 p-2">
+                <select id="yearFilter" class="rounded-xl border-2 border-gray-200 p-2 text-sm">
                     @foreach(range(date('Y'), date('Y')-2) as $year)
                         <option value="{{ $year }}" {{ date('Y') == $year ? 'selected' : '' }}>
                             {{ $year }}
@@ -71,7 +71,15 @@
                 </select>
             </div>
         </div>
-        <canvas id="monthlyStats" height="100"></canvas>
+        <div class="relative h-[300px]">
+            <div id="chart-loading" class="absolute inset-0 flex justify-center items-center bg-white">
+                <div class="flex flex-col items-center gap-4">
+                    <span class="animate-spin h-8 w-8 border-3 border-blue-500 border-t-transparent rounded-full"></span>
+                    <p class="text-gray-600 text-sm">Memuat data...</p>
+                </div>
+            </div>
+            <canvas id="monthlyStats" class="hidden"></canvas>
+        </div>
     </section>
 
     <section class="bg-white p-6 rounded-xl border-4 border-gray-200 shadow-md">
@@ -88,62 +96,147 @@
 </main>
 
 <script>
-    let chartInstance = null;
-
-    function updateChart(month, year) {
-        const canvas = document.getElementById('monthlyStats');
-        canvas.style.opacity = '0.5';
-
-        fetch(`/admin/reports/monthly-stats/${year}/${month}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (chartInstance) {
-                    chartInstance.destroy();
-                }
-
-                chartInstance = new Chart(canvas.getContext('2d'), {
-                    type: 'line',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('monthlyStats').getContext('2d');
+    
+    const monthlyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        generateLabels: function(chart) {
+                            const datasets = chart.data.datasets;
+                            return datasets.map(function(dataset, i) {
+                                return {
+                                    text: dataset.label,
+                                    fillStyle: dataset.borderColor,
+                                    strokeStyle: dataset.borderColor,
+                                    lineWidth: 2,
+                                    hidden: !chart.isDatasetVisible(i),
+                                    index: i,
+                                    cursor: 'pointer'
+                                };
+                            });
                         },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                        font: {
+                            size: 12
+                        },
+                        boxWidth: 30,
+                        boxHeight: 30,
+                        padding: 15
+                    },
+                    onClick: function(e, legendItem, legend) {
+                        const index = legendItem.index;
+                        const chart = legend.chart;
+                        const meta = chart.getDatasetMeta(index);
+
+                        meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+                        
+                        chart.update();
+
+                        const visibilityStatus = JSON.parse(localStorage.getItem('chartDatasetVisibility') || '{}');
+                        visibilityStatus[chart.data.datasets[index].label] = !meta.hidden;
+                        localStorage.setItem('chartDatasetVisibility', JSON.stringify(visibilityStatus));
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    padding: 12,
+                    cornerRadius: 4,
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 },
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y} aktivitas`;
                         }
+                    },
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        maxRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 15,
+                        font: { size: 12 }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0,
+                        font: { size: 12 }
+                    },
+                    grid: {
+                        borderDash: [2],
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    function updateChartData(month, year) {
+        document.getElementById('chart-loading').classList.remove('hidden');
+        document.getElementById('monthlyStats').classList.add('hidden');
+
+        fetch(`/admin/reports/monthly-stats?month=${month}&year=${year}`)
+            .then(response => response.json())
+            .then(data => {
+                const visibilityStatus = JSON.parse(localStorage.getItem('chartDatasetVisibility') || '{}');
+                
+                data.datasets.forEach(dataset => {
+                    if (visibilityStatus.hasOwnProperty(dataset.label)) {
+                        dataset.hidden = !visibilityStatus[dataset.label];
                     }
                 });
-                canvas.style.opacity = '1';
+
+                monthlyChart.data.labels = data.labels;
+                monthlyChart.data.datasets = data.datasets;
+                monthlyChart.update();
+
+                document.getElementById('chart-loading').classList.add('hidden');
+                document.getElementById('monthlyStats').classList.remove('hidden');
             })
             .catch(error => {
-                console.error('Error fetching stats:', error);
-                canvas.style.opacity = '1';
+                console.error('Error fetching chart data:', error);
+                alert('Terjadi kesalahan saat memuat data grafik');
             });
     }
 
     document.getElementById('monthFilter').addEventListener('change', function() {
-        const year = document.getElementById('yearFilter').value;
-        updateChart(this.value, year);
+        updateChartData(this.value, document.getElementById('yearFilter').value);
     });
 
     document.getElementById('yearFilter').addEventListener('change', function() {
-        const month = document.getElementById('monthFilter').value;
-        updateChart(month, this.value);
+        updateChartData(document.getElementById('monthFilter').value, this.value);
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const month = document.getElementById('monthFilter').value;
-        const year = document.getElementById('yearFilter').value;
-        updateChart(month, year);
-    });
+    updateChartData(
+        document.getElementById('monthFilter').value,
+        document.getElementById('yearFilter').value
+    );
+});
 </script>
+

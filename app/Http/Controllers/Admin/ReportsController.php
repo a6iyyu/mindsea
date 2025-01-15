@@ -8,72 +8,86 @@ use App\Models\Material;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ReportsController extends Controller
 {
     public function index()
     {
-        $monthlyStats = $this->getMonthlyStats();
         $performanceStats = $this->getPerformanceStats();
         $activitySummary = $this->getActivitySummary();
 
         return view('pages.admin.reports', compact(
-            'monthlyStats',
             'performanceStats',
             'activitySummary'
         ));
     }
 
-    private function getMonthlyStats()
+    public function getMonthlyStats(Request $request)
     {
-        $currentYear = Carbon::now()->year;
-        $months = range(1, 12);
-
-        $userSignups = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', $currentYear)
-            ->groupBy('month')
-            ->pluck('count', 'month')
-            ->toArray();
-
-        $materialCompletions = DB::table('material_progress')
-            ->selectRaw('MONTH(completed_at) as month, COUNT(*) as count')
-            ->whereYear('completed_at', $currentYear)
-            ->where('is_completed', true)
-            ->groupBy('month')
-            ->pluck('count', 'month')
-            ->toArray();
-
-        $exerciseCompletions = DB::table('user_exercises')
-            ->selectRaw('MONTH(completed_at) as month, COUNT(*) as count')
-            ->whereYear('completed_at', $currentYear)
-            ->whereNotNull('completed_at')
-            ->groupBy('month')
-            ->pluck('count', 'month')
-            ->toArray();
-
-        return [
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            'datasets' => [
-                [
-                    'label' => 'Pengguna Baru',
-                    'data' => array_map(fn($month) => $userSignups[$month] ?? 0, $months),
-                    'borderColor' => '#f59e0b',
-                    'backgroundColor' => '#f59e0b40',
-                ],
-                [
-                    'label' => 'Materi Selesai',
-                    'data' => array_map(fn($month) => $materialCompletions[$month] ?? 0, $months),
-                    'borderColor' => '#22c55e',
-                    'backgroundColor' => '#22c55e40',
-                ],
-                [
-                    'label' => 'Latihan Selesai',
-                    'data' => array_map(fn($month) => $exerciseCompletions[$month] ?? 0, $months),
-                    'borderColor' => '#3b82f6',
-                    'backgroundColor' => '#3b82f640',
-                ],
-            ]
-        ];
+        try {
+            $month = $request->get('month', date('m'));
+            $year = $request->get('year', date('Y'));
+            
+            $dailyStats = Activity::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->select(
+                    DB::raw('DATE(created_at) as date'),
+                    'type',
+                    DB::raw('count(*) as count')
+                )
+                ->groupBy('date', 'type')
+                ->orderBy('date')
+                ->get();
+            
+            $daysInMonth = Carbon::create($year, $month)->daysInMonth;
+            
+            $activityTypes = [
+                'material_created' => ['label' => 'Pembuatan Materi', 'color' => 'rgba(59, 130, 246'],      
+                'material_updated' => ['label' => 'Pembaruan Materi', 'color' => 'rgba(16, 185, 129'],     
+                'material_deleted' => ['label' => 'Penghapusan Materi', 'color' => 'rgba(239, 68, 68'],    
+                'exercise_created' => ['label' => 'Pembuatan Latihan', 'color' => 'rgba(236, 72, 153'],     
+                'exercise_updated' => ['label' => 'Pembaruan Latihan', 'color' => 'rgba(168, 85, 247'],    
+                'exercise_deleted' => ['label' => 'Penghapusan Latihan', 'color' => 'rgba(245, 158, 11'],  
+                'material_completed' => ['label' => 'Materi Selesai', 'color' => 'rgba(34, 197, 94'],      
+                'exercise_completed' => ['label' => 'Latihan Selesai', 'color' => 'rgba(14, 165, 233'],    
+            ];
+            
+            $datasets = [];
+            $labels = range(1, $daysInMonth);
+            
+            foreach ($activityTypes as $type => $config) {
+                $data = array_fill(0, $daysInMonth, 0);
+                
+                foreach ($dailyStats as $stat) {
+                    if ($stat->type === $type) {
+                        $day = (int)Carbon::parse($stat->date)->format('d');
+                        $data[$day - 1] = $stat->count;
+                    }
+                }
+                
+                $datasets[] = [
+                    'label' => $config['label'],
+                    'data' => $data,
+                    'backgroundColor' => $config['color'] . ', 0.2)',
+                    'borderColor' => $config['color'] . ', 1)',
+                    'borderWidth' => 1.5,
+                    'pointRadius' => 2,
+                    'pointHoverRadius' => 4,
+                    'tension' => 0.3,
+                    'fill' => true
+                ];
+            }
+            
+            return response()->json([
+                'labels' => $labels,
+                'datasets' => $datasets
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat memuat data'
+            ], 500);
+        }
     }
 
     private function getPerformanceStats()
@@ -97,62 +111,4 @@ class ReportsController extends Controller
             ->get();
     }
 
-    public function getMonthlyStatsForDate($year, $month)
-    {
-        try {
-            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
-            $endDate = Carbon::create($year, $month, 1)->endOfMonth();
-
-            $stats = Activity::whereBetween('created_at', [$startDate, $endDate])
-                ->selectRaw('DATE(created_at) as date, COUNT(*) as count, type')
-                ->groupBy('date', 'type')
-                ->get();
-
-            $colors = [
-                'login' => '#f59e0b',
-                'material_view' => '#22c55e',
-                'exercise_complete' => '#3b82f6',
-                'material_complete' => '#8b5cf6',
-                'default' => '#64748b'
-            ];
-
-            $datasets = [];
-            $types = $stats->pluck('type')->unique();
-
-            foreach ($types as $type) {
-                $data = [];
-                $dates = $stats->where('type', $type)
-                              ->pluck('count', 'date')
-                              ->toArray();
-
-                $currentDate = $startDate->copy();
-                while ($currentDate <= $endDate) {
-                    $dateStr = $currentDate->format('Y-m-d');
-                    $data[] = [
-                        'x' => $dateStr,
-                        'y' => $dates[$dateStr] ?? 0
-                    ];
-                    $currentDate->addDay();
-                }
-
-                $color = $colors[$type] ?? $colors['default'];
-                
-                $datasets[] = [
-                    'label' => ucfirst(str_replace('_', ' ', $type)),
-                    'data' => $data,
-                    'borderColor' => $color,
-                    'backgroundColor' => $color . '20',
-                    'fill' => false,
-                    'tension' => 0.1
-                ];
-            }
-
-            return response()->json([
-                'datasets' => $datasets
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error in monthly stats: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to fetch statistics'], 500);
-        }
-    }
 }

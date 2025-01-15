@@ -124,9 +124,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Reports
     Route::get('reports', [ReportsController::class, 'index'])->name('reports');
-    // Get monthly statistics report
-    Route::get('reports/monthly-stats/{year}/{month}', [ReportsController::class, 'getMonthlyStatsForDate'])
-        ->name('admin.reports.monthly-stats');
+    Route::get('reports/monthly-stats', [ReportsController::class, 'getMonthlyStats'])
+        ->name('reports.monthly-stats');
 });
 
 
