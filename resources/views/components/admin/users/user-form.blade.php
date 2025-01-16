@@ -4,7 +4,6 @@
         @method($method)
     @endif
 
-    <!-- Name -->
     <div>
         <label for="name" class="block text-lg font-medium text-gray-700 mb-2">
             Nama
@@ -22,7 +21,6 @@
         @enderror
     </div>
 
-    <!-- Email -->
     <div>
         <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Email</label>
         <input
@@ -38,7 +36,6 @@
         @enderror
     </div>
 
-    <!-- Password -->
     <div>
         <label for="password" class="block text-lg font-medium text-gray-700 mb-2">
             {{ isset($user) ? 'Kata Sandi Baru (Kosongkan Jika Tidak Ingin Mengubah)' : 'Kata Sandi' }}
@@ -62,7 +59,6 @@
         @enderror
     </div>
 
-    <!-- Password Confirmation -->
     <div>
         <label for="password_confirmation" class="block text-lg font-medium text-gray-700 mb-2">Konfirmasi Password</label>
         <span class="relative">
@@ -81,7 +77,6 @@
         </span>
     </div>
 
-    <!-- Is Admin -->
     <div class="flex items-center gap-2">
         <input
             type="checkbox" 
@@ -96,7 +91,6 @@
         </label>
     </div>
 
-    <!-- Buttons -->
     <div class="flex flex-col-reverse gap-4 text-center lg:flex-row lg:justify-end">
         <a
             href="{{ route('admin.users.index') }}" 

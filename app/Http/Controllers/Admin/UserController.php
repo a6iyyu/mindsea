@@ -8,6 +8,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -31,21 +32,38 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'is_admin' => ['boolean'],
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password' => ['required', 'string', 'min:8'],
+                'is_admin' => ['boolean'],
+            ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_admin' => $request->is_admin ?? false,
-        ]);
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'is_admin' => $validated['is_admin'] ?? false,
+            ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil ditambahkan.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengguna berhasil ditambahkan'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error creating user: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function edit(User $user)
@@ -55,35 +73,45 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'is_admin' => ['boolean'],
-        ]);
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'is_admin' => $request->is_admin ?? false,
-        ]);
-
-        if ($request->filled('password')) {
+        try {
             $request->validate([
-                'password' => ['confirmed', Rules\Password::defaults()],
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+                'is_admin' => ['boolean'],
             ]);
 
             $user->update([
-                'password' => Hash::make($request->password),
+                'name' => $request->name,
+                'email' => $request->email,
+                'is_admin' => $request->is_admin ?? false,
             ]);
+
+            if ($request->filled('password')) {
+                $request->validate([
+                    'password' => ['confirmed', Rules\Password::defaults()],
+                ]);
+
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+
+            Auth::user()->logActivity(
+                'Pengguna Diperbarui',
+                "Admin telah memperbarui data pengguna: {$user->name}",
+                'user_updated'
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengguna berhasil diperbarui'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
-
-        Auth::user()->logActivity(
-            'Pengguna Diperbarui',
-            "Admin telah memperbarui data pengguna: {$user->name}",
-            'user_updated'
-        );
-
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
 
     public function destroy(User $user)

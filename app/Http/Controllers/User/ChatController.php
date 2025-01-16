@@ -148,6 +148,10 @@ class ChatController extends Controller
                     - Penanda materi yang sudah selesai
                     - Notifikasi pencapaian
 
+                    4. Permainan
+                    - Permainan untuk menguji pemahaman
+                    - Sistem penilaian otomatis
+
                     PANDUAN INTERAKSI:
                     1. Berikan jawaban yang sederhana dan mudah dipahami
                     2. Gunakan bahasa yang ramah, positif, dan mendukung

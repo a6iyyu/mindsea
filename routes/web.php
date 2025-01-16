@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chatbot', fn() => view('pages.chatbot'))->name('chatbot');
     Route::post('/chat', [ChatController::class, 'chat'])->name('chat.send');
 
-    Route::get('/permainan', fn() => view('pages.permainan.index'))->name('permainan');
+    Route::get('/permainan', action: fn() => view('pages.permainan.index'))->name('permainan');
     Route::get('/permainan/penjumlahan', [GameController::class, 'penjumlahan'])->name('permainan.penjumlahan');
 
     Route::middleware(['auth'])->group(function () {
@@ -105,7 +105,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // User Management Routes - remove duplicate routes and keep only resource
     Route::resource('users', UserController::class);
-
     // Materials Management
     Route::resource('materials', ManageMaterial::class);
     Route::post('/materials/{material}/toggle-status', [ManageMaterial::class, 'toggleStatus'])

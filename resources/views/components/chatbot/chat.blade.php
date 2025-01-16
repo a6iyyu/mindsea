@@ -180,4 +180,11 @@
         userInput.value = message;
         await chatForm.dispatchEvent(new Event('submit'));
     }
+
+    userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+    });
 </script>

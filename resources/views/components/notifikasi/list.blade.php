@@ -35,15 +35,28 @@
       <article 
         onclick="showNotificationModal('{{ $notification->id }}', '{{ $notification->title }}', '{{ $notification->message }}', '{{ $notification->time_ago }}')"
         class="cursor-pointer flex flex-col items-start gap-4 rounded-xl border-2 p-6 shadow-sm hover:shadow-md 
-        border-{{ $notification->color }}-100 bg-{{ $notification->color }}-50 
-        {{ $notification->is_read ? 'opacity-75' : '' }} lg:flex-row">
-      <figure class="rounded-full bg-{{ $notification->color }}-100 p-3">
-        <i class="fa-solid {{ $notification->icon }} text-{{ $notification->color }}-500 text-2xl"></i>
+        @if($notification->is_read)
+            bg-gray-100 opacity-75 border-gray-200
+        @else
+            border-{{ $notification->color }}-100 bg-{{ $notification->color }}-50
+        @endif
+         lg:flex-row">
+      <figure class="@if($notification->is_read) bg-gray-200 @else bg-{{ $notification->color }}-100 @endif text-{{ $notification->color }}-500 p-3 rounded-full">
+        <i class="fa-solid {{ $notification->icon }} @if($notification->is_read) text-gray-500 @else text-{{ $notification->color }}-500 @endif text-2xl"></i>
       </figure>
       <div class="flex-1">
       <header class="flex flex-col items-start justify-between lg:items-center lg:flex-row">
       <h3 class="font-semibold text-lg text-gray-800">{{ $notification->title }}</h3>
+      <div class="flex items-center gap-2">
       <time class="text-base text-gray-500">{{ $notification->time_ago }}</time>
+        @if($notification->is_read)
+        <div>
+          <i class="fa-solid fa-clock text-gray-500"></i>
+          <time class="text-base text-gray-500" id="timer-{{ $notification->id }}">
+          </time>
+        </div>
+        @endif
+      </div>
       </header>
       <p class="mt-4 text-gray-600">{{ $notification->message }}</p>
       </div>
@@ -103,8 +116,12 @@
       
       const notification = document.querySelector(`#notification-${id}`);
       const article = notification?.querySelector('article');
+      const figure = notification?.querySelector('figure');
       
       if (article && !article.classList.contains('opacity-75')) {
+        const existingCountdown = localStorage.getItem(`notification_${id}_countdown`);
+        const startTime = existingCountdown ? parseInt(existingCountdown) : Date.now();
+        
         fetch(`/notifikasi/${id}/mark-as-read`, {
           method: 'POST',
           headers: {
@@ -123,10 +140,68 @@
         })
         .then(data => {
           if (data.success) {
-            article.classList.add('opacity-75');
-            const button = notification.querySelector('button');
-            if (button) button.remove();
-            updateNotificationCount();
+            article.classList.add('opacity-75', 'bg-gray-100');
+            article.classList.remove(article.className.match(/bg-\w+-50/)?.[0] || '');
+            article.classList.remove(article.className.match(/border-\w+-100/)?.[0] || '');
+            article.classList.add('border-gray-200');
+            
+            if (figure) {
+              figure.classList.remove(figure.className.match(/bg-\w+-100/)?.[0] || '');
+              figure.classList.add('bg-gray-200');
+              
+              const icon = figure.querySelector('i');
+              if (icon) {
+                icon.classList.remove(icon.className.match(/text-\w+-500/)?.[0] || '');
+                icon.classList.add('text-gray-500');
+              }
+            }
+            
+            const readButton = notification.querySelector('button[onclick^="markAsRead"]');
+            if (readButton) readButton.remove();
+
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const timeLeft = Math.max(300 - elapsedTime, 0);
+
+            if (!existingCountdown) {
+              localStorage.setItem(`notification_${id}_countdown`, startTime.toString());
+            }
+            
+            const timeLeftIndicator = document.createElement('div');
+            timeLeftIndicator.className = 'text-sm text-gray-500 mt-2';
+            timeLeftIndicator.id = `timer-${id}`;
+            
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeLeftIndicator.innerHTML = `<i class="fas fa-clock mr-1"></i>Akan dihapus dalam ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            article.appendChild(timeLeftIndicator);
+
+            if (timeLeft > 0) {
+              const countdownInterval = setInterval(() => {
+                const currentTime = Date.now();
+                const elapsed = Math.floor((currentTime - startTime) / 1000);
+                const remaining = Math.max(300 - elapsed, 0);
+                
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                
+                const timerElement = document.getElementById(`timer-${id}`);
+                if (timerElement) {
+                  timerElement.innerHTML = `<i class="fas fa-clock mr-1"></i>Akan dihapus dalam ${mins}:${secs.toString().padStart(2, '0')}`;
+                }
+
+                if (remaining <= 0) {
+                  clearInterval(countdownInterval);
+                  localStorage.removeItem(`notification_${id}_countdown`);
+                  notification.remove();
+                  updateNotificationCount();
+                  
+                  if (document.querySelectorAll('.notification-item').length === 0) {
+                    const emptyState = document.querySelector('.empty-state');
+                    if (emptyState) emptyState.classList.remove('hidden');
+                  }
+                }
+              }, 1000);
+            }
           }
         })
         .catch(error => {
@@ -195,5 +270,66 @@
         alert('Gagal menghapus notifikasi. Silakan coba lagi.');
       });
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.notification-item').forEach(notification => {
+        const id = notification.id.replace('notification-', '');
+        const article = notification.querySelector('article');
+        
+        if (article?.classList.contains('opacity-75')) {
+          const existingCountdown = localStorage.getItem(`notification_${id}_countdown`);
+          if (existingCountdown) {
+            const startTime = parseInt(existingCountdown);
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const timeLeft = Math.max(300 - elapsedTime, 0);
+            
+            if (timeLeft > 0) {
+              const timerElement = document.getElementById(`timer-${id}`);
+              if (timerElement) {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `Akan dihapus dalam ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                const countdownInterval = setInterval(() => {
+                  const currentTime = Date.now();
+                  const elapsed = Math.floor((currentTime - startTime) / 1000);
+                  const remaining = Math.max(300 - elapsed, 0);
+                  
+                  const mins = Math.floor(remaining / 60);
+                  const secs = remaining % 60;
+                  
+                  if (timerElement) {
+                    timerElement.textContent = `Akan dihapus dalam ${mins}:${secs.toString().padStart(2, '0')}`;
+                  }
+
+                  if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    localStorage.removeItem(`notification_${id}_countdown`);
+                    notification.remove();
+                    updateNotificationCount();
+                    
+                    if (document.querySelectorAll('.notification-item').length === 0) {
+                      const emptyState = document.querySelector('.empty-state');
+                      if (emptyState) emptyState.classList.remove('hidden');
+                    }
+                  }
+                }, 1000);
+              }
+            } else {
+              localStorage.removeItem(`notification_${id}_countdown`);
+              notification.remove();
+              updateNotificationCount();
+            }
+          } else {
+            localStorage.setItem(`notification_${id}_countdown`, Date.now().toString());
+            const timerElement = document.getElementById(`timer-${id}`);
+            if (timerElement) {
+              timerElement.textContent = 'Akan dihapus dalam 5:00';
+              markAsRead(id); // This will start the countdown
+            }
+          }
+        }
+      });
+    });
   </script>
 </section>

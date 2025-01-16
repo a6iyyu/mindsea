@@ -63,6 +63,9 @@
     <header class="fixed left-0 top-0 z-50 h-[4.5rem] w-screen border-b-2 border-gray-200 bg-[#fceede] shadow-md">
         <div class="mx-auto flex h-full max-w-[90vw] items-center justify-between lg:max-w-[96vw]">
             <span class="flex items-center gap-3 lg:gap-6">
+                <button type="button" onclick="toggle_sidebar()">
+                    <i class="fa-solid fa-bars text-2xl text-gray-600"></i>
+                </button>
                 <button type="button" onclick="toggleSidebar()"
                     class="rounded-xl p-3 text-gray-600 transition-colors hover:bg-[#f58a66]/10 lg:hidden"
                     aria-label="Toggle Sidebar">
@@ -78,7 +81,7 @@
                 <a href="/"
                     class="flex items-center gap-2 rounded-xl px-4 py-2 text-gray-600 transition-colors hover:bg-[#f58a66]/10">
                     <i class="fas fa-home"></i>
-                    <span class="hidden lg:inline">User View</span>
+                    <span class="hidden lg:inline">Tampilan Pengguna</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
@@ -104,15 +107,7 @@
             const sidebar = document.getElementById("sidebar");
             sidebar.classList.toggle("-translate-x-full");
         }
-    </script>
 
-    <!-- <button onclick="showActivities()"
-        class="rounded-xl bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 transition-colors">
-        <i class="fas fa-history mr-2"></i>
-        Riwayat Aktivitas
-    </button> -->
-
-    <script>
         function showAllActivities() {
             fetch('/admin/activities/data')
                 .then(response => response.json())
@@ -128,7 +123,6 @@
                         existingModal.remove();
                     }
 
-                    // Create modal
                     const modalContent = document.createElement('div');
                     modalContent.innerHTML = `
                         <div id="activityModal" class="fixed inset-0 z-50 overflow-y-auto">
@@ -167,7 +161,6 @@
                         </div>
                     `).join('');
 
-                    // Show modal
                     const modal = document.getElementById('activityModal');
                     modal.classList.remove('hidden');
                 })
@@ -200,6 +193,11 @@
                 modal.classList.add('hidden');
             }
         }
+
+        function toggle_sidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("-translate-x-full");
+        }
     </script>
 
     <!-- Moment.js -->
@@ -208,7 +206,7 @@
     <script>
         moment.locale('id');
     </script>
-
+ 
 </body>
 
 </html>

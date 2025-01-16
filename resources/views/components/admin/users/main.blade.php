@@ -8,11 +8,23 @@
         <h5>Tambah Pengguna</h5>
     </button>
 </section>
+
+<div id="success-message" class="hidden mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700"></div>
+
+<div id="error-message" class="hidden mb-6 p-4 rounded-lg border bg-red-100 border-red-400 text-red-700"></div>
+
 @if(session('success'))
     <h4 class="mb-6 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700">
         {{ session('success') }}
     </h4>
 @endif
+
+@if(session('error'))
+    <h4 class="mb-6 p-4 rounded-lg border bg-red-100 border-red-400 text-red-700">
+        {{ session('error') }}
+    </h4>
+@endif
+
 <section class="mb-6">
     <form action="{{ route('admin.users.index') }}" method="GET" class="flex items-center gap-4">
         <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}"
@@ -37,7 +49,7 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach($users as $user)
                 <tr>
-                    <td class="font-medium text-sm px-6 py-4 whitespace-nowrap text-gray-900">
+                    <td class="font-medium text-sm px-6 py-4 whitespace-nowrap text-gray-900" data-user-id="{{ $user->id }}">
                         {{ $user->id }}
                     </td>
                     <td class="font-medium text-sm px-6 py-4 whitespace-nowrap text-gray-900">
@@ -82,13 +94,17 @@
 @include('components.admin.users.user-modal', [
     'id' => 'add_user_modal',
     'title' => 'Tambah Pengguna',
-    'submitText' => 'Tambah Pengguna'
+    'submitText' => 'Tambah Pengguna',
+    'action' => route('admin.users.store'),
+    'isEdit' => false
 ])
 
 @include('components.admin.users.user-modal', [
     'id' => 'edit_user_modal',
     'title' => 'Edit Pengguna',
-    'submitText' => 'Simpan Perubahan'
+    'submitText' => 'Simpan Perubahan',
+    'action' => '#',
+    'isEdit' => true
 ])
 
 <script>
@@ -123,21 +139,125 @@
         }
     });
 
-    function edit_user(id, name, email, is_admin) {
-        const modal = document.getElementById('edit_user_modal');
-        const form = modal?.querySelector('form');
-        if (!form) return;
+    function showMessage(type, message) {
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
         
-        form.action = `/admin/users/${id}`;
+        successMessage.classList.add('hidden');
+        errorMessage.classList.add('hidden');
         
-        const nameInput = form.querySelector('input[name="name"]');
-        const emailInput = form.querySelector('input[name="email"]');
-        const roleSelect = form.querySelector('select[name="is_admin"]');
+        if (type === 'success') {
+            successMessage.textContent = message;
+            successMessage.classList.remove('hidden');
+        } else {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
         
-        if (nameInput) nameInput.value = name;
-        if (emailInput) emailInput.value = email;
-        if (roleSelect) roleSelect.value = is_admin ? "1" : "0";
-        
-        open_modal('edit_user_modal');
+        setTimeout(() => {
+            if (type === 'success') {
+                successMessage.classList.add('hidden');
+            } else {
+                errorMessage.classList.add('hidden');
+            }
+        }, 3000);
     }
+
+    function edit_user(id, name, email, is_admin) {
+        try {
+            const modal = document.getElementById('edit_user_modal');
+            const form = modal.querySelector('form');
+            
+            form.action = `/admin/users/${id}`;
+            
+            form.querySelector('input[name="name"]').value = name;
+            form.querySelector('input[name="email"]').value = email;
+            form.querySelector('select[name="is_admin"]').value = is_admin ? "1" : "0";
+            
+            open_modal('edit_user_modal');
+        } catch (error) {
+            showMessage('error', 'Terjadi kesalahan saat memuat data pengguna');
+            console.error('Error:', error);
+        }
+    }
+
+    function showValidationErrors(form, errors) {
+        form.querySelectorAll('[data-error]').forEach(el => {
+            el.textContent = '';
+            el.classList.add('hidden');
+        });
+
+        Object.keys(errors).forEach(field => {
+            const errorElement = form.querySelector(`[data-error="${field}"]`);
+            if (errorElement) {
+                errorElement.textContent = errors[field][0];
+                errorElement.classList.remove('hidden');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const addUserForm = document.querySelector('#add_user_modal form');
+        if (addUserForm) {
+            addUserForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json().then(data => ({status: response.status, body: data})))
+                .then(({status, body}) => {
+                    if (status === 422) {
+                        showValidationErrors(addUserForm, body.errors);
+                        showValidationErrors(addUserForm, body.errors);
+                        showMessage('error', 'Mohon periksa kembali input Anda');
+                    } else if (body.success) {
+                        showMessage('success', body.message);
+                        close_modal('add_user_modal');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showMessage('error', body.message || 'Terjadi kesalahan saat menambahkan pengguna');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('error', 'Terjadi kesalahan saat menambahkan pengguna');
+                });
+            });
+        }
+        
+        const editForm = document.querySelector('#edit_user_modal form');
+        if (editForm) {
+            editForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage('success', 'Pengguna berhasil diperbarui');
+                        close_modal('edit_user_modal');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showMessage('error', data.message || 'Terjadi kesalahan saat memperbarui pengguna');
+                    }
+                })
+                .catch(error => {
+                    showMessage('error', 'Terjadi kesalahan saat memperbarui pengguna');
+                    console.error('Error:', error);
+                });
+            });
+        }
+    });
 </script>
