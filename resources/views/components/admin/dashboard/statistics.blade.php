@@ -48,7 +48,7 @@
             <i class="fas fa-chart-line h-14 w-14 grid place-items-center text-xl bg-yellow-100 p-3 rounded-lg text-yellow-500"></i>
         </header>
         <div class="mt-6 w-full bg-gray-200 rounded-full h-2">
-            <span class="bg-yellow-500 h-2 rounded-full" style="width: '{{ $statistics['completion_rate'] }}%'"></span>
+            <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ $statistics['completion_rate'] }}%"></div>
         </div>
     </figure>
 

@@ -80,15 +80,6 @@
       </a>
     </h5>
   </form>
-
-  <div class="mt-10 text-center">
-    <hr class="border-gray-300">
-    <span class="bg-white px-2 text-gray-500 relative -top-3">Atau</span>
-    <a href="/auth/google"
-      class="mt-4 flex items-center justify-center py-3 border border-gray-300 rounded-md shadow-sm font-medium transition-all duration-300 ease-in-out text-gray-700 bg-white hover:bg-gray-50">
-      <i class="fab fa-google text-red-500 mr-2"></i> Google
-    </a>
-  </div>
 </section>
 
 <script>

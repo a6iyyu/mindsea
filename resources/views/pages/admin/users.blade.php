@@ -1,5 +1,5 @@
 @component("layouts.admin-layout", [
-    "judul" => "Admin Dashboard",
+    "judul" => "Kelola Pengguna",
     "deskripsi" => "Panel admin mindsea"
 ])
     @include("components.admin.users.main")

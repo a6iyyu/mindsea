@@ -1,5 +1,5 @@
 @component("layouts.admin-layout", [
-    "judul" => "Kelola Latihan",
+    "judul" => "Kelola Latihan Soal",
     "deskripsi" => ""
 ])
     @include("components.admin.exercises.main")

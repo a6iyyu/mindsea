@@ -1,5 +1,5 @@
 @component("layouts.main-layout", [
-    "judul" => "Permainan | mindsea",
+    "judul" => "Permainan",
     "deskripsi" => "Permainan edukatif dan menyenangkan di mindsea",
     "halaman_khusus" => false
 ])

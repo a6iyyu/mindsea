@@ -12,11 +12,10 @@
                 <p class="mt-2 text-gray-600">Asah kemampuan berhitungmu dengan cara yang menyenangkan!</p>
             </div>
         </div>
-        
-        <button 
+
+        <button
             onclick="window.SpeakText('Mari bermain penjumlahan seru! Pilih jawaban yang benar dari soal penjumlahan yang diberikan. Kamu punya waktu 30 detik untuk setiap soal.')"
-            class="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"
-        >
+            class="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors">
             <i class="fas fa-volume-up"></i>
             <span>Dengarkan Petunjuk</span>
         </button>
@@ -54,37 +53,51 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl border-4 border-emerald-200 p-8 shadow-lg">
-        <div class="text-center mb-8">
+    <div class=" bg-white rounded-2xl border-4 border-emerald-200 p-8 shadow-lg">
+        <div class="hidden text-center mb-8" id="question-container">
             <h2 class="text-4xl font-bold text-gray-800 mb-4" id="question">8 + 5 = ?</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="options">
-                <button class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
+                <button
+                    class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
                     12
                 </button>
-                <button class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
+                <button
+                    class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
                     13
                 </button>
-                <button class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
+                <button
+                    class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
                     14
                 </button>
-                <button class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
+                <button
+                    class="option-btn p-4 text-xl font-bold rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 transition-colors">
                     15
                 </button>
             </div>
         </div>
 
+        <div class="text-center mb-8" id="instructions">
+            <div
+                class="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-xl border-2 border-emerald-200 shadow-sm">
+                <p class="text-gray-700 text-lg">
+                    <i class="fas fa-gamepad text-emerald-500 mr-2"></i>
+                    Klik tombol <span class="font-bold text-emerald-600">Mulai Bermain</span> untuk memulai petualangan
+                    matematika!
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Jawab pertanyaan secepat mungkin untuk mendapatkan skor tertinggi
+                </p>
+            </div>
+        </div>
+
         <div class="flex justify-center gap-4">
-            <button 
-                onclick="toggleGame()"
+            <button onclick="toggleGame()"
                 class="px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors"
-                id="start-btn"
-            >
+                id="start-btn">
                 Mulai Bermain
             </button>
-            <a 
-                href="{{ route('permainan') }}"
-                class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
-            >
+            <a href="{{ route('permainan') }}"
+                class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">
                 Kembali
             </a>
         </div>
@@ -92,95 +105,136 @@
 </main>
 
 <script>
-let score = 0;
-let level = 1;
-let timer = 120;
-let gameInterval;
-let currentAnswer;
-let isGameRunning = false;
+    let score = 0;
+    let level = 1;
+    let timer = 120;
+    let gameInterval;
+    let currentAnswer;
+    let isGameRunning = false;
 
-function generateQuestion() {
-    const max = level * 10;
-    const num1 = Math.floor(Math.random() * max) + 1;
-    const num2 = Math.floor(Math.random() * max) + 1;
-    currentAnswer = num1 + num2;
-    
-    document.getElementById('question').textContent = `${num1} + ${num2} = ?`;
-    
-    const options = [currentAnswer];
-    while (options.length < 4) {
-        const wrongAnswer = currentAnswer + Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
-        if (!options.includes(wrongAnswer) && wrongAnswer > 0) {
-            options.push(wrongAnswer);
+    function generateQuestion() {
+        const max = level * 10;
+        const num1 = Math.floor(Math.random() * max) + 1;
+        const num2 = Math.floor(Math.random() * max) + 1;
+        currentAnswer = num1 + num2;
+
+        const questionText = `${num1} ditambah ${num2} sama dengan berapa?`;
+        document.getElementById('question').textContent = `${num1} + ${num2} = ?`;
+
+        // Disable all option buttons before speaking
+        toggleOptionButtons(false);
+        
+        // Speak text and enable buttons after speaking is done
+        window.SpeakText(questionText, {
+            onEnd: () => toggleOptionButtons(true)
+        });
+
+        const options = [currentAnswer];
+        while (options.length < 4) {
+            const wrongAnswer = currentAnswer + Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
+            if (!options.includes(wrongAnswer) && wrongAnswer > 0) {
+                options.push(wrongAnswer);
+            }
+        }
+
+        options.sort(() => Math.random() - 0.5);
+
+        const optionBtns = document.querySelectorAll('.option-btn');
+        optionBtns.forEach((btn, index) => {
+            btn.textContent = options[index];
+            btn.onclick = () => checkAnswer(options[index], btn);
+        });
+    }
+
+    function toggleOptionButtons(enabled) {
+        const optionBtns = document.querySelectorAll('.option-btn');
+        optionBtns.forEach(btn => {
+            btn.disabled = !enabled;
+            if (!enabled) {
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    }
+
+    function checkAnswer(selected, btn) {
+        toggleOptionButtons(false);
+
+        const optionBtns = document.querySelectorAll('.option-btn');
+        optionBtns.forEach((button) => {
+            button.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+        });
+
+        if (selected === currentAnswer) {
+            score += 10 * level;
+            document.getElementById('score').textContent = score;
+
+            btn.classList.add('bg-green-100', 'border-green-500');
+
+            if (score >= level * 50) {
+                level++;
+                document.getElementById('level').textContent = level;
+                window.SpeakText('Selamat! Kamu naik level!');
+            }
+
+            window.SpeakText('Benar!', {
+                onEnd: () => {
+                    btn.classList.remove('bg-green-100', 'border-green-500');
+                    generateQuestion();
+                }
+            });
+        } else {
+            btn.classList.add('bg-red-100', 'border-red-500');
+            window.SpeakText('Coba lagi!', {
+                onEnd: () => toggleOptionButtons(true)
+            });
         }
     }
-    
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionBtns = document.querySelectorAll('.option-btn');
-    optionBtns.forEach((btn, index) => {
-        btn.textContent = options[index];
-        btn.onclick = () => checkAnswer(options[index]);
-    });
-}
 
-function checkAnswer(selected) {
-    if (selected === currentAnswer) {
-        score += 10 * level;
+    function toggleGame() {
+        const startBtn = document.getElementById('start-btn');
+
+        if (!isGameRunning) {
+            startGame();
+            document.getElementById('question-container').classList.remove('hidden');
+            document.getElementById('instructions').classList.add('hidden');
+            startBtn.textContent = 'Stop';
+            startBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
+            startBtn.classList.add('bg-red-500', 'hover:bg-red-600');
+            isGameRunning = true;
+        } else {
+            clearInterval(gameInterval);
+            document.getElementById('question-container').classList.add('hidden');
+            document.getElementById('instructions').classList.remove('hidden');
+            window.SpeakText(`Permainan Dihentikan! Skor kamu ${score}`);
+            startBtn.textContent = 'Mulai Bermain';
+            startBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+            startBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
+            startBtn.disabled = false;
+            isGameRunning = false;
+        }
+    }
+
+    function startGame() {
+        score = 0;
+        level = 1;
+        timer = 120;
+
         document.getElementById('score').textContent = score;
-        
-        if (score >= level * 50) {
-            level++;
-            document.getElementById('level').textContent = level;
-            window.SpeakText('Selamat! Kamu naik level!');
-        }
-        
-        generateQuestion();
-        window.SpeakText('Benar!');
-    } else {
-        window.SpeakText('Coba lagi!');
-    }
-}
-
-function toggleGame() {
-    const startBtn = document.getElementById('start-btn');
-    
-    if (!isGameRunning) {
-        startGame();
-        startBtn.textContent = 'Stop';
-        startBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600');
-        startBtn.classList.add('bg-red-500', 'hover:bg-red-600');
-        isGameRunning = true;
-    } else {
-        clearInterval(gameInterval);
-        window.SpeakText(`Permainan Dihentikan! Skor kamu ${score}`);
-        startBtn.textContent = 'Mulai Bermain';
-        startBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-        startBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-600');
-        startBtn.disabled = false;
-        isGameRunning = false;
-    }
-}
-
-function startGame() {
-    score = 0;
-    level = 1;
-    timer = 120;
-    
-    document.getElementById('score').textContent = score;
-    document.getElementById('level').textContent = level;
-    document.getElementById('timer').textContent = timer;
-    
-    generateQuestion();
-    
-    gameInterval = setInterval(() => {
-        timer--;
+        document.getElementById('level').textContent = level;
         document.getElementById('timer').textContent = timer;
-        
-        if (timer <= 0) {
-            toggleGame();
-        }
-    }, 1000);
-}
+
+        generateQuestion();
+
+        gameInterval = setInterval(() => {
+            timer--;
+            document.getElementById('timer').textContent = timer;
+
+            if (timer <= 0) {
+                toggleGame();
+            }
+        }, 1000);
+    }
 </script>
 @endcomponent

@@ -44,12 +44,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 
-// Rute OAuth
-Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('{provider}', [OAuthController::class, 'redirectToProvider'])->name('provider');
-    Route::get('{provider}/callback', [OAuthController::class, 'handleProviderCallback'])->name('callback');
-});
-
 // Rute yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
