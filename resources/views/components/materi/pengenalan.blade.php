@@ -1,5 +1,5 @@
 @component("layouts.main-layout", ["judul" => "Pengenalan {$materi['title']} | mindsea", "deskripsi" => $materi['description'], "halaman_khusus" => false])
-<main class="ml-16 min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-68 lg:py-28 lg:pr-10 lg:pl-60">
+<main class="min-h-screen px-6 bg-white">
   <figure class="border-4 p-8 rounded-2xl transition-shadow shadow-lg bg-purple-50 border-purple-200 lg:hover:shadow-xl">
     <header class="flex flex-col-reverse items-start gap-4 mb-8 lg:flex-row lg:items-center">
       <i class="fa-solid fa-book-open hidden bg-purple-100 p-4 rounded-xl text-purple-500 text-3xl lg:inline"></i>

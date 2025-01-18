@@ -4,7 +4,7 @@
     "halaman_khusus" => true,
     "auth" => false
 ])
-<main class="flex flex-col justify-center items-center min-h-screen px-4 overflow-y-hidden relative">
+<main class="flex flex-col justify-center items-center min-h-screen w-full relative">
     <section class="absolute inset-0 -z-10 overflow-hidden opacity-20">
         <svg
             xmlns="http://www.w3.org/2000/svg"

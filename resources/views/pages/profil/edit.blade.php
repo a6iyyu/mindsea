@@ -7,7 +7,7 @@
     use Illuminate\Support\Facades\Auth;
 @endphp
 
-<section class="min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-12 lg:py-28 lg:pr-10 lg:pl-60">
+<section class="min-h-screen px-6 bg-white">
     @if(session('success'))
         <div class="mb-8 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
             {{ session('success') }}

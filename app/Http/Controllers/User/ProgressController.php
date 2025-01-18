@@ -68,10 +68,10 @@ class ProgressController extends Controller
                     'color' => 'green',
                     'icon' => 'fa-check-circle'
                 ];
-            } else if ($activity->exercise) {
+            } else if ($activity instanceof UserExercise && $activity->exercise) {
                 return (object) [
                     'title' => $activity->exercise->title,
-                    'description' => 'Menyelesaikan latihan',
+                    'description' => "Menyelesaikan latihan dengan nilai {$activity->score}",
                     'completed_at' => $activity->completed_at,
                     'color' => 'emerald',
                     'icon' => 'fa-pencil-alt'

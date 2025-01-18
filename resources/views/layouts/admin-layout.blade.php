@@ -63,13 +63,10 @@
     <header class="fixed left-0 top-0 z-50 h-[4.5rem] w-screen border-b-2 border-gray-200 bg-[#fceede] shadow-md">
         <div class="mx-auto flex h-full max-w-[90vw] items-center justify-between lg:max-w-[96vw]">
             <span class="flex items-center gap-3 lg:gap-6">
-                <button type="button" onclick="toggle_sidebar()">
-                    <i class="fa-solid fa-bars text-2xl text-gray-600"></i>
-                </button>
                 <button type="button" onclick="toggleSidebar()"
-                    class="rounded-xl p-3 text-gray-600 transition-colors hover:bg-[#f58a66]/10 lg:hidden"
+                    class="rounded-xl p-3 text-gray-600 transition-colors hover:bg-[#f58a66]/10"
                     aria-label="Toggle Sidebar">
-                    <i class="fas fa-bars text-xl"></i>
+                    <i class="fas fa-bars text-2xl"></i>
                 </button>
                 <a href="/admin" class="flex items-center gap-2">
                     <i class="fas fa-brain text-[#f58a66] text-2xl"></i>
@@ -98,15 +95,58 @@
     @include("shared.sidebar.admin")
 
     <!-- Main Content -->
-    <main class="ml-16 min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-68 lg:py-28 lg:pr-10 lg:pl-60">
-        {{ $slot }}
+    <main class="transition-all duration-300 min-h-screen px-6 pt-28 pb-16 bg-white flex flex-col items-center lg:items-start ml-0 lg:ml-[16rem]">
+        <div class="w-full max-w-7xl">
+            {{ $slot }}
+        </div>
     </main>
 
     <script>
+        const sidebar = document.getElementById("sidebar");
+        const mainContainer = document.querySelector("main");
+
         function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            sidebar.classList.toggle("-translate-x-full");
+            const isSidebarVisible = !sidebar.classList.contains('-translate-x-full');
+            
+            sidebar.classList.remove('translate-x-0', '-translate-x-full');
+            mainContainer.classList.remove("ml-0", "ml-16", "lg:ml-[16rem]", "lg:items-start", "items-center");
+            
+            if (isSidebarVisible) {
+                sidebar.classList.add('-translate-x-full');
+                mainContainer.classList.add("ml-0", "items-center");
+            } else {
+                sidebar.classList.add('translate-x-0');
+                mainContainer.classList.add("ml-16", "lg:ml-[16rem]", "lg:items-start");
+            }
         }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                mainContainer.classList.remove("ml-0", "items-center");
+                mainContainer.classList.add("ml-16", "lg:ml-[16rem]", "lg:items-start");
+            } else {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                mainContainer.classList.remove("ml-16", "lg:ml-[16rem]", "lg:items-start");
+                mainContainer.classList.add("ml-0", "items-center");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                mainContainer.classList.remove("ml-0", "items-center");
+                mainContainer.classList.add("ml-16", "lg:ml-[16rem]", "lg:items-start");
+            } else {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                mainContainer.classList.remove("ml-16", "lg:ml-[16rem]", "lg:items-start");
+                mainContainer.classList.add("ml-0", "items-center");
+            }
+        });
 
         function showAllActivities() {
             fetch('/admin/activities/data')
@@ -194,10 +234,6 @@
             }
         }
 
-        function toggle_sidebar() {
-            const sidebar = document.getElementById("sidebar");
-            sidebar.classList.toggle("-translate-x-full");
-        }
     </script>
 
     <!-- Moment.js -->

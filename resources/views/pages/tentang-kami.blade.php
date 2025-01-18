@@ -3,7 +3,7 @@
     "deskripsi" => "Mari kenali lebih jauh tentang tim pengembang dibalik layar mindsea!",
     "halaman_khusus" => false
 ])
-<main class="min-h-screen px-6 pt-28 bg-white lg:ml-12 lg:pr-10 lg:pl-60">
+<main class="min-h-screen px-6 bg-white">
     <h1 class="text-xl font-bold text-gray-800 lg:text-4xl">Tentang Kami 🎯</h1>
     <p class="mt-2 mb-12 text-base text-gray-600 lg:text-lg">
         Mengenal lebih dekat dengan mindsea dan visi misi kami

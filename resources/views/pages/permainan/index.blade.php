@@ -3,7 +3,7 @@
     "deskripsi" => "Permainan edukatif dan menyenangkan di mindsea",
     "halaman_khusus" => false
 ])
-<main class="min-h-screen px-6 pt-28 pb-16 bg-white lg:ml-12 lg:py-28 lg:pr-10 lg:pl-60">
+<main class="min-h-screen px-6 bg-white">
     <!-- Header Section -->
     <header class="mb-8">
         <div class="flex items-center gap-4">
@@ -46,7 +46,7 @@
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
         <!-- Game Cards -->
         @include('pages.permainan.components.game-card', [
-    'title' => 'Penjumlahan Seru',
+    'title' => 'Penjumlahan',
     'description' => 'Belajar berhitung dengan cara yang menyenangkan',
     'icon' => 'fa-plus-circle',
     'color' => 'emerald',

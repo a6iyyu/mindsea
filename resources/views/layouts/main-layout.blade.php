@@ -72,40 +72,63 @@
     @include("shared.sidebar.student")
   @endif
 
-  {{ $slot }}
+  <main class="transition-all duration-300 min-h-screen px-6 bg-white {{ !$halaman_khusus ? 'ml-0 lg:ml-[16rem] pt-28 pb-16' : 'flex justify-center' }}">
+    <div class="w-full max-w-7xl mx-auto">
+      {{ $slot }}
+    </div>
+  </main>
 
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const isHidden = sidebar.classList.contains("-translate-x-full");
+    const sidebar = document.getElementById("sidebar");
+    const mainContainer = document.querySelector("main");
+    const menuButton = document.getElementById("menu-button");
 
-      if (isHidden) {
-        sidebar.classList.remove("-translate-x-full");
-        sidebar.classList.add("translate-x-0");
-        mainContainer.classList.remove("ml-0");
-        mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
-      } else {
-        sidebar.classList.remove("translate-x-0");
-        sidebar.classList.add("-translate-x-full");
-        mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
-        mainContainer.classList.add("ml-0");
-      }
+    function initializeSidebar() {
+        if (window.innerWidth < 1024) {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
+            mainContainer.classList.add("ml-0");
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            mainContainer.classList.remove("ml-0");
+            mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
+        }
     }
 
+    document.addEventListener('DOMContentLoaded', initializeSidebar);
+
+    function toggleSidebar() {
+        const isSidebarOpen = !sidebar.classList.contains('-translate-x-full');
+        
+        sidebar.classList.remove('translate-x-0', '-translate-x-full', 'lg:translate-x-0');
+        mainContainer.classList.remove("ml-0", "ml-16", "lg:ml-[16rem]");
+        
+        if (isSidebarOpen) {
+            sidebar.classList.add('-translate-x-full');
+            mainContainer.classList.add("ml-0");
+        } else {
+            sidebar.classList.add('translate-x-0');
+            mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
+        }
+    }
+
+    menuButton.addEventListener('click', toggleSidebar);
+
     window.addEventListener('resize', () => {
-      const sidebar = document.getElementById("sidebar");
-      if (window.innerWidth >= 1024) {
-        sidebar.classList.remove('-translate-x-full');
-        sidebar.classList.add('translate-x-0');
-        mainContainer.classList.remove("ml-0");
-        mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
-      } else {
-        sidebar.classList.remove('translate-x-0');
-        sidebar.classList.add('-translate-x-full');
-        mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
-        mainContainer.classList.add("ml-0");
-      }
-    })
+        if (window.innerWidth >= 1024) {
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                mainContainer.classList.remove("ml-0");
+                mainContainer.classList.add("ml-16", "lg:ml-[16rem]");
+            }
+        } else {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            mainContainer.classList.remove("ml-16", "lg:ml-[16rem]");
+            mainContainer.classList.add("ml-0");
+        }
+    });
   </script>
 
   <script>
